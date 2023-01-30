@@ -1,0 +1,181 @@
+body {
+    background-color: #11101d;
+}
+
+.frame {
+    height: 600px;
+    width: auto;
+    background:
+transparent;
+    background-size: cover;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 7px rgb(0, 0, 0);
+    overflow: hidden;
+    transition: all .5s ease;
+
+}
+
+#img {
+    margin-top: 50px;
+}
+
+.frame-short {
+    height: 400px;
+    margin-top: 50px;
+    box-shadow: 0px 2px 7px rgb(10, 146, 3);
+}
+
+.form-signin {
+    width: auto;
+    height: 375px;
+    font-size: 16px;
+    font-weight: 300;
+    padding-top: 30px;
+    transition: opacity .5s ease, transform .5s ease;
+}
+
+.form-short {
+    padding-left: 37px;
+    padding-right: 37px;
+}
+
+.form-styling {
+    color: #fff;
+    width: 100%;
+    height: 35px;
+    padding-left: 15px;
+    border: none;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, .2);
+}
+
+label {
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+    color: rgba(255, 255, 255, .7);
+    display: block;
+}
+
+:focus {
+    outline: none;
+}
+
+.form-signin input:focus,
+textarea:focus {
+    background: rgba(255, 255, 255, .3);
+    border: none;
+    padding-right: 40px;
+    transition: background .5s ease;
+}
+
+
+.btn-signup {
+    float: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    text-align: center;
+    color: #ffffff;
+    padding-top: 8px;
+    width: 100%;
+    height: 35px;
+    border: none;
+    border-radius: 20px;
+    margin-top: 23px;
+    background-color: #1059FF;
+}
+
+.btn-signin {
+    float: left;
+    padding-top: 8px;
+    width: 100%;
+    height: 35px;
+    border: none;
+    border-radius: 20px;
+    margin-top: -8px;
+}
+
+.btn-animate {
+    float: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    text-align: center;
+    color: rgba(255, 255, 255, 1);
+    padding-top: 8px;
+    width: 100%;
+    height: 35px;
+    border: none;
+    border-radius: 20px;
+    margin-top: 23px;
+    background-color: rgba(16, 89, 255, 1);
+    left: 0px;
+    top: 0px;
+    transition: all .5s ease, top .5s ease .5s, height .5s ease .5s, background-color .5s ease .75s;
+}
+
+.btn-animate-grow {
+    width: 130%;
+    height: 625px;
+    position: relative;
+    left: -55px;
+    top: -420px;
+    color: rgba(255, 255, 255, 0);
+    background:         linear-gradient(rgb(54, 51, 89),
+    rgb(5, 10, 29));
+}
+
+.forgot {
+    height: 100px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-top: 24px;
+    border-top: solid 1px rgba(255, 255, 255, .3);
+    transition: all 0.5s ease;
+}
+
+.forgot-fade {
+    opacity: 0;
+}
+
+.forgot a {
+    color: rgba(255, 255, 255, .3);
+    font-weight: 400;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.welcome {
+    width: 100%;
+    height: 50px;
+    position: relative;
+    color: rgba(255, 255, 255, 0.518);
+    opacity: 0;
+    transition: transform 1.5s ease .25s, opacity .1s ease 1s;
+}
+
+.welcome-left {
+    transform: translateY(-410px);
+    opacity: 1;
+}
+
+
+h1 {
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.error{
+    box-shadow: 0px 2px 7px rgb(146, 3, 3);
+}

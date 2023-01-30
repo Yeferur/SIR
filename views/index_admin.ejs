@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome</title>
+  <style>
+    .stretch-card>.card {
+      width: 100%;
+    }
+
+    .flex {
+      -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+    }
+
+    @media (max-width: 991.98px) {
+      .padding {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .padding {
+        padding: 1rem;
+      }
+    }
+
+    .padding {
+      padding: 3rem;
+    }
+
+    .card {
+      box-shadow: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      -ms-box-shadow: none;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #2a2f3a;
+      background-clip: border-box;
+      border-radius: 5px;
+      color: #fff;
+    }
+
+    .card .card-block {
+      padding: 1.25rem;
+    }
+
+    .m-l-10 {
+      margin-left: 10px;
+    }
+
+    .proj-progress-card .progress {
+      height: 6px;
+      overflow: visible;
+      margin-bottom: 10px;
+    }
+
+    .proj-progress-card .progress .progress-bar {
+      position: relative;
+    }
+
+    .progress .progress-bar {
+      height: 100%;
+      color: inherit;
+    }
+
+    .proj-progress-card .progress .progress-bar:after {
+      content: "";
+
+      position: absolute;
+      right: -6px;
+      top: -4px;
+      border-radius: 50%;
+      width: 15px;
+      height: 15px;
+    }
+
+
+    .m-b-30 {
+      margin-bottom: 30px;
+    }
+
+    .text {
+      color: #ff5370;
+    }
+  </style>
+</head>
+
+<body class="text-center">
+<div class="col-3"> 
+    <input type="date" class="form-style" name="" id="fecha">
+  
+</div>
+  <div class="page-content page-container" id="page-content">
+    <div class="padding">
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-12">
+          <div class="card proj-progress-card">
+            <div class="card-block">
+              <div class="row" id="div">
+                <% if (typeof resultsCupos !="undefined" ) { resultsCupos.forEach((Tours)=>{ %>
+                  <div class="col-xl-6 col-md-12 col-xs-12">
+                    <h3>
+                      <%= Tours.NombreTour %>
+                    </h3>
+                    <h4 class="m-b-30 f-w-700"><span id="Pasajeros<%= Tours.Id_Tour %>"></span><span> /</span><span
+                        class="text m-l-5" id="Cupos<%= Tours.Id_Tour %>">
+                        <%= Tours.CupoDia %>
+                      </span></h4>
+                    <input type="hidden" name="" id="Pas<%= Tours.Id_Tour %>">
+                    <input type="hidden" name="" id="C<%= Tours.Id_Tour %>" value="<%= Tours.CupoDia %>">
+                    <div class="progress">
+                      <div class="progress-bar bg-progress" id="bar-Progress<%= Tours.Id_Tour %>"></div>
+                    </div>
+                  </div>
+
+                  <% }) } %>
+                    <% if (typeof resultsCuposH !="undefined" ) { %>
+                      <div class="col-xl-12 col-md-12 col-xs-12">
+                        <h3>
+                          <%= resultsCuposR.NombreTour %> Y <%= resultsCuposH.NombreTour %>
+                        </h3>
+                        <h4 class="m-b-30 f-w-700"><span id="Pasajeros<%= resultsCuposH.Id_Tour %>"></span><span>
+                            /</span><span class="text m-l-5" id="Cupos<%= resultsCuposH.Id_Tour %>">
+                            <%= resultsCuposH.CupoDia %>
+                          </span></h4>
+                        <input type="hidden" name="" id="Pas<%= resultsCuposH.Id_Tour %>">
+                        <input type="hidden" name="" id="C<%= resultsCuposH.Id_Tour %>"
+                          value="<%= resultsCuposH.CupoDia %>">
+                        <div class="progress">
+                          <div class="progress-bar bg-progress" id="bar-Progress<%= resultsCuposH.Id_Tour %>"></div>
+                        </div>
+                      </div>
+                      <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+
+    $(document).ready(function () {
+      Tours()
+      ToursRH()
+    });
+
+    $('#fecha').change(function () {
+      Tours()
+      ToursRH()
+    })
+
+    Tours = () => {
+      fetch('/Tours').then((response) => {
+        return response.json();
+      }).then((responseData) => {
+        for (var i = 0; i < responseData.length; i++) {
+          var Fecha = $('#fecha').val();
+          if (Fecha == '') {
+            var Ft = new Date();
+            var dia = String(Ft.getDate() + 1).padStart(2, '0');
+            var mes = String(Ft.getMonth() + 1).padStart(2, '0');
+            var año = Ft.getFullYear();
+            var Fecha = año + '-' + mes + '-' + dia
+            $('#Cupos'+responseData[i].Id_Tour+'').text(responseData[i].CupoDia)
+            $('#C'+responseData[i].Id_Tour+'').val(responseData[i].CupoDia)
+          }else{
+            $('#Cupos'+responseData[i].Id_Tour+'').text(responseData[i].CupoBase)
+            $('#C'+responseData[i].Id_Tour+'').val(responseData[i].CupoBase)
+          }
+          cupos(responseData[i].Id_Tour, Fecha)
+        }
+      })
+    }
+    ToursRH = () => {
+      fetch('/ToursRH').then((response) => {
+        return response.json();
+      }).then((responseData) => {
+        for (var i = 0; i < responseData.length; i++) {
+          var Fecha = $('#fecha').val();
+          if (Fecha == '') {
+            var Ft = new Date();
+            var dia = String(Ft.getDate() + 1).padStart(2, '0');
+            var mes = String(Ft.getMonth() + 1).padStart(2, '0');
+            var año = Ft.getFullYear();
+            var Fecha = año + '-' + mes + '-' + dia
+            $('#Cupos'+responseData[i].Id_Tour+'').text(responseData[i].CupoDia)
+            $('#C'+responseData[i].Id_Tour+'').val(responseData[i].CupoDia)
+          }else{
+            $('#Cupos'+responseData[i].Id_Tour+'').text(responseData[i].CupoBase)
+            $('#C'+responseData[i].Id_Tour+'').val(responseData[i].CupoBase)
+          }
+          cuposRH(responseData[0].Id_Tour, Fecha)
+        }
+      })
+
+
+    }
+
+    cupos = (Id_Tour, Fecha) => {
+      var id = Id_Tour;
+      fetch('/CuposIndex?Id_Tour=' + Id_Tour + '&Fecha=' + Fecha + '').then((res) => {
+        return res.json();
+      }).then((resData) => {
+        var Total = resData[0].Total;
+        if (Total == null) {
+          Total = 0;
+        }
+        $('#Pasajeros' + id + '').text(Total);
+        $('#Pas' + id + '').val(Total);
+      }).then(() => {
+        NumPas = $('#Pas' + id + '').val();
+        Cupos = $('#C' + id + '').val();
+
+        var porcentaje = NumPas * 100 / Cupos;
+
+        if (NumPas == Cupos) {
+          color = "#ff5370";
+        } else if (NumPas >= Cupos - 10) {
+          color = "#fffc53";
+        } else {
+          color = "#89ff53"
+        }
+        $('#bar-Progress' + id + '').width(porcentaje + '%')
+        $('#bar-Progress' + id + '').css('background-color', color)
+
+      })
+    }
+
+
+
+    cuposRH = (Id_Tour, Fecha) => {
+      var id = Id_Tour;
+      fetch('/CuposRHIndex?Fecha=' + Fecha + '').then((res) => {
+        return res.json();
+      }).then((resData) => {
+        var Total = resData[0].Total;
+        if (Total == null) {
+          Total = 0;
+        }
+        $('#Pasajeros' + id + '').text(Total);
+        $('#Pas' + id + '').val(Total);
+      }).then(() => {
+        NumPas = $('#Pas' + id + '').val();
+        Cupos = $('#C' + id + '').val();
+
+        var porcentaje = NumPas * 100 / Cupos;
+
+        if (NumPas == Cupos) {
+          color = "#ff5370";
+        } else if (NumPas >= Cupos - 10) {
+          color = "#fffc53";
+        } else {
+          color = "#89ff53"
+        }
+        $('#bar-Progress' + id + '').width(porcentaje + '%')
+        $('#bar-Progress' + id + '').css('background-color', color)
+
+      })
+
+
+
+    }
+
+
+
+
+  </script>
+
+</body>
+
+</html>

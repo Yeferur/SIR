@@ -1,0 +1,23 @@
+{
+  "name": "sir",
+  "version": "1.0.0",
+  "description": "Sistema Integrado de Reservas",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Yeferson Urrego",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.0",
+    "mysql": "^2.18.1",
+    "wrangler": "^2.7.0"
+  }
+}

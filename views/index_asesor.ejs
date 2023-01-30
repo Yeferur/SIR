@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome</title>
+    <style>      
+    
+    </style>
+  </head>
+  <body class="text-center">         
+          <div class="contenedor">
+            <h1>Página de Inicio</h1>
+            <h2>Dashboard</h2>
+            <h2>Bienvenido: ASESOR
+              <% if (user) { %>
+                <span class="badge bg-success"><%= user.name %></span>
+              <% } %>
+            </h2>
+          </div>
+
+          <% if (typeof resultsCupos !="undefined" ) { resultsCupos.forEach((Tours)=>{ %>
+
+            <div class="col-xl-6 col-md-12 col-xs-12">
+              <h3>
+                <%= Tours.NombreTour %>
+              </h3>
+              <h4 class="m-b-30 f-w-700">532 /<span class="text m-l-10">
+                  <%= Tours.CupoDia %>
+                </span></h4>
+              <div class="progress">
+                <div class="progress-bar bg-progress" style="width:50%; background-color: #ff5370;"></div>
+              </div>
+            </div>
+            <% }) } %>
+              <% if (typeof resultsCuposH !="undefined" ) { resultsCuposH.forEach((ToursH)=>{ %>
+
+                <div class="col-xl-12 col-md-12 col-xs-12">
+                  <h3>
+                    <%= ToursH.NombreTour %> y Tour a Río Claro
+                  </h3>
+                  <div class="row row-cols-2">
+                    <div class="col">
+                      <h4 class="m-b-30 f-w-700">532</h4>
+                    </div>
+                    <div class="col">
+                      <h4 class="m-b-30 f-w-700">532</h4>
+                    </div>
+
+                  </div>
+                  <h4 class="m-b-30 f-w-700">532 /<span class="text m-l-10">
+                      <%= ToursH.CupoDia %>
+                    </span></h4>
+                  <div class="progress">
+                    <div class="progress-bar bg-progress" style="width:50%; background-color: #ff5370;"></div>
+                  </div>
+                </div>
+                <% }) } %>
+  </body>
+</html>
