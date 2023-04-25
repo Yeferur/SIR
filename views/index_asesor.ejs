@@ -1,61 +1,674 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome</title>
-    <style>      
-    
-    </style>
-  </head>
-  <body class="text-center">         
-          <div class="contenedor">
-            <h1>Página de Inicio</h1>
-            <h2>Dashboard</h2>
-            <h2>Bienvenido: ASESOR
-              <% if (user) { %>
-                <span class="badge bg-success"><%= user.name %></span>
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inicio</title>
+  <style>
+    .stretch-card>.card {
+      width: 100%;
+    }
+
+    .flex {
+      -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+    }
+
+    @media (max-width: 991.98px) {
+      .padding {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .padding {
+        padding: 1rem;
+      }
+    }
+
+    .padding {
+      padding: 3rem;
+    }
+
+    .card {
+      box-shadow: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      -ms-box-shadow: none;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #2a2f3a;
+      background-clip: border-box;
+      border-radius: 30px;
+      color: #fff;
+    }
+
+    .card .card-block {
+      padding: 1.25rem;
+
+    }
+
+    .m-l-10 {
+      margin-left: 10px;
+    }
+
+
+
+    .proj-progress-card .progress {
+      height: 6px;
+      overflow: visible;
+      margin-bottom: 10px;
+    }
+
+    .proj-progress-card .progress .progress-bar {
+      position: relative;
+    }
+
+    .progress .progress-bar {
+      height: 100%;
+      color: inherit;
+    }
+
+    .proj-progress-card .progress .progress-bar:after {
+      content: "";
+
+      position: absolute;
+      right: -6px;
+      top: -4px;
+      border-radius: 50%;
+      width: 15px;
+      height: 15px;
+    }
+
+
+    .m-b-30 {
+      margin-bottom: 30px;
+    }
+
+    .text {
+      color: #ff5370;
+    }
+
+    #collapseAforos {
+
+      position: absolute;
+      background-color: #282b34;
+      padding: 5px;
+      margin-top: 70px;
+      margin-left: 20px;
+      max-width: 600px;
+      border-radius: 6px;
+      box-shadow: 0 14px 35px 0 rgba(9, 9, 12, 0.4);
+      z-index: 1;
+      transition: all 200ms linear;
+    }
+
+    .Div_Aforos_Fecha {
+      margin-top: 15px;
+      margin-left: 20px;
+    }
+
+    .Div_Aforos {
+      margin-top: 10px;
+    }
+
+    .card-aforos {
+      margin: 10px;
+    }
+
+    .btn-aforos {
+      height: 40px;
+      margin-left: 5px;
+    }
+
+    .input-group-text {
+      background-color: #1f2029;
+    }
+
+    #Submit_Actualizar,
+    #Submit_Reiniciar,
+    #ReiniciarAforo {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row Div_Aforos_Fecha mb-3">
+    <div class="col-lg-3">
+      <label for="" class="fw-bold">Fecha</label>
+      <input type="date" class="form-style mayusculas " name="" id="fecha">
+    </div>
+    <div class="col-lg-6 d-flex justify-content-end Div_Aforos">
+      <div class="d-flex align-items-end">
+        <input type="button" class="btn btn-warning" id="Reiniciar" value="Reiniciar" />
+        <button class="btn btn-primary btn-aforos" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseAforos" aria-expanded="false" aria-controls="collapseAforos">
+          Aforos
+        </button>
+      </div>
+
+      <div class="collapse" id="collapseAforos">
+        <div class="card-aforos text-center">
+
+          <form action="/ActualizarAforo" method="post" autocomplete="off">
+            <% if(typeof rol !="undefined" ){ %>
+              <input type="hidden" name="rol" value="<%= rol %>">
               <% } %>
-            </h2>
-          </div>
-
-          <% if (typeof resultsCupos !="undefined" ) { resultsCupos.forEach((Tours)=>{ %>
-
-            <div class="col-xl-6 col-md-12 col-xs-12">
-              <h3>
-                <%= Tours.NombreTour %>
-              </h3>
-              <h4 class="m-b-30 f-w-700">532 /<span class="text m-l-10">
-                  <%= Tours.CupoDia %>
-                </span></h4>
-              <div class="progress">
-                <div class="progress-bar bg-progress" style="width:50%; background-color: #ff5370;"></div>
-              </div>
-            </div>
-            <% }) } %>
-              <% if (typeof resultsCuposH !="undefined" ) { resultsCuposH.forEach((ToursH)=>{ %>
-
-                <div class="col-xl-12 col-md-12 col-xs-12">
-                  <h3>
-                    <%= ToursH.NombreTour %> y Tour a Río Claro
-                  </h3>
-                  <div class="row row-cols-2">
-                    <div class="col">
-                      <h4 class="m-b-30 f-w-700">532</h4>
+                <% if (typeof resultsCupos !="undefined" ) { resultsCupos.forEach((Aforos)=>{ %>
+                  <h5>
+                    <%= Aforos.NombreTour%>
+                  </h5>
+                  <div class="d-flex justify-content-center">
+                    <label class="fw-bold">
+                      Cupos base &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cupos por día
+                    </label>
+                  </div>
+                  <div class="input-group row mb-3 d-flex justify-content-center">
+                    <div class="col-6">
+                      <input type="text" name="CupoBase[]" class="form-style mayusculas " id="Base" value="<%= Aforos.CupoBase%>">
                     </div>
-                    <div class="col">
-                      <h4 class="m-b-30 f-w-700">532</h4>
+
+                    <div class="col-6">
+                      <input type="text" name="CupoDia[]" class="form-style mayusculas " id="Dia" value="<%= Aforos.CupoDia%>">
                     </div>
+                    <input type="hidden" name="Id_Tour[]" id="Id" value="<%= Aforos.Id_Tour%>">
+                    <input type="hidden" name="NombreTour[]" value="<%= Aforos.NombreTour%>">
+                  </div>
+                  <hr>
+
+                  <% }) } %>
+                    <% if (typeof resultsCuposH !="undefined" ) { %>
+                      <h5>
+                        <%= resultsCuposR.NombreTour %> Y <%= resultsCuposH.NombreTour %>
+                      </h5>
+                      <div class="d-flex justify-content-center">
+                        <label class="fw-bold">
+                          Cupos base &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cupos por
+                          día
+                        </label>
+                      </div>
+                      <div class="input-group row mb-3 d-flex justify-content-center">
+                        <div class="col-6">
+                          <input type="text" name="CupoBase[]" class="form-style mayusculas " id="Dia"
+                            value="<%= resultsCuposH.CupoBase%>">
+                        </div>
+
+                        <div class="col-6">
+                          <input type="text" name="CupoDia[]" class="form-style mayusculas " id="Dia"
+                            value="<%= resultsCuposH.CupoDia%>">
+                        </div>
+                        <input type="hidden" name="Id_Tour[]" id="Id" value="<%= resultsCuposH.Id_Tour%>">
+                        <input type="hidden" name="NombreTour[]"
+                          value="<%= resultsCuposR.NombreTour %> Y <%= resultsCuposH.NombreTour %>">
+                      </div>
+                      <hr>
+
+                      <% } %>
+                        <input type="submit" value="" id="Submit_Actualizar">
+          </form>
+
+          <form action="/ReiniciarAforo" method="post" autocomplete="off" id="ReiniciarAforo">
+            <% if(typeof rol !="undefined" ){ %>
+              <input type="hidden" name="rol" value="<%= rol %>">
+              <% } %>
+                <% if (typeof resultsCupos !="undefined" ) { resultsCupos.forEach((Aforos)=>{ %>
+                  <h5>
+                    <%= Aforos.NombreTour%>
+                  </h5>
+                  <div class="d-flex justify-content-center">
 
                   </div>
-                  <h4 class="m-b-30 f-w-700">532 /<span class="text m-l-10">
-                      <%= ToursH.CupoDia %>
-                    </span></h4>
-                  <div class="progress">
-                    <div class="progress-bar bg-progress" style="width:50%; background-color: #ff5370;"></div>
+                  <div class="input-group row mb-3 d-flex justify-content-center">
+                    <div class="col-6">
+                      <input type="text" name="CupoBase[]" class="form-style mayusculas " id="Base" value="<%= Aforos.CupoBase%>">
+                    </div>
+                    <input type="hidden" name="Id_Tour[]" id="Id" value="<%= Aforos.Id_Tour%>">
+                  </div>
+                  <hr>
+
+                  <% }) } %>
+                    <% if (typeof resultsCuposH !="undefined" ) { %>
+                      <h5>
+                        <%= resultsCuposR.NombreTour %> Y <%= resultsCuposH.NombreTour %>
+                      </h5>
+                      <div class="d-flex justify-content-center">
+                      </div>
+                      <div class="input-group row mb-3 d-flex justify-content-center">
+                        <div class="col-6">
+                          <input type="text" name="CupoBase[]" class="form-style mayusculas " id="Dia"
+                            value="<%= resultsCuposH.CupoBase%>">
+                        </div>
+                        <input type="hidden" name="Id_Tour[]" id="Id" value="<%= resultsCuposH.Id_Tour%>">
+                      </div>
+                      <hr>
+
+                      <% } %>
+                        <input type="submit" value="" id="Submit_Reiniciar">
+          </form>
+          <div class="mb-3">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#collapseAforos"
+              aria-expanded="false" aria-controls="collapseAforos">Cerrar</button>
+
+            <input type="button" class="btn btn-primary" id="Actualizar" value="Actualizar" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-content page-container text-center" id="page-content">
+    <div class="padding">
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-12">
+          <div class="row g-3" id="div">
+            <% if (typeof resultsCupos !="undefined" ) { resultsCupos.forEach((Tours)=>{ %>
+              <div class="col-xl-6 col-md-12 col-xs-12">
+                <div class="card proj-progress-card ">
+                  <div class="card-block">
+                    <div>
+                      <h3>
+                        <%= Tours.NombreTour %>
+                      </h3>
+                      <h4 class="m-b-30 f-w-700"><span id="Pasajeros<%= Tours.Id_Tour %>"></span><span> /</span><span
+                          class="text m-l-5" id="Cupos<%= Tours.Id_Tour %>">
+                          <%= Tours.CupoDia %>
+                        </span></h4>
+                      <input type="hidden" name="" id="Pas<%= Tours.Id_Tour %>">
+                      <input type="hidden" name="" id="C<%= Tours.Id_Tour %>" value="<%= Tours.CupoDia %>">
+                      <div class="progress">
+                        <div class="progress-bar bg-progress" id="bar-Progress<%= Tours.Id_Tour %>"></div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
-                <% }) } %>
-  </body>
+              </div>
+              <% }) } %>
+                <% if (typeof resultsCuposH !="undefined" ) { %>
+                  <div class="col-12">
+                    <div class="card proj-progress-card">
+                      <div class="card-block">
+
+                        <div>
+                          <h3>
+                            <%= resultsCuposR.NombreTour %> Y <%= resultsCuposH.NombreTour %>
+                          </h3>
+                          <h4 class="m-b-30 f-w-700"><span id="Pasajeros<%= resultsCuposH.Id_Tour %>"></span><span>
+                              /</span><span class="text m-l-5" id="Cupos<%= resultsCuposH.Id_Tour %>">
+                              <%= resultsCuposH.CupoDia %>
+                            </span></h4>
+                          <input type="hidden" name="" id="Pas<%= resultsCuposH.Id_Tour %>">
+                          <input type="hidden" name="" id="C<%= resultsCuposH.Id_Tour %>"
+                            value="<%= resultsCuposH.CupoDia %>">
+                          <div class="progress">
+                            <div class="progress-bar bg-progress" id="bar-Progress<%= resultsCuposH.Id_Tour %>"></div>
+                          </div>
+                          <p>
+                            <button class="btn btn-success btn-sm" type="button" data-bs-toggle="collapse"
+                              data-bs-target=".multi-collapseRH" aria-expanded="false"
+                              aria-controls="CollapseR CollapseH">Ver Detalles</button>
+                          </p>
+                          <div class="row">
+                            <div class="col">
+                              <div class="collapse multi-collapseRH" id="CollapseR">
+                                <div class="card card-body">
+                                  <h5>
+                                    <%= resultsCuposR.NombreTour %>
+                                  </h5>
+                                  <p id="PasajerosRio"></p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col">
+                              <div class="collapse multi-collapseRH" id="CollapseH">
+                                <div class="card card-body">
+                                  <h5>
+                                    <%= resultsCuposH.NombreTour %>
+                                  </h5>
+                                  <p id="PasajerosHacienda"></p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <% } %>
+
+                    <div class="col-lg-6">
+                      <div class="card proj-progress-card">
+                        <div class="card-block">
+
+                          <div>
+                            <h3>
+                              Privados
+                            </h3>
+                            <h4 class="m-b-30 f-w-700" id="Privados"></h4>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                      <div class="card proj-progress-card">
+                        <div class="card-block">
+
+                          <div>
+                            <h3>
+                              Transfer
+                            </h3>
+                            <h4 class="m-b-30 f-w-700" id="Transfer"></h4>
+                            <p>
+                              <button class="btn btn-success btn-sm" type="button" data-bs-toggle="collapse"
+                                data-bs-target=".multi-collapseAH" aria-expanded="false"
+                                aria-controls="CollapseAero CollapseHotel">Ver Detalles</button>
+                            </p>
+                            <div class="row">
+                              <div class="col">
+                                <div class="collapse multi-collapseAH" id="CollapseAero">
+                                  <div class="card card-body">
+                                    <h5>Aeropuerto/Hotel</h5>
+                                    <p id="TransferAeropuerto"></p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="collapse multi-collapseAH" id="CollapseHotel">
+                                  <div class="card card-body">
+                                    <h5>Hotel/Aeropuerto</h5>
+                                    <p id="TransferHotel"></p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if(typeof alert !="undefined" ){ %>
+    <script>
+      swal({
+        title: '<%= alertTitle %>',
+        text: '<%= alertMessage %>',
+        icon: '<%= alertIcon %>',
+        showConfirmButton: '<%= showConfirmButton %>',
+        timer: '<%= timer %>'
+      }).then(() => {
+        window.location = '/<%= ruta %>'
+      })
+    </script>
+    <% } %>
+
+      <script>
+
+        $("#Actualizar").click(() => {
+          swal({
+            title: "¿Todo Listo?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+            .then((go) => {
+              if (go) {
+                $("#Submit_Actualizar").click()
+              }
+            });
+        })
+
+        $("#Reiniciar").click(() => {
+          swal({
+            title: "¿Desea reiniciar el cupo diario?",
+            text: "Tenga en cuenta que el cupo diario tomará el valor del cupo base.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+            .then((go) => {
+              if (go) {
+                $("#Submit_Reiniciar").click()
+              }
+            });
+        })
+
+        $(document).ready(function () {
+          Tours()
+          ToursRH()
+          var fecha = new Date();
+          var dia = String(fecha.getDate()).padStart(2, '0');
+          var mes = String(fecha.getMonth() + 1).padStart(2, '0');
+          var año = fecha.getFullYear();
+          var FechaMin = año + '-' + mes + '-' + dia
+
+        });
+
+        $('#fecha').change(function () {
+          Tours()
+          ToursRH()
+        })
+
+        Tours = () => {
+          fetch('/Index/Tours').then((response) => {
+            return response.json();
+          }).then((responseData) => {
+            for (var i = 0; i < responseData.length; i++) {
+              var Fecha;
+              var Input_Fecha = $('#fecha').val();
+              var Ft = new Date();
+              var FD = new Date(Ft.setDate(Ft.getDate() + 1));
+              var dia = String(FD.getDate()).padStart(2, '0');
+              var mes = String(Ft.getMonth() + 1).padStart(2, '0');
+              var año = Ft.getFullYear();
+              var Fecha_Mañana = año + '-' + mes + '-' + dia;
+              if (Input_Fecha == '') {
+                Fecha = Fecha_Mañana;
+                $('#Cupos' + responseData[i].Id_Tour + '').text(responseData[i].CupoDia)
+                $('#C' + responseData[i].Id_Tour + '').val(responseData[i].CupoDia)
+              } else if (Fecha_Mañana == Input_Fecha) {
+                Fecha = Input_Fecha;
+                $('#Cupos' + responseData[i].Id_Tour + '').text(responseData[i].CupoDia)
+                $('#C' + responseData[i].Id_Tour + '').val(responseData[i].CupoDia)
+              } else {
+                Fecha = Input_Fecha;
+                $('#Cupos' + responseData[i].Id_Tour + '').text(responseData[i].CupoBase)
+                $('#C' + responseData[i].Id_Tour + '').val(responseData[i].CupoBase)
+              }
+              cupos(responseData[i].Id_Tour, Fecha)
+            }
+          })
+        }
+
+        ToursRH = () => {
+          fetch('/Index/ToursRH').then((response) => {
+            return response.json();
+          }).then((responseData) => {
+            for (var i = 0; i < responseData.length; i++) {
+              var Fecha;
+              var Input_Fecha = $('#fecha').val();
+              var Ft = new Date();
+              var FD = new Date(Ft.setDate(Ft.getDate() + 1));
+              var dia = String(FD.getDate()).padStart(2, '0');
+              var mes = String(Ft.getMonth() + 1).padStart(2, '0');
+              var año = Ft.getFullYear();
+              var Fecha_Mañana = año + '-' + mes + '-' + dia;
+              if (Input_Fecha == '') {
+                Fecha = Fecha_Mañana;
+                $('#Cupos' + responseData[i].Id_Tour + '').text(responseData[i].CupoDia)
+                $('#C' + responseData[i].Id_Tour + '').val(responseData[i].CupoDia)
+              } else if (Fecha_Mañana == Input_Fecha) {
+                Fecha = Input_Fecha;
+                $('#Cupos' + responseData[i].Id_Tour + '').text(responseData[i].CupoDia)
+                $('#C' + responseData[i].Id_Tour + '').val(responseData[i].CupoDia)
+              } else {
+                Fecha = Input_Fecha;
+                $('#Cupos' + responseData[i].Id_Tour + '').text(responseData[i].CupoBase)
+                $('#C' + responseData[i].Id_Tour + '').val(responseData[i].CupoBase)
+              }
+              cuposRH(responseData[0].Id_Tour, Fecha)
+              pasajerosRio(Fecha)
+              pasajerosHacienda(Fecha)
+              transfer(Fecha)
+              transferAeropuerto(Fecha)
+              transferHotel(Fecha)
+              privados(Fecha)
+            }
+          })
+
+
+        }
+
+        cupos = (Id_Tour, Fecha) => {
+          var id = Id_Tour;
+          fetch('/Index/Cupos?Id_Tour=' + Id_Tour + '&Fecha=' + Fecha + '').then((res) => {
+            return res.json();
+          }).then((resData) => {
+            var Total = resData[0].Total;
+            if (Total == null) {
+              Total = 0;
+            }
+            $('#Pasajeros' + id + '').text(Total);
+            $('#Pas' + id + '').val(Total);
+          }).then(() => {
+            NumPas = $('#Pas' + id + '').val();
+            Cupos = $('#C' + id + '').val();
+
+            var porcentaje = NumPas * 100 / Cupos;
+
+            if (NumPas == Cupos) {
+              color = "#ff5370";
+            } else if (NumPas >= Cupos - 10) {
+              color = "#fffc53";
+            } else {
+              color = "#89ff53"
+            }
+            $('#bar-Progress' + id + '').width(porcentaje + '%')
+            $('#bar-Progress' + id + '').css('background-color', color)
+
+          })
+        }
+
+        cuposRH = (Id_Tour, Fecha) => {
+          var id = Id_Tour;
+          fetch('/Index/CuposRH?Fecha=' + Fecha + '').then((res) => {
+            return res.json();
+          }).then((resData) => {
+            var Total = resData[0].Total;
+            if (Total == null) {
+              Total = 0;
+            }
+            $('#Pasajeros' + id + '').text(Total);
+            $('#Pas' + id + '').val(Total);
+          }).then(() => {
+            NumPas = $('#Pas' + id + '').val();
+            Cupos = $('#C' + id + '').val();
+
+            var porcentaje = NumPas * 100 / Cupos;
+
+            if (NumPas == Cupos) {
+              color = "#ff5370";
+            } else if (NumPas >= Cupos - 10) {
+              color = "#fffc53";
+            } else {
+              color = "#89ff53"
+            }
+            $('#bar-Progress' + id + '').width(porcentaje + '%')
+            $('#bar-Progress' + id + '').css('background-color', color)
+
+          })
+        }
+
+        pasajerosRio = (Fecha) => {
+          fetch('/Index/PasajerosRio?Fecha=' + Fecha + '').then((response) => {
+            return response.json();
+          }).then((Data) => {
+            var Pasajeros = 0;
+            if (Data[0].Pasajeros != null) {
+              Pasajeros = Data[0].Pasajeros;
+            }
+            $('#PasajerosRio').text(Pasajeros)
+          })
+        }
+
+        pasajerosHacienda = (Fecha) => {
+          fetch('/Index/PasajerosHacienda?Fecha=' + Fecha + '').then((response) => {
+            return response.json();
+          }).then((Data) => {
+            var Pasajeros = 0;
+            if (Data[0].Pasajeros != null) {
+              Pasajeros = Data[0].Pasajeros;
+            }
+            $('#PasajerosHacienda').text(Pasajeros)
+          })
+        }
+
+        privados = (Fecha) => {
+          fetch('/Index/Privados?Fecha=' + Fecha + '').then((res) => {
+            return res.json();
+          }).then((Data) => {
+            var Privados = 0;
+            if (Data[0].Privados != null) {
+              Privados = Data[0].Privados;
+            }
+            $('#Privados').text(Privados)
+          })
+        }
+
+        transfer = (Fecha) => {
+          fetch('/Index/Transfer?Fecha=' + Fecha + '').then((res) => {
+            return res.json();
+          }).then((Data) => {
+            var Transfer = 0;
+            if (Data[0].Transfer != null) {
+              Transfer = Data[0].Transfer;
+            }
+            $('#Transfer').text(Transfer)
+          })
+        }
+
+        transferAeropuerto = (Fecha) => {
+          fetch('/Index/TransferAeropuerto?Fecha=' + Fecha + '').then((response) => {
+            return response.json();
+          }).then((Data) => {
+            var Transfer = 0;
+            if (Data[0].Transfer != null) {
+              Transfer = Data[0].Transfer;
+            }
+            $('#TransferAeropuerto').text(Transfer)
+          })
+        }
+
+        transferHotel = (Fecha) => {
+          fetch('/Index/TransferHotel?Fecha=' + Fecha + '').then((response) => {
+            return response.json();
+          }).then((Data) => {
+            var Transfer = 0;
+            if (Data[0].Transfer != null) {
+              Transfer = Data[0].Transfer;
+            }
+            $('#TransferHotel').text(Transfer)
+          })
+        }
+
+
+
+      </script>
+
+</body>
+
 </html>

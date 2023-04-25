@@ -273,6 +273,23 @@
             z-index: 2 !important;
         }
 
+        .search-container {
+            position: relative;
+        }
+
+        .search-container .search {
+            top: 45px;
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        #search::after {
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
         #search::before {
             display: block;
             position: absolute;
@@ -310,12 +327,59 @@
             background: #2a2f3a;
             color: #fff;
         }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #2a2f3a;
+            margin: 15% auto;
+            padding: 20px;
+            border: none;
+            width: 40%;
+        }
+
+        .modal-header h2 {
+            margin-top: 0;
+        }
+
+        .modal-body input {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .modal-footer {
+            text-align: right;
+        }
+
+        .modal-footer button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-footer button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 
 <body>
     <main class="content">
-
         <div class="container-fluid p-0">
             <div class="container">
                 <div class="card">
@@ -330,157 +394,216 @@
                     </div>
                     <div class="card-body">
                         <form action="/NuevaReserva" method="POST" autocomplete="OFF">
-                            <input type="text" name="Id_Reserva" id="Id_Reserva">
-                            <input type="hidden" name="id_user" id="" value="<%=user.id_user %>">
+                            <input type="hidden" name="Id_Reserva" id="Id_Reserva">
 
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <label class="fw-bold">Numero de Pasajeros:</label>
-                                    <input class="dropdown" type="checkbox" id="dropdown" name="dropdown" />
-                                    <label class="for-dropdown" for="dropdown" id="numpas">0</label>
-                                    <input type="hidden" name="input_numpas" id="input_numpas">
-                                    <input type="hidden" name="total_pas" id="total_pas">
-                                    <div class="section-dropdown">
-                                        <div class="form-group">
-                                            <input type="text" name="adultos" class="form-styleCount"
-                                                placeholder="Adultos" id="adultos" onkeyup="total(); CallCupos();"
-                                                autocomplete="off">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" name="niños" class="form-styleCount" placeholder="Niños"
-                                                id="niños" onkeyup="total(); CallCupos();" autocomplete="off">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" name="infantes" class="form-styleCount"
-                                                placeholder="Infantes" id="infantes" onkeyup="total(); CallCupos();"
-                                                autocomplete="off">
+                            <% if (typeof user !="undefined" ){ %>
+                                <input type="hidden" name="id_user" id="" value="<%=user.id_user %>">
+                                <% } %>
+
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="fw-bold">Tipo de reserva</label>
+                                            <select class="form-style mayusculas  mayusculas " name="TipoReserva"
+                                                id="TipoReserva">
+                                                <option value="Grupal" selected>Grupal</option>
+                                                <option value="Privada">Privada</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <label class="fw-bold">Elige el tour</label>
-                                    <select class="form-style" name="SelectTour" id="SelectTour">
-                                        <option selected disabled>Seleccionar</option>
-                                        <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{ %>
-                                            <option value="<%= Tours.Id_Tour %>">
-                                                <%= Tours.NombreTour %>
-                                            </option>
-                                            <% }) } %>
-                                    </select>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <label class="fw-bold">Numero de Pasajeros <span
+                                                    style="color: red">*</span></label>
+                                            <input class="dropdown" type="checkbox" id="dropdown" name="dropdown" />
+                                            <label class="for-dropdown" for="dropdown" id="numpas">0</label>
+                                            <input type="hidden" name="input_numpas" id="input_numpas">
+                                            <input type="hidden" name="total_pas" id="total_pas">
+                                            <div class="section-dropdown">
+                                                <div class="form-group">
+                                                    <input type="text" name="adultos"
+                                                        class="form-styleCount mayusculas " placeholder="Adultos"
+                                                        id="adultos" onkeyup="total(); CallCupos();" autocomplete="off">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" name="niños" class="form-styleCount mayusculas "
+                                                        placeholder="Niños" id="niños" onkeyup="total(); CallCupos();"
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" name="infantes"
+                                                        class="form-styleCount mayusculas " placeholder="Infantes"
+                                                        id="infantes" onkeyup="total(); CallCupos();"
+                                                        autocomplete="off">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label class="fw-bold">Elige el tour <span
+                                                    style="color: red">*</span></label>
+                                            <select class="form-style mayusculas " name="SelectTour" id="SelectTour"
+                                                required>
+                                                <option selected disabled>Seleccionar</option>
+                                                <% if (typeof resultsTours !="undefined" ){
+                                                    resultsTours.forEach((Tours)=>{ %>
+                                                    <option value="<%= Tours.Id_Tour %>">
+                                                        <%= Tours.NombreTour %>
+                                                    </option>
+                                                    <% }) } %>
+                                            </select>
 
-                                </div>
-                                <div class="col-lg-3" id="punto">
-                                    <label class="fw-bold">Punto de encuentro</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-style" placeholder="" id="NombrePunto"
-                                            name="NombrePunto">
-                                        <div id="search">
-                                            <span id="search_result"></span>
+                                        </div>
+                                        <div class="col-lg-3" id="punto">
+                                            <label class="fw-bold">Puntos de encuentro <span
+                                                    style="color: red">*</span></label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-style mayusculas " placeholder=""
+                                                    id="NombrePunto" name="NombrePunto" required>
+                                            </div>
+                                        </div>
+                                        <div id="modal" class="modal" tabindex="-1" role="dialog"
+                                            data-backdrop="static">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2>Puntos de encuetro</h2>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="search-container">
+                                                        <input type="text" class="form-style"
+                                                            placeholder="Punto de encuentro principal" id="Punto_1">
+                                                        <div class="search">
+                                                            <span id="search_result_Punto_1"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="search-container">
+                                                        <input type="text" class="form-style"
+                                                            placeholder="Punto de encuentro 2" id="Punto_2">
+                                                        <div class="search">
+                                                            <span id="search_result_Punto_2"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="search-container">
+                                                        <input type="text" class="form-style"
+                                                            placeholder="Punto de encuentro 3" id="Punto_3">
+                                                        <div class="search">
+                                                            <span id="search_result_Punto_3"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" id="modal-btn-agregar">Listo</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label class="fw-bold">Elige la fecha<span
+                                                    style="color: red">*</span></label>
+                                            <input type="date" class="form-style mayusculas " name="FechaReserva"
+                                                id="FechaReserva" onchange="CallCupos();" required />
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <label class="fw-bold">Elige la fecha<span style="color: red">*</span></label>
-                                    <input type="date" class="form-style" name="FechaReserva" id="FechaReserva"
-                                        onchange="CallCupos();" required />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-3">
-                                    <label class="fw-bold"># Tel. Reserva<span style="color: red">*</span></label>
-                                    <input type="text" class="form-style" name="TelefonoReserva" id="TelefonoReserva"
-                                        required />
-                                </div>
-                                <div class="col-lg-2">
-                                    <label class="fw-bold">Idioma</label>
-                                    <select class="form-style" name="IdiomaReserva">
-                                        <option value="Español">Español</option>
-                                        <option value="Inglés">Inglés</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-2">
-                                    <label class="fw-bold">Categoría</label>
-                                    <select class="selectpicker form-style" title="Seleccionar" name="Categoria"
-                                        id="ReportaReserva">
-                                        <% if(typeof resultsCategoria !="undefined" ){
-                                            resultsCategoria.forEach((Categoria)=>{ %>
-                                            <option value="<%= Categoria.Id_Categoria %>">
-                                                <%= Categoria.Categoria %>
-                                            </option>
-                                            <% }) }%>
-                                    </select>
-                                </div>
-                                <div class="col-lg-2">
-                                    <label class="fw-bold">¿Quién Reporta?</label>
-                                    <input type="text" class="form-style" name="NombreReporta" placeholder="Nombre" />
-                                </div>
-                                <div class="col-lg-2">
-                                    <label class="fw-bold">Hora recogida</label>
-                                    <input type="text" class="form-style" name="HoraSalida" id="HoraSalida" />
-                                </div>
-                                <div class="col-lg-1">
-                                    <label class="fw-bold">Ruta</label>
-                                    <input type="text" class="form-style" name="Ruta" id="Ruta" />
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <label class="fw-bold">Observaciones</label>
-                                <div class="form-floating">
-                                    <textarea type="text" class="form-style" name="Observaciones"
-                                        style="height: 100px"></textarea>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="input-group">
-                                <h3 class="mb-0">
-                                    <strong>Datos de los pasajeros</strong> &nbsp;
-                                </h3>
-                            </div>
-                            <br />
-                            <div>
-                                <h3>Adultos</h3>
-                                <div id="div_adultos">
-                                </div>
-                                <br>
-                                <div class="">
-                                    <button type="button" class="icon-btn add-btn plus" id="Agregar_Adulto">
-                                        <div class="add-icon"></div>
-                                        <div class="btn-txt">Agregar</div>
-                                    </button>
-                                </div>
-                                <hr>
-                            </div>
-                            <div>
-                                <h3>Niños</h3>
-                                <div id="div_niños">
-                                </div>
-                                <br>
-                                <div class="">
-                                    <button type="button" class="icon-btn add-btn plus" id="Agregar_Niños">
-                                        <div class="add-icon"></div>
-                                        <div class="btn-txt">Agregar</div>
-                                    </button>
-                                </div>
-                                <hr>
-                            </div>
-                            <div>
-                                <h3>Infantes</h3>
-                                <div id="div_infantes">
-                                </div>
-                                <br>
-                                <div class="">
-                                    <button type="button" class="icon-btn add-btn plus" id="Agregar_Infantes">
-                                        <div class="add-icon"></div>
-                                        <div class="btn-txt">Agregar</div>
-                                    </button>
-                                </div>
-                                <hr>
-                            </div>
-                            <div class=" d-flex align-items-center justify-content-end ">
-                                <button type="button" class="btn btn-primary btn-lg" id="save-btn">Guardar</button>
-                            </div>
-                            <input type="submit" value="" id="Submit">
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <label class="fw-bold"># Tel. Reserva<span
+                                                    style="color: red">*</span></label>
+                                            <input type="text" class="form-style mayusculas " name="TelefonoReserva"
+                                                id="TelefonoReserva" required />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="fw-bold">Idioma</label>
+                                            <select class="form-style mayusculas " name="IdiomaReserva">
+                                                <option value="Español">Español</option>
+                                                <option value="Inglés">Inglés</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="fw-bold">Categoría</label>
+                                            <select class="selectpicker form-style" title="Seleccionar" name="Categoria"
+                                                id="ReportaReserva">
+                                                <% if(typeof resultsCategoria !="undefined" ){
+                                                    resultsCategoria.forEach((Categoria)=>{ %>
+                                                    <option value="<%= Categoria.Id_Categoria %>">
+                                                        <%= Categoria.Categoria %>
+                                                    </option>
+                                                    <% }) }%>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="fw-bold">¿Quién Reporta?</label>
+                                            <input type="text" class="form-style mayusculas " name="NombreReporta"
+                                                placeholder="Nombre" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="fw-bold">Hora recogida</label>
+                                            <input type="text" class="form-style mayusculas " name="HoraSalida"
+                                                id="HoraSalida" />
+                                        </div>
+                                        <div class="col-lg-1">
+                                            <label class="fw-bold">Ruta</label>
+                                            <input type="text" class="form-style mayusculas " name="Ruta" id="Ruta" />
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <label class="fw-bold">Observaciones</label>
+                                        <div class="form-floating">
+                                            <textarea type="text" class="form-style mayusculas " name="Observaciones"
+                                                style="height: 100px"></textarea></textarea>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="input-group">
+                                        <h3 class="mb-0">
+                                            <strong>Datos de los pasajeros</strong> &nbsp;
+                                        </h3>
+                                    </div>
+                                    <br />
+                                    <div>
+                                        <h3>Adultos</h3>
+                                        <div id="div_adultos">
+                                        </div>
+                                        <br>
+                                        <div class="">
+                                            <button type="button" class="icon-btn add-btn plus" id="Agregar_Adulto">
+                                                <div class="add-icon"></div>
+                                                <div class="btn-txt">Agregar</div>
+                                            </button>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    <div>
+                                        <h3>Niños</h3>
+                                        <div id="div_niños">
+                                        </div>
+                                        <br>
+                                        <div class="">
+                                            <button type="button" class="icon-btn add-btn plus" id="Agregar_Niños">
+                                                <div class="add-icon"></div>
+                                                <div class="btn-txt">Agregar</div>
+                                            </button>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    <div>
+                                        <h3>Infantes</h3>
+                                        <div id="div_infantes">
+                                        </div>
+                                        <br>
+                                        <div class="">
+                                            <button type="button" class="icon-btn add-btn plus" id="Agregar_Infantes">
+                                                <div class="add-icon"></div>
+                                                <div class="btn-txt">Agregar</div>
+                                            </button>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-end">
+                                        <button type="button" class="btn btn-primary btn-lg"
+                                            id="save-btn">Guardar</button>
+                                    </div>
+                                    <input type="submit" value="" id="Submit">
                         </form>
                     </div>
                 </div>
@@ -504,7 +627,49 @@
 
             <script>
 
+                const inputPrincipal = document.getElementById("NombrePunto");
+                const modal = document.getElementById("modal");
+                const modalInputs = document.querySelectorAll("#modal input");
+                const modalBtnAgregar = document.getElementById("modal-btn-agregar");
+                var Select = document.getElementById("SelectTour");
+                var Punto_1 = document.getElementById("Punto_1");
 
+
+                // Función para abrir el modal
+                function openModal() {
+                    modal.style.display = "block";
+                    if (modalInputs[0].value == "") {
+                        modalInputs[0].focus();
+                    }
+                }
+
+                // Función para cerrar el modal y actualizar el input principal
+                function closeModal() {
+                    let datos = [];
+                    modalInputs.forEach((input) => {
+                        datos.push(input.value.trim());
+                    });
+                    let filteredDatos = datos.filter((dato) => dato !== ""); // Elimina valores vacíos
+                    if (filteredDatos.length > 1) {
+                        inputPrincipal.value = filteredDatos.join(", ");
+                    } else {
+                        inputPrincipal.value = filteredDatos[0] || ""; // Asigna el primer valor o un string vacío si no hay valores
+                    }
+                    modal.style.display = "none";
+                }
+
+                // Evento para abrir el modal al hacer focus en el input principal
+                inputPrincipal.addEventListener("focus", openModal);
+
+                // Evento para cerrar el modal al presionar el botón "Agregar" y actualizar el input principal
+                modalBtnAgregar.addEventListener("click", closeModal);
+
+                // Evento para cerrar el modal al presionar la tecla "Enter" y actualizar el input principal
+                modal.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        closeModal();
+                    }
+                });
 
                 $("#save-btn").click(() => {
                     swal({
@@ -524,7 +689,7 @@
                     var val = $(this).val();
                     var innerhtml = '';
                     for (var i = 0; i < val; i++) {
-                        innerhtml += "<div class='row lista-producto' id='cont_adultos'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style IdPas' id='IdPas' onkeyup='CheckPasajeros();'/></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioAdulto'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeAdulto'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Adulto'></div><br /></div></div>";
+                        innerhtml += "<div class='row lista-producto' id='cont_adultos'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas  mayusculas IdPas' id='IdPas' onkeyup='CheckPasajeros();'/></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioAdulto'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeAdulto'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Adulto'></div><br /></div></div>";
                     }
                     var dis = $('#div_adultos');
                     dis.html(innerhtml);
@@ -533,7 +698,7 @@
                     var val = $(this).val();
                     var innerhtml = '';
                     for (var i = 0; i < val; i++) {
-                        innerhtml += "<div class='row lista-producto1' id='cont_niños'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='NomPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioNiño'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNiño'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Niño'></div><br /></div></div>";
+                        innerhtml += "<div class='row lista-producto1' id='cont_niños'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioNiño'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNiño'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Niño'></div><br /></div></div>";
                     }
                     var dis = $('#div_niños');
                     dis.html(innerhtml);
@@ -542,7 +707,7 @@
                     var val = $(this).val();
                     var innerhtml = '';
                     for (var i = 0; i < val; i++) {
-                        innerhtml += "<div class='row lista-producto2' id='cont_infantes'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='NomPas[]' class='form-style' /></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' /></div> <input type='hidden' name='Telefono[]' class='form-style' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioInfante'></div><input type='hidden' name='Comision[]' class='form-style' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeInfante'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Infante'></div><br /></div></div>";
+                        innerhtml += "<div class='row lista-producto2' id='cont_infantes'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div> <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioInfante'></div><input type='hidden' name='Comision[]' class='form-style mayusculas ' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeInfante'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Infante'></div><br /></div></div>";
                     }
                     var dis = $('#div_infantes');
                     dis.html(innerhtml);
@@ -550,12 +715,47 @@
 
                 //---------------------------------------------------------------- JSON --------------------------------------------------------
 
-                load_data = (query = '', Id_Tour) => {
-                    fetch('/autocompletar?search_query=' + query + '&Id_Tour=' + Id_Tour + '').then((response) => {
+                const inputs = document.querySelectorAll("input[id^='Punto']");
+                const searchResults = document.querySelectorAll("span[id^='search_result_Punto']");
+
+                inputs.forEach((input, index) => {
+                    input.addEventListener("focus", () => {
+                        const search = searchResults[index];
+                        search.style.display = "block";
+                    });
+
+                    input.addEventListener("blur", () => {
+                        const search = searchResults[index];
+                        setTimeout(() => {
+                            search.style.display = "none";
+                        }, 200); // Agregamos un pequeño retardo para asegurarnos de que no se borre inmediatamente el spam
+                    });
+                });
+
+                modalInputs.forEach((input) => {
+                    input.addEventListener('keyup', () => {
+                        const query = input.value.trim();
+                        const id = input.id;
+                        var Id_Tour = Select.value;
+                        load_data(query, Id_Tour, id);
+                    });
+                });
+
+                modalInputs.forEach((input) => {
+                    input.addEventListener('focus', () => {
+                        const query = input.value.trim();
+                        const id = input.id;
+                        var Id_Tour = Select.value;
+                        load_data(query, Id_Tour, id);
+                    });
+                });
+
+                load_data = (query = '', Id_Tour, idInput) => {
+                    fetch('/autocompletar?search_query=' + query + '&Id_Tour=' + Id_Tour + '').then(function (response) {
 
                         return response.json();
 
-                    }).then((responseData) => {
+                    }).then(function (responseData) {
 
                         var html = '<ul class="list-group">';
 
@@ -563,21 +763,20 @@
                             for (var count = 0; count < responseData.length; count++) {
                                 var regular_expression = new RegExp('(' + query + ')', 'gi');
 
-                                html += '<a class="list-group-item list-group-item-action list-group-color" onclick="get_text(this)">' + responseData[count].NombrePunto.replace(regular_expression, '<span class="text-primary fw-bold">$1</span>') + '</a>';
+                                html += '<a class="list-group-item list-group-item-action list-group-color" onclick="get_text(this, \'' + idInput + '\'); call_Load_HR()">' + responseData[count].NombrePunto.replace(regular_expression, '<span class="text-primary fw-bold">$1</span>') + '</a>';
                             }
                         }
                         else {
                             html += '<a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>';
-                            html += '<a href="#" class="list-group-item list-group-item-action list-group-create-color">Crear nuevo punto</a>';
+                            html += '<a href="../../Puntos/NuevoPunto" class="list-group-item list-group-item-action list-group-create-color">Crear nuevo punto</a>';
                         }
 
                         html += '</ul>';
 
-                        document.getElementById('search_result').innerHTML = html;
+                        document.getElementById('search_result_' + idInput + '').innerHTML = html;
 
                     });
                 }
-
 
                 load_HR = (Id_Tour, Punto) => {
                     fetch('/HoraRuta?Id_Tour=' + Id_Tour + '&Punto=' + Punto + '').then((response) => {
@@ -633,7 +832,7 @@
                                 $("#save-btn").attr("disabled", true);
                                 swal({
                                     title: "Error",
-                                    text: "No tenemos suficientes cupos para la fa fecha "+FechaReserva+"... ¿Desea revisas los cupos disponibles? ",
+                                    text: "No tenemos suficientes cupos para la fa fecha " + FechaReserva + "... ¿Desea revisar los cupos disponibles? ",
                                     icon: "error",
                                     buttons: true,
                                     dangerMode: true,
@@ -643,7 +842,7 @@
                                             window.location = "/";
                                         }
                                     });
-                            }else{
+                            } else {
                                 $("#save-btn").removeAttr("disabled");
                             }
                         })
@@ -653,49 +852,28 @@
 
                 //---------------------------------------------------------------------------------------------------------------
 
-                var search_element = document.getElementById("NombrePunto");
-                var Select = document.getElementById("SelectTour");
-
-                search_element.onkeyup = () => {
-
-                    var query = search_element.value;
-                    var Id_Tour = Select.value;
-                    load_data(query, Id_Tour);
-
-                };
-
-                search_element.onfocus = () => {
-
-                    var query = search_element.value;
-                    var Id_Tour = Select.value;
-                    load_data(query, Id_Tour);
-
-                    // console.log(Id_Tour)
-
-                };
-
-                Select.onchange = () => {
-                    var Id_Tour = Select.value;
-                    if (search_element.value == "") {
-                        var query = search_element.value;
-                        load_data(query, Id_Tour);
+                Select.onchange = function () {
+                    if (inputPrincipal.value == "") {
+                        openModal();
                     } else {
-                        var Punto = document.getElementById('NombrePunto').value;
+                        var Id_Tour = Select.value;
+                        var Punto = Punto_1.value;
                         load_HR(Id_Tour, Punto);
                     }
-                    Id_Reserva(Id_Tour);
-                    CallCupos();
+                    callCupos()
                 };
 
-                get_text = (event) => {
-                    var Punto_Name = event.textContent;
-
-                    document.getElementById('NombrePunto').value = Punto_Name;
-                    document.getElementById('search_result').innerHTML = '';
-
+                call_Load_HR = () => {
+                    var Punto_name = document.getElementById('Punto_1').value;
                     var Id_Tour = Select.value;
-                    var Punto = Punto_Name;
+                    var Punto = Punto_name;
                     load_HR(Id_Tour, Punto);
+                }
+                function get_text(event, inputId) {
+                    var Punto_name = event.textContent;
+
+                    document.getElementById(inputId).value = Punto_name;
+                    document.getElementById('search_result_' + inputId).innerHTML = '';
                 }
 
                 CallCupos = () => {
@@ -703,11 +881,14 @@
                     var FechaReserva = $('#FechaReserva').val();
                     var Cupos = "CupoBase";
 
+
+
                     var fecha = new Date();
+                    var FechaDia = new Date(fecha.setDate(fecha.getDate() + 1));
                     var diaActual = String(fecha.getDate()).padStart(2, '0');
                     var mesActual = String(fecha.getMonth() + 1).padStart(2, '0');
 
-                    var diaTomorrow = String(fecha.getDate() + 1).padStart(2, '0');
+                    var diaTomorrow = String(FechaDia.getDate()).padStart(2, '0');
                     var mesTomorrow = String(fecha.getMonth() + 1).padStart(2, '0');
 
                     var año = fecha.getFullYear();
@@ -728,58 +909,6 @@
                     }
 
                 }
-
-
-
-                // numpas = () => {
-                //     var cont = document.getElementById("adultos").value;
-                //     var cont1 = document.getElementById("niños").value;
-                //     var numpas = document.getElementById("numpas");
-                //     var input_numpas = document.getElementById("input_numpas");
-
-
-                //     if (cont == "") {
-                //         cont = 0;
-                //     }
-                //     if (cont1 == "") {
-                //         cont1 = 0;
-                //     }
-
-                //     var num = parseInt(cont) + parseInt(cont1);
-                //     numpas.innerText = num;
-                //     input_numpas.value = num;
-                // }
-
-
-                // change = () => {
-                //     var adultos = document.getElementById("adultos");
-                //     adultos.value = 2;
-                // }
-
-                // numpas = () => {
-                //     var adultos = document.getElementById("adultos").value;
-                //     var niños = document.getElementById("niños").value;
-                //     var infantes = document.getElementById("infantes").value;
-                //     var numpas = document.getElementById("numpas");
-                //     var input_numpas = document.getElementById("input_numpas");
-                //     var total_pas = document.getElementById("total_pas");
-
-                //     if (adultos == "") {
-                //         adultos = 0;
-                //     }
-                //     if (niños == "") {
-                //         niños = 0;
-                //     }
-                //     if (infantes == "") {
-                //         infantes = 0;
-                //     }
-
-                //     var num = parseInt(adultos) + parseInt(niños);
-                //     var total = parseInt(adultos) + parseInt(niños) + parseInt(infantes);
-                //     numpas.innerText = num;
-                //     input_numpas.value = num;
-                //     total_pas.value = total;
-                // }
 
                 total = () => {
                     var adultos = $("#adultos").val();
@@ -813,7 +942,7 @@
                     }
                     var num = parseInt(val) + 1;
                     var innerhtml = '';
-                    innerhtml += "<div class='row lista-producto' id='cont_adultos'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioAdulto'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeAdulto'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Adulto'></div><br /></div></div>";
+                    innerhtml += "<div class='row lista-producto' id='cont_adultos'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioAdulto'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeAdulto'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Adulto'></div><br /></div></div>";
 
                     var dis = $('#div_adultos');
                     dis.append(innerhtml);
@@ -832,7 +961,7 @@
                     }
                     var num = parseInt(val) + 1;
                     var innerhtml = '';
-                    innerhtml += "<div class='row lista-producto1' id='cont_niños'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='NomPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioNiño'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNiño'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Niño'></div><br /></div></div>";
+                    innerhtml += "<div class='row lista-producto1' id='cont_niños'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioNiño'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNiño'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Niño'></div><br /></div></div>";
 
                     var dis = $('#div_niños');
                     dis.append(innerhtml);
@@ -852,7 +981,7 @@
                     var num = parseInt(val) + 1;
                     var innerhtml = '';
 
-                    innerhtml += "<div class='row lista-producto2' id='cont_infantes'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='NomPas[]' class='form-style' /></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' /></div> <input type='hidden' name='Telefono[]' class='form-style' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioInfante'></div><input type='hidden' name='Comision[]' class='form-style' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeInfante'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Infante'></div><br /></div></div>";
+                    innerhtml += "<div class='row lista-producto2' id='cont_infantes'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div> <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioInfante'></div><input type='hidden' name='Comision[]' class='form-style mayusculas ' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeInfante'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Infante'></div><br /></div></div>";
 
                     var dis = $('#div_infantes');
                     dis.append(innerhtml);
@@ -906,6 +1035,14 @@
                 var FechaMin = año + '-' + mes + '-' + dia
 
                 $("#FechaReserva").attr('min', FechaMin);
+
+                $(document).ready(function () {
+                    $("form").keypress(function (e) {
+                        if (e.which == 13) {
+                            return false;
+                        }
+                    });
+                });
             </script>
 </body>
 

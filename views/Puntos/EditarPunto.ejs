@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Editar Punto</title>
+    <link rel="stylesheet" href="../../resources/css/layout.css">
+    <link rel="shortcut icon" href="../../resources/img/SIR.png" />
+
+</head>
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="container">
+            <button class="back-button" onclick="window.location.href = '../../Puntos/VerPuntos'">&larr; Volver</button>
+            <div class="card">
+                <% if (typeof Punto !="undefined" ) { %>
+                    <form action="/EditarPunto" method="post" autocomplete="OFF">
+                        <div class="card-header">
+                            <div class="input-group">
+                                <h3 class="mb-0"><strong>Nuevo punto de encuentro:</strong></h3>
+                            </div>
+                            <input type="hidden" name="Id_Punto" id="Id_Punto" value="<%= Punto.Id_Punto %>">
+                            <span style="font-size:12px">Los campos con <span class="text-danger">*</span> son
+                                obligatorios.</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="" class="FormNewTour">Nombre<span class="text-danger">*</span></label>
+                                    <input type="text" name="NombrePunto" id="NombrePunto"
+                                        class="form-style mayusculas " value="<%= Punto.NombrePunto %>"
+                                        required="required">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Sector" class="">Sector</label>
+                                    <input type="text" name="Sector" id="Sector" class="form-style mayusculas "
+                                        value="<%= Punto.Sector %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Ruta" class="">Ruta</label>
+                                    <input type="text" name="Ruta" id="Ruta" class="form-style mayusculas "
+                                        value="<%= Punto.Ruta %>">
+                                </div>
+                            </div>
+                            <br><br>
+                            <div>
+                                <h3 class="mb-0"><strong>Datos de Ubicación</strong> &nbsp;</h3>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="Ruta" class="FormNewTour">Latitud</label>
+                                    <input type="text" name="Latitud" id="Latitud" placeholder="Latitud"
+                                        class="form-style mayusculas " value="<%= Punto.Latitud %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="Ruta" class="FormNewTour">Longitud</label>
+                                    <input type="text" name="Longitud" id="Longitud" placeholder="Longitud"
+                                        class="form-style mayusculas " value="<%= Punto.Longitud %>">
+                                </div>
+                            </div>
+                            <br><br>
+                            <div>
+                                <h3 class="mb-0"><strong>Horarios y Rutas</strong> &nbsp;</h3>
+                            </div>
+                            <br>
+                            <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{ %>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input type="hidden" value="<%= Tours.Id_Tour %>" name="Id_Tour[]">
+                                        <input type="text" value="<%= Tours.NombreTour %>" id="NombreTour"
+                                            class="form-style mayusculas " disabled>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-style mayusculas "
+                                                placeholder="Hora de Salida" aria-label="Salida" name="HoraSalida[]"
+                                                id="Salida<%= Tours.Id_Tour %>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-style mayusculas "
+                                                placeholder="Hora de Llegada" aria-label="Llegada" name="HoraLlegada[]"
+                                                id="Llegada<%= Tours.Id_Tour %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    $(document).ready(() => {
+                                        var Id_Punto = $("#Id_Punto").val();
+                                        var Id_Tour = "<%= Tours.Id_Tour %>"
+                                        fetch('/EditarPunto/Horarios?Id_Punto=' + Id_Punto + '&Id_Tour=' + Id_Tour + '').then(function (response) {
+                                            return response.json();
+                                        }).then((responseData) => {
+                                            if (responseData.length > 0) {
+                                                $("#Salida<%= Tours.Id_Tour %>").val(responseData[0].HoraSalida)
+                                                $("#Llegada<%= Tours.Id_Tour %>").val(responseData[0].HoraLlegada)
+                                            }
+                                        });
+                                    })
+                                </script>
+                                <% }) } %>
+                                    <div class="d-flex align-items-center justify-content-end">
+                                        <button type="button" class="btn btn-primary btn-lg"
+                                            id="save-btn">Guardar</button>
+                                    </div>
+                                    <input type="submit" value="" id="Submit">
+                        </div>
+                    </form>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+
+<% if(typeof alert !="undefined" ){ %>
+    <script>
+        swal({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: '<%= showConfirmButton %>',
+            timer: '<%= timer %>'
+        }).then(() => {
+            window.location = '/<%= ruta %>'
+        })
+    </script>
+    <% } %>
+
+        <script>
+
+            $("#save-btn").click(() => {
+                swal({
+                    title: "¿Todo Listo?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((go) => {
+                        if (go) {
+                            $("#Submit").click()
+                        }
+                    });
+            })
+
+            $(document).ready(function () {
+                $("form").keypress(function (e) {
+                    if (e.which == 13) {
+                        return false;
+                    }
+                });
+            });
+
+            $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+            $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+            $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+            $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+            $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+            $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+            $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+            $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+            $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+            $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+            $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+            $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+            $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+            $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+            $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+            $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
+            $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+
+        </script>
+        </body>
+
+</html>

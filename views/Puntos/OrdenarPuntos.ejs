@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordenar Puntos</title>
+    <style>
+        .btn-flotante {
+            font-size: 16px;
+            /* Cambiar el tamaño de la tipografia */
+            text-transform: uppercase;
+            /* Texto en mayusculas */
+            font-weight: bold;
+            /* Fuente en negrita o bold */
+            color: #ffffff;
+            /* Color del texto */
+            border-radius: 5px;
+            /* Borde del boton */
+            letter-spacing: 2px;
+            /* Espacio entre letras */
+            background-color: #be1919;
+            /* Color de fondo */
+            padding: 18px 30px;
+            /* Relleno del boton */
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            transition: all 300ms ease 0ms;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            z-index: 99;
+        }
+
+        .btn-flotante:hover {
+            background-color: #2c2fa5;
+            /* Color de fondo al pasar el cursor */
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-7px);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .btn-flotante {
+                font-size: 14px;
+                padding: 12px 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+
+        .swal-button--ubicacionActual {
+            padding: 7px 19px;
+            border-radius: 5px;
+            background-color: #45acdf;
+            font-size: 14px;
+            border: 1px solid #45acdf;
+        }
+
+        .swal-button--puntoReferencia {
+            padding: 7px 19px;
+            border-radius: 5px;
+            background-color: #dfa945;
+            font-size: 14px;
+            border: 1px solid #dfa945;
+            color: #fff;
+        }
+
+        .swal-button:focus {
+            box-shadow: none;
+        }
+
+        .swal-button--ubicacionActual:not([disabled]):hover {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #45acdf;
+        }
+
+        .swal-button--puntoReferencia:not([disabled]):hover {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #dfa945;
+        }
+
+        .swal-content__input {
+            padding-left: 13px;
+            height: 40px;
+            width: 100%;
+            font-weight: 500;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 22px;
+            letter-spacing: 0.5px;
+            outline: none;
+            color: #c4c3ca;
+            background-color: #1f2029;
+            border: none;
+            -webkit-transition: all 200ms linear;
+            transition: all 200ms linear;
+            box-shadow: 0 4px 8px 0 rgba(20, 20, 20, 0.2);
+        }
+        #btn-ordenar{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="content">
+        <div class="container container-fluid ">
+            <form method="POST" name="" action="/OrdenarPuntos" autocomplete="off">
+                <div class="card card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group mx-sm-3 mb-6">
+                                <label for="form-label">Ruta</label>
+                                <select name="ruta[]" class="form-style mayusculas Select" id="select">
+                                    <option value="Seleccionar" disabled selected>
+                                        Seleccionar
+                                    </option>
+                                    <% if (typeof resultRutas !="undefined" ){ resultRutas.forEach((Rutas)=>{
+                                        %>
+                                        <option value="<%= Rutas.Ruta %>">
+                                            <%= Rutas.Ruta %>
+                                        </option>
+                                        <% }) } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4" id="div_Info"></div>
+                    </div>
+                    <br>
+
+                    <div class="row row-cols-2" id="div_Table">
+                        <div class="d-flex align-items-center justify-content-center" id="div_Text">
+                            <p>Seleccione una ruta para filtrar</p>
+                        </div>
+                    </div>
+
+                    <br><br><br><br>
+                    <input type="button" name="ordenar" value="ordenar" class="btn-flotante" id="save-btn">
+                    <input type="submit" value="" id="Submit">
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+    <% if(typeof alert !="undefined" ){ %>
+        <script>
+            swal({
+                title: '<%= alertTitle %>',
+                text: '<%= alertMessage %>',
+                icon: '<%= alertIcon %>',
+                showConfirmButton: '<%= showConfirmButton %>',
+                timer: '<%= timer %>'
+            }).then(() => {
+                window.location = '/<%= ruta %>'
+            })
+        </script>
+        <% } %>
+
+
+            <script>
+
+                $(document).ready(() => {
+                    fetch('/Ordenar/Nuevos').then(function (response) {
+                        return response.json();
+                    }).then(function (responseData) {
+                        var Nuevo = ''
+                        var Separacion = '';
+                        if (responseData.length > 0) {
+                            var Plural = 'Puntos de encuentro sin ordenar en la ruta:'
+                            if (responseData.length > 1) {
+                                Plural = 'Puntos de encuentro sin ordenar en las rutas:'
+                            }
+                            Nuevo += '<h6>'
+
+                            Nuevo += Plural
+
+                            Nuevo += '</h6>'
+                            Nuevo += '<div class="form-group mx-sm-3 mb-3">'
+                            for (var i = 0; i < responseData.length; i++) {
+                                Nuevo += '<button type="button" class="btn btn-danger" disabled>'
+                                Nuevo += responseData[i].Ruta
+                                Nuevo += '</button>'
+                                Nuevo += ' '
+                            }
+                            Nuevo += '</div>'
+                        }
+                        $('#div_Info').html(Nuevo)
+                    })
+                })
+
+                $(document).ready(() => {
+                    $("#save-btn").hide()
+                })
+
+                $("#save-btn").click(() => {
+                    swal({
+                        title: "¿Todo Listo?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                        .then((go) => {
+                            if (go) {
+                                $("#Submit").click()
+                            }
+                        });
+                })
+
+
+                $("#select").change(function () {
+                    var Ruta = $("#select").val();
+                    fetch('/Ordenar/Table?Ruta=' + Ruta + '').then(function (response) {
+
+                        return response.json();
+
+                    }).then(function (responseData) {
+                        var dis = $('#div_Table');
+                        var tr = '';
+                        var Nuevo = '';
+                        if (responseData.length > 0) {
+                            $("#save-btn").show()
+                            if (responseData.length > 1) {
+                                $(function () {
+                                    $("#tabla tbody").sortable({
+                                        helper: function (e, tr) {
+                                            var $originals = tr.children();
+                                            var $helper = tr.clone();
+                                            $helper.children().each(function (index) {
+                                                $(this).width($originals.eq(index).width());
+                                            });
+                                            return $helper;
+                                        },
+                                        stop: function (e, ui) {
+                                            $("#tbody tr").each(function (index) {
+                                                $(this).find("td:first-child").html(index + 1);
+                                            });
+                                        }
+                                    }).disableSelection();
+                                });
+
+                                tr += '<div class="form-group mx-sm-3 mb-2">'
+                                tr += '<button type="button" class="btn btn-warning btn-sm" id="btn-ordenar">Ordenar por geolocalización</button>'
+                                tr += '</div>'
+                            }
+                            tr += '<div class="col-lg-10 col-9 table-responsive">'
+                            tr += '<table class="table table-striped table-bordered table-dark" id="tabla">'
+                            tr += '<thead>'
+                            tr += ' <th></th>'
+                            tr += '<th>Id_Punto</th>'
+                            tr += '<th>Nombre</th>'
+                            tr += '<th>Sector</th>'
+                            tr += '<th>Ruta</th>'
+                            tr += '</thead>'
+                            tr += '<tbody id="tbody">'
+                            for (var i = 0; i < responseData.length; i++) {
+                                if (responseData[i].Nuevo == 1) {
+                                    Nuevo = 'class="table-danger"'
+                                }
+                                tr += '<tr ' + Nuevo + '>'
+                                tr += '<td>'
+                                tr += i + 1
+                                tr += '</td>'
+                                tr += '<td>'
+                                tr += responseData[i].Id_Punto
+                                tr += '<input type="hidden" name="Id_Punto[]" id="" value="' + responseData[i].Id_Punto + '">'
+                                tr += '<input type="hidden" name="" id="" value="' + responseData[i].Posicion + '">'
+                                tr += '</td>'
+                                tr += '<td>'
+                                tr += responseData[i].NombrePunto
+                                tr += '<input type="hidden" name="NombreEncuentro[]" id="" value="' + responseData[i].NombrePunto + '">'
+                                tr += '</td>'
+                                tr += '<td>'
+                                tr += responseData[i].Sector
+                                tr += '<input type="hidden" name="Sector[]" id="" value="' + responseData[i].Sector + '">'
+                                tr += '</td>'
+                                tr += '<td>'
+                                tr += responseData[i].Ruta
+                                tr += '<input type="hidden" name="Ruta[]" id="" value="' + responseData[i].Ruta + '">'
+                                tr += '</td>'
+                                tr += '<td style="display: none;">'
+                                tr += responseData[i].Latitud
+                                tr += '<input type="hidden" name="Latitud[]" id="" value="' + responseData[i].Latitud + '">'
+                                tr += '</td>'
+                                tr += '<td style="display: none;">'
+                                tr += responseData[i].Longitud
+                                tr += '<input type="hidden" name="Longitud[]" id="" value="' + responseData[i].Longitud + '">'
+                                tr += '</td>'
+                                tr += '</tr>'
+                            }
+                            tr += '</tbody>'
+                            tr += '</table>'
+                            tr += '<br>'
+                            tr += '</div>'
+                            tr += '<div class="col-lg-2 col-3">'
+                            tr += '<table class="table table-striped table-bordered table-dark">'
+                            tr += '<thead>'
+                            tr += '<th>'
+                            tr += 'Posicion'
+                            tr += '</th>'
+                            tr += '</thead>'
+                            tr += '<tbody>'
+                            for (var i = 0; i < responseData.length; i++) {
+                                tr += '<tr>'
+                                tr += '<td>'
+                                tr += responseData[i].Posicion
+                                tr += '<input type="hidden" name="Posicion[]" id="" value="' + responseData[i].Posicion + '">'
+                                tr += '</td>'
+                                tr += '</tr>'
+                            }
+                            tr += '</tbody>'
+                            tr += '</table>'
+                            tr += '</div>'
+                        } else {
+                            tr += '<div class="d-flex align-items-center justify-content-center" id="div_Text">'
+                            tr += '<p>No se encontraron datos para esta ruta.</p>'
+                            tr += '</div>'
+                            $("#save-btn").hide()
+                        }
+                        $(dis).html(tr);
+                        var btnOrdenar = document.getElementById("btn-ordenar");
+                        btnOrdenar.addEventListener("click", ordenarPorUbicacion);
+
+                    });
+
+                })
+
+                function ordenarPorUbicacion() {
+                    swal({
+                        title: "Ordenar por ubicación",
+                        text:
+                            "¿Desea usar su ubicación actual o especificar un punto de referencia?",
+                        buttons: {
+                            ubicacionActual: {
+                                text: "Ubicación actual",
+                                value: "ubicacionActual",
+                            },
+                            puntoReferencia: {
+                                text: "Punto de referencia",
+                                value: "puntoReferencia",
+                            },
+                        },
+                    }).then((value) => {
+                        if (value === "ubicacionActual") {
+                            obtenerUbicacionActual();
+                        } else if (value === "puntoReferencia") {
+                            swal({
+                                title: "Especificar punto de referencia",
+                                text: "Ingrese el nombre del punto de encuentro:",
+                                content: "input",
+                                buttons: {
+                                    cancel: true,
+                                    confirm: {
+                                        text: "Buscar",
+                                        value: true,
+                                    },
+                                },
+                            }).then((value) => {
+                                if (value) {
+                                    buscarPuntoEnTabla(value);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                function obtenerUbicacionActual() {
+                    if (navigator.geolocation) {
+                        swal({
+                            title: "Obteniendo ubicación...",
+                            text: "Espere un momento por favor",
+                            buttons: {
+                                cancel: true,
+                            },
+                            closeOnClickOutside: false,
+                            closeOnEsc: false,
+                        });
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                swal.close();
+                                const lat = position.coords.latitude;
+                                const lng = position.coords.longitude;
+                                ordenarPuntosPorGeolocalizacion(lat, lng);
+                            },
+                            (error) => {
+                                swal.close();
+                                swal("Error", "No se pudo obtener su ubicación actual", "error");
+                            }
+                        );
+                    } else {
+                        swal("Error", "Su navegador no soporta geolocalización", "error");
+                    }
+                }
+
+                function buscarPuntoEnTabla(nombre) {
+                    const tabla = document.getElementById("tabla");
+                    const tbody = tabla.getElementsByTagName("tbody")[0];
+                    let encontrado = false;
+                    nombre = nombre.toLowerCase(); // Convertir a minúsculas
+                    for (let i = 0; i < tbody.rows.length; i++) {
+                        const nombreTabla = tbody.rows[i].cells[2].textContent.toLowerCase(); // Convertir a minúsculas
+                        if (nombreTabla.includes(nombre)) { // Usar includes() para comparar
+                            const lat = tbody.rows[i].cells[5].textContent;
+                            const lng = tbody.rows[i].cells[6].textContent;
+                            ordenarPuntosPorGeolocalizacion(lat, lng);
+                            encontrado = true;
+                            break;
+                        }
+                    }
+                    if (!encontrado) {
+                        swal("Error", "No se encontró el punto de encuentro", "error");
+                    }
+                }
+
+                function ordenarPuntosPorGeolocalizacion(latitud, longitud) {
+
+                    // Calcula la distancia entre la ubicación actual y cada punto de encuentro
+                    var tablaPuntos = document.getElementById("tabla");
+                    var filas = tablaPuntos.getElementsByTagName("tr");
+                    var puntos = [];
+                    for (var i = 1; i < filas.length; i++) {
+                        var fila = filas[i];
+                        var celdas = fila.getElementsByTagName("td");
+                        var latitudPunto = parseFloat(celdas[5].textContent);
+                        var longitudPunto = parseFloat(celdas[6].textContent);
+                        var distancia = calcularDistancia(latitud, longitud, latitudPunto, longitudPunto);
+                        puntos.push({ fila: fila, distancia: distancia });
+                    }
+
+                    // Ordena la tabla según la distancia
+                    puntos.sort(function (a, b) {
+                        return a.distancia - b.distancia;
+                    });
+                    var tbody = tablaPuntos.getElementsByTagName("tbody")[0];
+                    for (var i = 0; i < puntos.length; i++) {
+                        tbody.appendChild(puntos[i].fila);
+                    }
+                    $("#tbody tr").each(function (index) {
+                        $(this).find("td:first-child").html(index + 1);
+                    });
+
+                }
+
+                // Función para calcular la distancia entre dos puntos geográficos
+                function calcularDistancia(lat1, lon1, lat2, lon2) {
+                    var R = 6371; // radio de la tierra en km
+                    var dLat = toRad(lat2 - lat1);
+                    var dLon = toRad(lon2 - lon1);
+                    var lat1 = toRad(lat1);
+                    var lat2 = toRad(lat2);
+
+                    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    var d = R * c;
+                    return d;
+                }
+
+                // Función auxiliar para convertir grados a radianes
+                function toRad(degrees) {
+                    return degrees * Math.PI / 180;
+                }
+
+                $(document).ready(function () {
+                    $("form").keypress(function (e) {
+                        if (e.which == 13) {
+                            return false;
+                        }
+                    });
+                });
+            </script>
+
+</body>
+
+</html>

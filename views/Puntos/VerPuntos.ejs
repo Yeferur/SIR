@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Ver Puntos de encuentro</title>
+</head>
+
+<body>
+    <main class="content">
+        <div class="container container-fluid p-0">
+            <div class="card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <h3 class="mb-0"><strong>Puntos de encuentro</strong></h3>
+                    </div>
+                </div>
+                <div class="card-body table-responsive">
+                    <table id="Puntos" class="table table-striped table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Sector
+                                </th>
+                                <th>Ruta</th>
+                                <th>
+                                    Editar
+                                </th>
+                                <th>
+                                    Eliminar
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (typeof resultsPuntos !="undefined" ){ resultsPuntos.forEach((Puntos)=>{ %>
+                                <tr id="<%= Puntos.Id_Punto %>">
+                                    <td>
+                                        <%= Puntos.NombrePunto %>
+                                    </td>
+                                    <td>
+                                        <%= Puntos.Sector %>
+                                    </td>
+                                    <td>
+                                        <%= Puntos.Ruta %>
+                                    </td>
+                                    <td><a href="../Puntos/EditarPunto/<%= Puntos.Id_Punto  %>" class="edit"><iconify-icon
+                                                icon="material-symbols:edit" style="color: white;" width="30"
+                                                height="30"></iconify-icon></a></td>
+                                    <td><a type="button" class="delete" id="delete<%= Puntos.Id_Punto %>"><iconify-icon
+                                                icon="material-symbols:delete-outline" style="color: white;" width="30"
+                                                height="30"></iconify-icon></a></td>
+                                    <script>
+                                        $("#delete<%= Puntos.Id_Punto %>").click(() => {
+                                            swal({
+                                                title: "¿Seguro desea eliminar <%= Puntos.NombrePunto  %>?",
+                                                icon: "warning",
+                                                buttons: true,
+                                                dangerMode: true,
+                                            }).then((go) => {
+                                                if (go) {
+                                                    deletePunto('<%= Puntos.Id_Punto %>','<%= Puntos.NombrePunto %>')
+                                                }
+                                            });
+                                        })
+                                    </script>
+                                </tr>
+                                <% }) } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+<!-- 
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.5/datatables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#Puntos').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+                }
+            });
+        });
+    </script> -->
+    <script>
+        deletePunto = (Id_Punto,NombrePunto) => {
+        fetch('/Puntos/DeletePunto?Id_Punto=' + Id_Punto + '').then(response => {
+            response.json();
+        }).then((res) => {
+            if (res == 'error') {
+                swal({
+                    title: "Ocurrió un error",
+                    text: "No fue posible eliminar el punto de encuentro, Si el error continúa, comuníquese con soporte técnico.",
+                    icon: "error",
+                    buttons: true,
+                    dangerMode: true,
+                })
+            } else {
+                swal({
+                    text: NombrePunto + "se ha eliminado correctamente.",
+                    icon: "success",
+                    buttons: true,
+                    dangerMode: true,
+                    timer: 1500
+                }).then(() => {
+                    $('#' + Id_Punto + '').remove();
+                    console.log(Id_Punto);
+                })
+
+            }
+        })
+    }
+    </script>
+</body>
+
+</html>

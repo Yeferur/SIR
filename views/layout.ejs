@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="shortcut icon" href="../resources/img/SIR.png" />
     <!--========== BOX ICONS ==========-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 
     <!--========== jquery ==========-->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
     <!--========== Bootstrap ==========-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -52,8 +55,7 @@
                 </a>
 
                 <div class="nav__list">
-                    <% if(typeof rol !="undefined" ){ 
-                     if (rol=="Administrador" ) { %>
+                    <% if(typeof rol !="undefined" ){ if (rol=="Administrador" ) { %>
                         <div class="nav__items">
 
                             <a href="/" class="nav__link ">
@@ -72,8 +74,6 @@
                                     <div class="nav__dropdown-content">
                                         <a href="../Reservas/NuevaReserva" class="nav__dropdown-item"
                                             id="Layout_NuevaReserva">Nueva Reserva</a>
-                                            <a href="../Reservas/NuevaReservaPrivado" class="nav__dropdown-item"
-                                            id="Layout_NuevaReservaPrivado">Nueva Reserva Privado</a>
                                         <a href="../Reservas/VerReservas" class="nav__dropdown-item"
                                             id="Layout_VerReservas">Ver Reservas</a>
                                     </div>
@@ -89,8 +89,10 @@
 
                                 <div class="nav__dropdown-collapse">
                                     <div class="nav__dropdown-content">
-                                        <a href="../Transfer/NuevoTransfer" class="nav__dropdown-item">Nuevo Transfer</a>
-                                        <a href="../Transfer/VerTransfer" class="nav__dropdown-item">Ver Transfer</a>
+                                        <a href="../Transfer/NuevoTransfer" class="nav__dropdown-item"
+                                            id="Layout_NuevoTransfer">Nuevo Transfer</a>
+                                        <a href="../Transfer/VerTransfer" class="nav__dropdown-item"
+                                            id="Layout_VerTransfer">Ver Transfer</a>
                                     </div>
                                 </div>
                             </div>
@@ -103,8 +105,10 @@
 
                                 <div class="nav__dropdown-collapse">
                                     <div class="nav__dropdown-content">
-                                        <a href="#" class="nav__dropdown-item">Crear Tour</a>
-                                        <a href="#" class="nav__dropdown-item">Ver Tours</a>
+                                        <a href="../Tours/NuevoTour" class="nav__dropdown-item"
+                                            id="Layout_NuevoTour">Nuevo Tour</a>
+                                        <a href="../Tours/VerTours" class="nav__dropdown-item" id="Layout_VerTours">Ver
+                                            Tours</a>
                                     </div>
                                 </div>
                             </div>
@@ -118,18 +122,39 @@
 
                                 <div class="nav__dropdown-collapse">
                                     <div class="nav__dropdown-content">
-                                        <a href="#" class="nav__dropdown-item">Crear punto</a>
-                                        <a href="#" class="nav__dropdown-item">Ver Puntos</a>
+                                        <a href="../Puntos/NuevoPunto" class="nav__dropdown-item"
+                                            id="Layout_NuevoPunto">Crear punto</a>
+                                        <a href="../Puntos/VerPuntos" class="nav__dropdown-item"
+                                            id="Layout_VerPuntos">Ver Puntos</a>
+                                        <a href="../Puntos/OrdenarPuntos" class="nav__dropdown-item"
+                                            id="Layout_OrdenarPuntos">Ordenar Puntos</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <a href="#" class="nav__link">
+                            <div class="nav__dropdown">
+                                <a href="#" class="nav__link">
+                                    <i class='bx bx-list-check nav__icon'></i>
+                                    <span class="nav__name">Programación</span>
+                                    <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
+                                </a>
+
+                                <div class="nav__dropdown-collapse">
+                                    <div class="nav__dropdown-content">
+                                        <a href="../Programacion/Listado" class="nav__dropdown-item"
+                                            id="Layout_Listado">Listado</a>
+                                        <a href="../Programacion/Confirmacion" class="nav__dropdown-item"
+                                            id="Layout_Confirmacion">Confirmación</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="../Comisiones/Comisiones" class="nav__link" id="Layout_Comisiones">
                                 <i class='bx bx-money nav__icon'></i>
                                 <span class="nav__name">Comisiones</span>
                             </a>
 
-                            <a href="#" class="nav__link">
+                            <a href="../Seguros/Seguros" class="nav__link" id="Layout_Seguros">
                                 <i class='bx bx-shield-plus nav__icon'></i>
                                 <span class="nav__name">Seguros</span>
                             </a>
@@ -143,10 +168,17 @@
 
                                 <div class="nav__dropdown-collapse">
                                     <div class="nav__dropdown-content">
-                                        <a href="#" class="nav__dropdown-item">Perfil</a>
-                                        <a href="#" class="nav__dropdown-item">Crear Usuario</a>
-                                        <a href="#" class="nav__dropdown-item">Administrar Usuarios</a>
-                                        <a href="#" class="nav__dropdown-item">Ayuda</a>
+                                        <% if(typeof user !="undefined" ){ %>
+                                            <a href="../Settings/Perfil/<%= user.id %>" class="nav__dropdown-item"
+                                                id="Layout_Perfil">Perfil</a>
+                                            <% }%>
+                                                <a href="../Settings/NewUser" class="nav__dropdown-item"
+                                                    id="Layout_NewUser" id="Layout_NewUser">Crear Usuario</a>
+                                                <a href="../Settings/AdminUsers" class="nav__dropdown-item"
+                                                    id="Layout_AdminUsers">Administrar Usuarios</a>
+                                                <a href="https://wa.me/573025783379?text=Necesito ayuda."
+                                                    target="_blank" class="nav__dropdown-item"
+                                                    id="Layout_Ayuda">Ayuda</a>
                                     </div>
                                 </div>
 
@@ -158,13 +190,13 @@
 
                             <div class="nav__items">
 
-                                <a href="#" class="nav__link active">
+                                <a href="/" class="nav__link ">
                                     <i class='bx bxs-dashboard nav__icon'></i>
-                                    <span class="nav__name">Inicio</span>
+                                    <span class="nav__name">Cupos</span>
                                 </a>
 
                                 <div class="nav__dropdown">
-                                    <a href="#" class="nav__link">
+                                    <a class="nav__link">
                                         <i class='bx bx-calendar-plus nav__icon'></i>
                                         <span class="nav__name">Reservas</span>
                                         <i class='bx bx-chevron-down nav__icon nav__dropdown-icon'></i>
@@ -172,9 +204,10 @@
 
                                     <div class="nav__dropdown-collapse">
                                         <div class="nav__dropdown-content">
-                                            <a href="#" class="nav__dropdown-item" id="Layout_NuevaReserva">Nueva
-                                                Reserva</a>
-                                            <a href="#" class="nav__dropdown-item">Ver Reservas</a>
+                                            <a href="../Reservas/NuevaReserva" class="nav__dropdown-item"
+                                                id="Layout_NuevaReserva">Nueva Reserva</a>
+                                            <a href="../Reservas/VerReservas" class="nav__dropdown-item"
+                                                id="Layout_VerReservas">Ver Reservas</a>
                                         </div>
                                     </div>
                                 </div>
@@ -188,14 +221,16 @@
 
                                     <div class="nav__dropdown-collapse">
                                         <div class="nav__dropdown-content">
-                                            <a href="#" class="nav__dropdown-item">Nuevo Transfer</a>
-                                            <a href="#" class="nav__dropdown-item">Ver Transfer</a>
+                                            <a href="../Transfer/NuevoTransfer" class="nav__dropdown-item"
+                                                id="Layout_NuevoTransfer">Nuevo Transfer</a>
+                                            <a href="../Transfer/VerTransfer" class="nav__dropdown-item"
+                                                id="Layout_VerTransfer">Ver Transfer</a>
                                         </div>
                                     </div>
                                 </div>
 
-                                <a href="#" class="nav__link">
-                                    <i class='bx bx-shield-plus nav__icon'></i>
+                                <a href="../Tours/VerTours" class="nav__link">
+                                    <i class='bx bx-flag nav__icon'></i>
                                     <span class="nav__name">Ver Tours</span>
                                 </a>
 
@@ -208,8 +243,10 @@
 
                                     <div class="nav__dropdown-collapse">
                                         <div class="nav__dropdown-content">
-                                            <a href="#" class="nav__dropdown-item">Crear punto</a>
-                                            <a href="#" class="nav__dropdown-item">Ver Puntos</a>
+                                            <a href="../Puntos/NuevoPunto" class="nav__dropdown-item"
+                                                id="Layout_NuevoPunto">Crear punto</a>
+                                            <a href="../Puntos/VerPuntos" class="nav__dropdown-item"
+                                                id="Layout_VerPuntos">Ver Puntos</a>
                                         </div>
                                     </div>
                                 </div>
@@ -223,8 +260,13 @@
 
                                     <div class="nav__dropdown-collapse">
                                         <div class="nav__dropdown-content">
-                                            <a href="#" class="nav__dropdown-item">Perfil</a>
-                                            <a href="#" class="nav__dropdown-item">Ayuda</a>
+                                            <% if(typeof user !="undefined" ){ %>
+                                                <a href="../Settings/Perfil/<%= user.id %>" class="nav__dropdown-item"
+                                                    id="Layout_Perfil">Perfil</a>
+                                                <% }%>
+                                                    <a href="https://wa.me/573025783379?text=Necesito ayuda."
+                                                        target="_blank" class="nav__dropdown-item"
+                                                        id="Layout_Ayuda">Ayuda</a>
                                         </div>
                                     </div>
 
@@ -237,7 +279,7 @@
                 </div>
             </div>
 
-            <a href="logout" class="nav__link nav__logout">
+            <a href="/logout" class="nav__link nav__logout">
                 <i class='bx bx-log-out nav__icon'></i>
                 <span class="nav__name">Log Out</span>
             </a>

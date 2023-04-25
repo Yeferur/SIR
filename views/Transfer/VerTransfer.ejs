@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Reservas</title>
+    <title>Ver Transfers</title>
     <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
@@ -365,6 +365,7 @@
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
         }
+
         a.edit {
             background: #ffd900;
             border-radius: 4px;
@@ -376,6 +377,7 @@
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
         }
+
         a.delete {
             background: #c10303;
             border-radius: 4px;
@@ -387,7 +389,6 @@
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
         }
-
     </style>
 </head>
 
@@ -401,30 +402,39 @@
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Fecha del servicio</label>
-                        <input type="date" name="FechaReserva" id="FechaReserva" class="form-style">
+                        <input type="date" name="FechaTransfer" id="FechaTransfer" class="form-style mayusculas ">
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Fecha de registro</label>
-                        <input type="date" name="FechaRegistro" id="FechaRegistro" class="form-style">
+                        <input type="date" name="FechaRegistro" id="FechaRegistro" class="form-style mayusculas ">
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="form-label">Tipo de servicio</label>
-                        <select class="form-styleSelect" multiple="multiple" name="" id="CategoriaReserva">
-                            <option value="Transfer Hotel/Aeropuerto">Transfer Hotel/Aereopuerto</option>
-                            <option value="Transfer Aeropuerto/Hotel">Transfer Aeropuerto/Hotel</option>
+                        <select class="form-styleSelect mayusculas Select" multiple="multiple" name="Servicio"
+                            id="Servicio">
+                            <% if (typeof resultsServicio !="undefined" ){ resultsServicio.forEach((Servicio)=>{
+                                %>
+                                <option value="<%= Servicio.id %>">
+                                    <%= Servicio.Servicio %>
+                                </option>
+                                <% }) } %>
                         </select>
                     </div>
                 </div>
                 <div class="col-lg-4 ">
                     <div class="form-group mx-sm-3 mb-2">
-                        <label for="">Id de reserva</label>
-                        <input type="text" name="reserva" id="Id_Reserva" class="form-style">
+                        <label for="">Id de Transfer</label>
+                        <input type="text" name="Transfer" id="Id_Transfer" class="form-style mayusculas ">
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="">Nombres y Apellidos del pasajero</label>
+                        <input type="text" name="NombreApellido" id="NombreApellido" class="form-style mayusculas ">
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">DNI del pasajero</label>
-                        <input type="text" name="id" id="IdPas" class="form-style">
+                        <input type="text" name="id" id="IdPas" class="form-style mayusculas ">
                     </div>
                 </div>
             </div>
@@ -459,51 +469,56 @@
             <div id="cardds">
                 <div class="cardds">
                     <% resultsTransfer.forEach((Transfer)=>{ %>
-                        <div class="cardd" id="<%= Transfer.Id_Reserva %>">
+                        <div class="cardd" id="<%= Transfer.Id_Transfer %>">
 
                             <div class="cardd-title">
                                 <a class="toggle-info button"
-                                    onclick="load_Pas('<%= Transfer.Id_Reserva %>'); card('<%= Transfer.Id_Reserva %>');">
+                                    onclick="load_Pas('<%= Transfer.Id_Transfer %>'); card('<%= Transfer.Id_Transfer %>');">
                                     <span class="left"></span>
                                     <span class="right"></span>
                                 </a>
                                 <h2>
-                                    <%= Transfer.Id_Reserva %>
+                                    <%= Transfer.Id_Transfer %>
                                 </h2>
                             </div>
-                            <div class="cardd-flap flap1" id="pdf<%= Transfer.Id_Reserva %>">
+                            <div class="cardd-flap flap1" id="pdf<%= Transfer.Id_Transfer %>">
 
                                 <div class="cardd-info">
                                     <h3>
-                                        <%= Transfer.Id_Reserva %>
+                                        <%= Transfer.Id_Transfer %>
                                     </h3>
-                                    <div class="info_Reserva">
-                                        <h5>Fecha del Tour:
-                                            <%= Transfer.FechaReserva %>
+                                    <div class="info_Transfer">
+                                        <h5>Fecha:
+                                            <%= Transfer.FechaTransfer %>
                                         </h5>
-                                        <h5>Ruta:
-                                            <%= Transfer.Ruta %>
+                                        <h5># Vuelo:
+                                            <%= Transfer.Vuelo %>
                                         </h5>
                                         <h5>Numero de Pasjeros:
                                             <%= Transfer.NumeroPasajeros %>
                                         </h5>
-                                        <h5>Tour:
-                                            <%= Transfer.NombreTour %>
+                                        <h5>Servicio:
+                                            <%= Transfer.Servicio %>
                                         </h5>
                                         <h5>Fecha de registro:
                                             <%= Transfer.FechaRegistro %>
                                         </h5>
-                                        <h5>Telefono Reserva:
-                                            <%= Transfer.TelefonoReserva %>
+                                        <h5>Telefono Transfer:
+                                            <%= Transfer.TelefonoTransfer %>
                                         </h5>
                                     </div>
                                     <div class="pasajeros"></div>
                                 </div>
                                 <div class="cardd-flap flap2">
                                     <div class="cardd-actions">
-                                        <a class="pdf" onclick="PDF('<%= Transfer.Id_Reserva %>');"><iconify-icon icon="material-symbols:download" style="color: white;" width="30" height="30"></iconify-icon></a>
-                                        <a href="../Transfer/EditarReserva/<%= Transfer.Id_Reserva %>" class="edit" ><iconify-icon icon="material-symbols:edit" style="color: white;" width="30" height="30"></iconify-icon></a>
-                                        <a class="delete"><iconify-icon icon="material-symbols:delete-outline" style="color: white;" width="30" height="30"></iconify-icon></a>
+                                        <a class="pdf" onclick="PDF('<%= Transfer.Id_Transfer %>');"><iconify-icon
+                                                icon="material-symbols:download" style="color: white;" width="30"
+                                                height="30"></iconify-icon></a>
+                                        <a href="../Transfer/EditarTransfer/<%= Transfer.Id_Transfer %>"
+                                            class="edit"><iconify-icon icon="material-symbols:edit"
+                                                style="color: white;" width="30" height="30"></iconify-icon></a>
+                                        <a class="delete"><iconify-icon icon="material-symbols:delete-outline"
+                                                style="color: white;" width="30" height="30"></iconify-icon></a>
                                     </div>
                                 </div>
                             </div>
@@ -518,29 +533,6 @@
             <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         </div>
     </div>
-
-
-
-
-
-
-
-    <!-- 
-        <input type="date" name="" id="FechaReserva">
-<br>
-<input type="date" name="" id="FechaRegistro">
-    <select name="" id="tour" multiple>
-        <% resultsTours.forEach((Tours)=>{ %>
-        <option value="<%= Tours.Id_Tour %>"><%= Tours.NombreTour %></option>
-        <% }) %>
-    </select>
-
-    <button type="button" id="filtrar">Filtrar</button> -->
-
-
-
-
-
 
     <script>
         $(document).ready(function () {
@@ -587,10 +579,10 @@
 
             };
         });
-        
 
-        load_Pas = (Id_Reserva) => {
-            fetch('/VerRervas/Pasajeros?Id_Reserva=' + Id_Reserva + '').then(function (response) {
+
+        load_Pas = (Id_Transfer) => {
+            fetch('/VerTransfer/Pasajeros?Id_Transfer=' + Id_Transfer + '').then(function (response) {
 
                 return response.json();
 
@@ -629,8 +621,8 @@
             });
         }
 
-        Filtro = (selectionTour = '', FechaReserva = '', FechaRegistro = '', CategoriaReserva = '', Id_Reserva = '', IdPas = '', Empty = '') => {
-            fetch('/FiltroVerTransfer?selectionTour=' + selectionTour + '&FechaReserva=' + FechaReserva + '&FechaRegistro=' + FechaRegistro + '&CategoriaReserva=' + CategoriaReserva + '&Id_Reserva=' + Id_Reserva + '&IdPas=' + IdPas + '&Empty=' + Empty + '').then(function (response) {
+        Filtro = (Servicio = '', FechaTransfer = '', FechaRegistro = '', Id_Transfer = '', IdPas = '', Empty = '', NombreApellido = '') => {
+            fetch('/VerTransfer/FiltroVerTransfer?Servicio=' + Servicio + '&FechaTransfer=' + FechaTransfer + '&FechaRegistro=' + FechaRegistro + '&Id_Transfer=' + Id_Transfer + '&IdPas=' + IdPas + '&Empty=' + Empty + '&NombreApellido=' + NombreApellido + '').then(function (response) {
 
                 return response.json();
 
@@ -642,11 +634,11 @@
                     $(".cardd").hide();
                     $("#NoData").hide();
                     for (var count = 0; count < responseData.length; count++) {
-                        console.log(responseData[count].Id_Reserva);
-                        var Id_Reserva = responseData[count].Id_Reserva
+                        console.log(responseData[count].Id_Transfer);
+                        var Id_Transfer = responseData[count].Id_Transfer
 
-                        if ((selectionTour != '') || (FechaReserva != '') || (FechaRegistro != '') || (CategoriaReserva != '') || (Id_Reserva != '') || (IdPas != '')) {
-                            $("#" + Id_Reserva + "").show();
+                        if ((Servicio != '') || (FechaTransfer != '') || (FechaRegistro != '') || (Id_Transfer != '') || (IdPas != '') || (Empty != '')) {
+                            $("#" + Id_Transfer + "").show();
                         }
                     }
                 }
@@ -660,20 +652,20 @@
         }
 
         $("#filtrar").click(function () {
-            var tour = $('#tour').val();
-            var FechaReserva = $('#FechaReserva').val();
+            var Servicio = $('#Servicio').val();
+            var FechaTransfer = $('#FechaTransfer').val();
             var FechaRegistro = $('#FechaRegistro').val();
-            var CategoriaReserva = $('#CategoriaReserva').val();
-            var Id_Reserva = $('#Id_Reserva').val();
+            var Id_Transfer = $('#Id_Transfer').val();
             var IdPas = $('#IdPas').val();
+            var NombreApellido = $('#NombreApellido').val();
             var Empty = '';
             $("#empty").each(function () {
                 if ($(this).is(":checked")) {
                     Empty = $(this).val();
                 }
             })
-            if ((tour != '') || (FechaReserva != '') || (FechaRegistro != '') || (CategoriaReserva != '') || (Id_Reserva != '') || (IdPas != '') || (Empty != '')) {
-                Filtro(tour, FechaReserva, FechaRegistro, CategoriaReserva, Id_Reserva, IdPas, Empty);
+            if ((Servicio != '') || (FechaTransfer != '') || (FechaRegistro != '') || (Id_Transfer != '') || (IdPas != '') || (Empty != '') || (NombreApellido != '')) {
+                Filtro(Servicio, FechaTransfer, FechaRegistro, Id_Transfer, IdPas, Empty, NombreApellido);
             }
         });
         $("#deshacer").click(function () {
@@ -681,9 +673,9 @@
             $("#NoData").hide();
         });
 
-        function PDF(Id_Reserva) {
-            var HTML_Width = $("#pdf"+Id_Reserva+"").width();
-            var HTML_Height = $("#pdf"+Id_Reserva+"").height();
+        function PDF(Id_Transfer) {
+            var HTML_Width = $("#pdf" + Id_Transfer + "").width();
+            var HTML_Height = $("#pdf" + Id_Transfer + "").height();
             var top_left_margin = 15;
             var PDF_Width = HTML_Width + (top_left_margin * 2);
             var PDF_Height = (PDF_Width * 2) + (top_left_margin * 2);
@@ -692,7 +684,7 @@
 
             var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
 
-            html2canvas($("#pdf"+Id_Reserva+"")[0]).then(function (canvas) {
+            html2canvas($("#pdf" + Id_Transfer + "")[0]).then(function (canvas) {
                 var imgData = canvas.toDataURL("image/jpeg", 1.0);
                 var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
                 pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
@@ -700,7 +692,7 @@
                     pdf.addPage(PDF_Width, PDF_Height);
                     pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 4), canvas_image_width, canvas_image_height);
                 }
-                pdf.save(""+Id_Reserva+".pdf");
+                pdf.save("" + Id_Transfer + ".pdf");
 
             });
         }

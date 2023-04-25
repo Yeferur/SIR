@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado</title>
+    <style>
+        .btn-flotante {
+            font-size: 16px;
+            /* Cambiar el tamaño de la tipografia */
+            text-transform: uppercase;
+            /* Texto en mayusculas */
+            font-weight: bold;
+            /* Fuente en negrita o bold */
+            color: #ffffff;
+            /* Color del texto */
+            border-radius: 5px;
+            /* Borde del boton */
+            letter-spacing: 2px;
+            /* Espacio entre letras */
+            background-color: #be1919;
+            /* Color de fondo */
+            padding: 18px 30px;
+            /* Relleno del boton */
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            transition: all 300ms ease 0ms;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            z-index: 99;
+        }
+
+        .btn-flotante:hover {
+            background-color: #2c2fa5;
+            /* Color de fondo al pasar el cursor */
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-7px);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .btn-flotante {
+                font-size: 14px;
+                padding: 12px 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="content">
+        <div class="container container-fluid ">
+            <div class="card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <h3 class="mb-0"><strong>Listado de programación</strong></h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="">Fecha del tour</label>
+                                <input type="date" name="fecha" id="fecha" class="form-style mayusculas ">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mx-sm-3 mb-6">
+                                <label for="form-label">Tour</label>
+                                <select name="" class="form-style mayusculas Select" id="select">
+                                    <option value="" selected>
+                                        Seleccionar
+                                    </option>
+                                    <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{
+                                        %>
+                                        <option value="<%= Tours.Id_Tour %>">
+                                            <%= Tours.NombreTour %>
+                                        </option>
+                                        <% }) } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mx-sm-3 mb-6">
+                                <label for="form-label">Ruta</label>
+                                <select name="ruta[]" class="form-style mayusculas Select" id="ruta">
+                                    <option value="" selected>
+                                        Seleccionar
+                                    </option>
+                                    <% if (typeof resultRutas !="undefined" ){ resultRutas.forEach((Rutas)=>{
+                                        %>
+                                        <option value="<%= Rutas.Ruta %>">
+                                            <%= Rutas.Ruta %>
+                                        </option>
+                                        <% }) } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-4" id="div_Info"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <button type="button" class="btn btn-primary btn-sm " id="filtrar">Filtrar</button>
+                            </div>
+                            <br><br>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row" id="div_Table">
+                        <div class="d-flex align-items-center justify-content-center" id="div_Text">
+                            <p>Seleccione una fecha y/o un tour para filtrar</p>
+                        </div>
+                    </div>
+                    <br><br><br><br>
+                    <input type="button" name="Exportar" value="Exportar" class="btn-flotante"
+                        onclick="exportTableToExcel('Listado', 'Listado.xls')" id="save-btn">
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
+    <% if(typeof alert !="undefined" ){ %>
+        <script>
+            swal({
+                title: '<%= alertTitle %>',
+                text: '<%= alertMessage %>',
+                icon: '<%= alertIcon %>',
+                showConfirmButton: '<%= showConfirmButton %>',
+                timer: '<%= timer %>'
+            }).then(() => {
+                window.location = '/<%= ruta %>'
+            })
+        </script>
+        <% } %>
+
+
+            <script>
+
+
+                $(document).ready(() => {
+                    $("#save-btn").hide()
+                })
+
+                $("#filtrar").click(function () {
+                    var Fecha = $("#fecha").val();
+                    var Tour = $("#select").val();
+                    var Ruta = $("#ruta").val();
+                    if ((Tour != '') || (Fecha != '') || (Ruta != '')) {
+                        tabla(Tour, Fecha, Ruta)
+                        console.log(Tour, Fecha, Ruta)
+                    }
+                })
+
+                tabla = (Tour = '', Fecha = '', Ruta = '') => {
+                    fetch('/Listado/Listado?Tour=' + Tour + '&Fecha=' + Fecha + '&Ruta=' + Ruta + '').then(function (response) {
+                        return response.json();
+                    }).then(function (responseData) {
+                        var dis = $('#div_Table');
+                        var tabla = '';
+                        if (responseData.length > 0) {
+
+                            tabla += '<div class="col-lg-12 table-responsive">'
+                            tabla += '<table class="table table-striped table-bordered table-dark" id="Listado">'
+                            tabla += '<thead>'
+                            tabla += '<th>Id_Reserva</th>'
+                            tabla += '<th>Nombre Pasajero</th>'
+                            tabla += '<th>DNI/Pasaporte</th>'
+                            tabla += '<th>Teléfono</th>'
+                            tabla += '<th>Precio</th>'
+                            tabla += '<th>Número Pasajeros</th>'
+                            tabla += '<th>Pundo de Encuentro</th>'
+                            tabla += '<th>Reporta</th>'
+                            tabla += '<th>Ruta</th>'
+                            tabla += '<th>Fecha Reserva</th>'
+                            tabla += '<th>Idioma</th>'
+                            tabla += '</thead>'
+                            tabla += '<tbody id="tbody">'
+
+                            responseData.forEach(fila => {
+                                const NombrePasajero = fila.NombrePasajero.split(', ');
+                                const IdPas = fila.IdPas.split(', ');
+                                const TelefonoPasajero = fila.TelefonoPasajero.split(', ');
+                                const PrecioTour = fila.PrecioTour.split(', ');
+                                let filasNombrePasajeros = '';
+                                let filasIdPas = '';
+                                let filasTelefonoPasajero = '';
+                                let filasPrecioTour = '';
+                                for (let i = 0; i < NombrePasajero.length; i++) {
+                                    filasNombrePasajeros += `<tr><td>${NombrePasajero[i]}</td></tr>`;
+                                    filasIdPas += `<tr><td>${IdPas[i]}</td></tr>`;
+                                    filasTelefonoPasajero += `<tr><td>${TelefonoPasajero[i]}</td></tr>`;
+                                    filasPrecioTour += `<tr><td>${PrecioTour[i]}</td></tr>`;
+                                }
+
+                                tabla += `<tr>
+                                    <td>${fila.Id_Reserva}</td>
+                                    <td><table>${filasNombrePasajeros}</table></td>
+                                    <td><table>${filasIdPas}</table></td>
+                                    <td><table>${filasTelefonoPasajero}</table></td>
+                                    <td><table>${filasPrecioTour}</table></td>
+                                    <td>${fila.NumeroPasajeros}</td>
+                                    <td>${fila.PuntoEncuentro}</td>
+                                    <td>${fila.NombreReporta}</td>
+                                    <td>${fila.Ruta}</td>
+                                    <td>${fila.FechaReserva}</td>
+                                    <td>${fila.IdiomaReserva}</td>
+                                    </tr>`;
+                            });
+                            tabla += '</tbody>'
+                            tabla += '</table>'
+                            tabla += '<br>'
+                            tabla += '</div>'
+
+                            $("#save-btn").show()
+                        } else {
+                            tabla += '<div class="d-flex align-items-center justify-content-center" id="div_Text">'
+                            tabla += '<p>No se encontraron datos.</p>'
+                            tabla += '</div>'
+                            $("#save-btn").hide()
+                        }
+                        $(dis).html(tabla);
+
+                    });
+
+                }
+
+
+
+                // function exportTableToExcel(tableID, filename = '') {
+                //     const downloadLink = document.createElement('a');
+                //     const dataType = 'application/vnd.ms-excel';
+                //     const tableSelect = document.getElementById(tableID);
+                //     const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+                //     filename = filename || 'excel_data.xls';
+                //     downloadLink.href = `data:${dataType}, ${tableHTML}`;
+                //     downloadLink.download = filename;
+                //     downloadLink.click();
+                // }
+
+                function exportTableToExcel(tableID, filename = '') {
+                    const downloadLink = document.createElement('a');
+                    const dataType = 'application/vnd.ms-excel';
+                    const tableSelect = document.getElementById(tableID);
+
+                    // Añade estilos CSS para los bordes de la tabla
+                    const css = `
+                    table {
+                    border-collapse: collapse;
+                    }
+                    table, th, td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    }
+                `;
+                    const style = document.createElement('style');
+                    style.type = 'text/css';
+                    style.appendChild(document.createTextNode(css));
+
+                    const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+                    filename = filename || 'excel_data.xls';
+
+                    downloadLink.href = `data:${dataType}, ${tableHTML}`;
+                    downloadLink.download = filename;
+
+                    // Agrega los estilos CSS al inicio del archivo Excel
+                    const excelFile = document.createElement('div');
+                    excelFile.appendChild(style);
+                    excelFile.appendChild(tableSelect.cloneNode(true));
+
+                    downloadLink.href = URL.createObjectURL(new Blob([excelFile.innerHTML], { type: dataType }));
+                    downloadLink.download = filename;
+
+                    downloadLink.click();
+                }
+
+                $(document).ready(function () {
+                    $("form").keypress(function (e) {
+                        if (e.which == 13) {
+                            return false;
+                        }
+                    });
+                });
+            </script>
+
+</body>
+
+</html>

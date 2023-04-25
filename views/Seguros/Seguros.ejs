@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comisiones</title>
+    <style>
+        .btn-flotante {
+            font-size: 16px;
+            /* Cambiar el tamaño de la tipografia */
+            text-transform: uppercase;
+            /* Texto en mayusculas */
+            font-weight: bold;
+            /* Fuente en negrita o bold */
+            color: #ffffff;
+            /* Color del texto */
+            border-radius: 5px;
+            /* Borde del boton */
+            letter-spacing: 2px;
+            /* Espacio entre letras */
+            background-color: #be1919;
+            /* Color de fondo */
+            padding: 18px 30px;
+            /* Relleno del boton */
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            transition: all 300ms ease 0ms;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            z-index: 99;
+        }
+
+        .btn-flotante:hover {
+            background-color: #2c2fa5;
+            /* Color de fondo al pasar el cursor */
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-7px);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .btn-flotante {
+                font-size: 14px;
+                padding: 12px 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="content">
+        <div class="container container-fluid p-0">
+            <div class="card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <h3 class="mb-0"><strong>Seguros</strong></h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-2">
+                        <div class="col-md-4">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="">Fecha del tour</label>
+                                <input type="date" name="fecha" id="Fecha" class="form-style mayusculas ">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="">Tour</label>
+                                <select name="tour[]" multiple="multiple" class="form-styleSelect mayusculas" id="select">
+                                    <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{ %>
+                                        <option value="<%= Tours.Id_Tour %>">
+                                            <%= Tours.NombreTour %>
+                                        </option>
+                                        <% }) } %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <button class="btn btn-primary btn-sm " id="filtrar">Filtrar</button>
+                            </div>
+                            <br><br>
+                        </div>
+                    </div>
+                    <div class="table-responsive" id="div_Table">
+                        <div class="d-flex align-items-center justify-content-center" id="div_Text">
+                            <p>Seleccione una fecha y/o un tour para filtrar</p>
+                        </div>
+                    </div>
+                    <br><br><br><br>
+                    <input type="button" name="Exportar" value="Exportar" class="btn-flotante"
+                        onclick="exportTableToExcel('Seguros', 'Seguros.xls')" id="save-btn">
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+    <script>
+
+
+        $(document).ready(() => {
+            $("#save-btn").hide()
+        })
+
+        $("#filtrar").click(function () {
+            var tour = $('#select').val();
+            var Fecha = $('#Fecha').val();
+            if ((tour != '') || (Fecha != '')) {
+                load_Pas(Fecha, tour);
+            }
+        });
+
+        load_Pas = (Fecha, Id_Tour) => {
+            fetch('/Seguros/Tabla?Fecha=' + Fecha + '&Id_Tour=' + Id_Tour + '').then(function (response) {
+
+                return response.json();
+
+            }).then(function (responseData) {
+                var dis = $('#div_Table');
+                var tabla = '';
+                if (responseData.length > 0) {
+                    tabla += '<table class="table table-striped table-bordered table-dark" id="Comisiones">'
+                    tabla += '<thead>'
+                    tabla += '<tr>'
+                    tabla += '<th>Nombre del Pasajero</th>'
+                    tabla += '<th>DNI/Pasaporte</th>'
+                    tabla += '<th>Tour</th>'
+                    tabla += '<th>Comisión</th>'
+                    tabla += '<th>Fecha de viaje</th>'
+                    tabla += '</tr>'
+                    tabla += '</thead>'
+                    tabla += '<tbody>'
+
+                    for (var i = 0; i < responseData.length; i++) {
+                        var dis;
+
+                        tabla += '<tr>'
+                        tabla += '<input type="hidden" name="id[]" value="<?id ?>">'
+                        tabla += '<td>'
+                        tabla += responseData[i].NombrePasajero
+                        tabla += '</td>'
+                        tabla += '<td>'
+                        tabla += responseData[i].IdPas
+                        tabla += '</td>'
+                        tabla += '<td>'
+                        tabla += responseData[i].NombreTour
+                        tabla += '</td>'
+                        tabla += '<td>'
+                        tabla += responseData[i].Comision
+                        tabla += '</td>'
+                        tabla += '<td>'
+                        tabla += responseData[i].FechaReserva
+                        tabla += '</td>'
+                        tabla += '</tr>'
+                    }
+                    tabla += '</tbody>'
+                    tabla += '</table>'
+                    $("#save-btn").show()
+                } else {
+                    tabla += '<div class="d-flex align-items-center justify-content-center" id="div_Text">'
+                    tabla += '<p>No se encontraron datos.</p>'
+                    tabla += '</div>'
+                    $("#save-btn").hide()
+                }
+                $(dis).html(tabla);
+            });
+        }
+
+        function exportTableToExcel(tableID, filename = '') {
+            const downloadLink = document.createElement('a');
+            const dataType = 'application/vnd.ms-excel';
+            const tableSelect = document.getElementById(tableID);
+
+            // Añade estilos CSS para los bordes de la tabla
+            const css = `
+                    table {
+                    border-collapse: collapse;
+                    }
+                    table, th, td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    }
+                `;
+            const style = document.createElement('style');
+            style.type = 'text/css';
+            style.appendChild(document.createTextNode(css));
+
+            const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+            filename = filename || 'excel_data.xls';
+
+            downloadLink.href = `data:${dataType}, ${tableHTML}`;
+            downloadLink.download = filename;
+
+            // Agrega los estilos CSS al inicio del archivo Excel
+            const excelFile = document.createElement('div');
+            excelFile.appendChild(style);
+            excelFile.appendChild(tableSelect.cloneNode(true));
+
+            downloadLink.href = URL.createObjectURL(new Blob([excelFile.innerHTML], { type: dataType }));
+            downloadLink.download = filename;
+
+            downloadLink.click();
+        }
+        $(document).ready(function() {
+        $("form").keypress(function(e) {
+            if (e.which == 13) {
+                return false;
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>

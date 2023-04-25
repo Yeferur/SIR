@@ -3,22 +3,182 @@ const bcryptjs = require('bcryptjs');
 const connection = require('../database/db');
 const { promisify } = require('util');
 
-exports.register = async (req, res) => {
+exports.saveNewUser = async (req, res) => {
     try {
         const rol = req.body.rol;
         const name = req.body.name;
-        const id_user = req.body.id_user;
-        const apellidos = req.body.apellidos;
+        const apellidos = req.body.surname;
+        const id_user = req.body.dni;
         const phone = req.body.phone;
         const username = req.body.username;
         const email = req.body.email;
-        const pswd2 = req.body.pswd2;
-        let passwordHash = await bcryptjs.hash(pswd2, 8);
+        const pswd = req.body.pswd;
+        let passwordHash = await bcryptjs.hash(pswd, 8);
         connection.query('INSERT INTO users SET ?', { id_user: id_user, name: name, apellidos: apellidos, phone: phone, username: username, email: email, password: passwordHash, rol: rol }, async (error, results) => {
             if (error) {
-                console.log(error)
+                console.log(error);
+                res.render("Settings/NewUser", {
+                    alert: true,
+                    alertTitle: "¡Ocurrió un error!",
+                    alertMessage: "No fue posible crear el usuario. Si el error continúa, comuníquese con soporte técnico.",
+                    alertIcon: "error",
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: "Settings/NewUser",
+                });
+            } else {
+                res.render("Settings/NewUser", {
+                    alert: true,
+                    alertTitle: "Exito",
+                    alertMessage: "El usuario se ha creado correctamente.",
+                    alertIcon: "success",
+                    showConfirmButton: false,
+                    timer: 1500,
+                    ruta: "Settings/NewUser",
+                });
             }
-            res.redirect('/');
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.saveEditarUser = async (req, res) => {
+    try {
+        const id = req.body.id;
+        const rol = req.body.rol;
+        const name = req.body.name;
+        const apellidos = req.body.surname;
+        const id_user = req.body.dni;
+        const phone = req.body.phone;
+        const username = req.body.username;
+        const email = req.body.email;
+        const pswd = req.body.pswd;
+        let passwordHash;
+        if(pswd !== ''){
+        passwordHash = await bcryptjs.hash(pswd, 8);
+        }
+        connection.query('UPDATE users SET ? WHERE id = ?', [{ id_user: id_user, name: name, apellidos: apellidos, phone: phone, username: username, email: email, rol: rol },id], async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.render("Settings/EditarUser", {
+                    alert: true,
+                    alertTitle: "¡Ocurrió un error!",
+                    alertMessage: "No fue posible editar el usuario. Si el error continúa, comuníquese con soporte técnico.",
+                    alertIcon: "error",
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: "Settings/EditarUser/"+id+"",
+                });
+            } else {
+                if(passwordHash !== undefined){
+                    console.log(passwordHash)
+                    connection.query('UPDATE users SET ? WHERE id = ?', [{password: passwordHash},id], async (error, results) => {
+                        if (error) {
+                            console.log(error);
+                            res.render("Settings/EditarUser", {
+                                alert: true,
+                                alertTitle: "¡Ocurrió un error!",
+                                alertMessage: "No fue posible editar el usuario. Si el error continúa, comuníquese con soporte técnico.",
+                                alertIcon: "error",
+                                showConfirmButton: false,
+                                timer: 3500,
+                                ruta: "Settings/EditarUser/"+id+"",
+                            });
+                        } else {
+                            console.log('si')
+                            res.render("Settings/EditarUser", {
+                                alert: true,
+                                alertTitle: "Exito",
+                                alertMessage: "El usuario se ha editado correctamente.",
+                                alertIcon: "success",
+                                showConfirmButton: false,
+                                timer: 1500,
+                                ruta: "Settings/EditarUser/"+id+"",
+                            });
+                        }
+                    })
+                }else{
+                    res.render("Settings/EditarUser", {
+                        alert: true,
+                        alertTitle: "Exito",
+                        alertMessage: "El usuario se ha creado correctamente.",
+                        alertIcon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: "Settings/EditarUser/"+id+"",
+                    });
+                }
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.savePerfil = async (req, res) => {
+    try {
+        const id = req.body.id;
+        const name = req.body.name;
+        const apellidos = req.body.surname;
+        const phone = req.body.phone;
+        const username = req.body.username;
+        const email = req.body.email;
+        const pswd = req.body.pswd;
+        let passwordHash;
+        if((pswd !== '') & (pswd !== undefined)){
+        passwordHash = await bcryptjs.hash(pswd, 8);
+        }
+        connection.query('UPDATE users SET ? WHERE id = ?', [{name: name, apellidos: apellidos, phone: phone, username: username, email: email },id], async (error, results) => {
+            if (error) {
+                console.log(error);
+                res.render("Settings/Perfil", {
+                    alert: true,
+                    alertTitle: "¡Ocurrió un error!",
+                    alertMessage: "No fue posible editar el perfil. Si el error continúa, comuníquese con soporte técnico.",
+                    alertIcon: "error",
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: "Settings/Perfil/"+id+"",
+                });
+            } else {
+                if(passwordHash !== undefined){
+                    connection.query('UPDATE users SET ? WHERE id = ?', [{password: passwordHash},id], async (error, results) => {
+                        if (error) {
+                            console.log(error);
+                            res.render("Settings/Perfil", {
+                                alert: true,
+                                alertTitle: "¡Ocurrió un error!",
+                                alertMessage: "No fue posible editar el perfil. Si el error continúa, comuníquese con soporte técnico.",
+                                alertIcon: "error",
+                                showConfirmButton: false,
+                                timer: 3500,
+                                ruta: "Settings/Perfil/"+id+"",
+                            });
+                        } else {
+                            res.render("Settings/Perfil", {
+                                alert: true,
+                                alertTitle: "Exito",
+                                alertMessage: "El perfil se ha editado correctamente.",
+                                alertIcon: "success",
+                                showConfirmButton: false,
+                                timer: 1500,
+                                ruta: "Settings/Perfil/"+id+"",
+                            });
+                        }
+                    })
+                }else{
+                    res.render("Settings/Perfil", {
+                        alert: true,
+                        alertTitle: "Exito",
+                        alertMessage: "El perfil se ha creado correctamente.",
+                        alertIcon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: "Settings/Perfil/"+id+"",
+                    });
+                }
+            }
         })
     } catch (error) {
         console.log(error)
@@ -36,7 +196,7 @@ exports.login = async (req, res) => {
                 error: 'Ingrese los datos solicitados'
             })
         } else {
-            connection.query('SELECT * FROM users WHERE email = ?', [user], async (error, results, fields) => {
+            connection.query('SELECT * FROM users WHERE id_user = ? OR username = ? OR email = ?', [user, user, user], async (error, results, fields) => {
                 if (results.length == 0 || !(await bcryptjs.compare(pass, results[0].password))) {
                     res.render('login', {
                         layout: false,
@@ -86,14 +246,145 @@ exports.isAuthenticated = async (req, res, next) => {
     }
 }
 
+exports.ensureNotAuthenticated = async (req, res, next) => {
+    if (req.cookies.jwt) {
+        return res.redirect('/');
+    }
+    next();
+}
+
 exports.logout = (req, res) => {
     res.clearCookie('jwt')
     return res.redirect('/')
 }
 
+exports.ActualizarAforo = (req, res) => {
+    try {
+        var Id_Tour = req.body.Id_Tour;
+        var NombreTour = req.body.NombreTour;
+        var CupoBase = req.body.CupoBase;
+        var CupoDia = req.body.CupoDia;
+        var rol = req.body.rol;
+        var render;
+
+        if (rol == "Administrador") {
+            render = "index_admin";
+        } else if (rol == "Asesor") {
+            render = "index_asesor";
+        }
+
+        var Fecha = new Date();
+        var dia = String(Fecha.getDate()).padStart(2, '0');
+        var mes = String(Fecha.getMonth() + 1).padStart(2, '0');
+        var año = Fecha.getFullYear();
+        var FechaRegistro = año + '-' + mes + '-' + dia;
+
+        for (var i = 0; i < Id_Tour.length; i++) {
+            connection.query('INSERT INTO Aforos SET ?', {
+                NombreTour: NombreTour[i], CupoBase: CupoBase[i], CupoDia: CupoDia[i], FechaRegistro: FechaRegistro
+            }, async (error, result) => {
+                if (error) {
+                    console.log(error)
+                    res.render(render, {
+                        alert: true,
+                        alertTitle: "¡Ocurrió un error!",
+                        alertMessage: "No fue posible actualizar el aforo. Si el error continúa, comuníquese con soporte técnico.",
+                        alertIcon: "error",
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: "",
+                    });
+                }
+            })
+        }
+        if (i == Id_Tour.length) {
+            for (var t = 0; t < Id_Tour.length; t++) {
+                connection.query('UPDATE Tours SET ? WHERE Id_Tour = ?', [{
+                    CupoBase: CupoBase[t], CupoDia: CupoDia[t]
+                }, Id_Tour[t]], async (error, result) => {
+                    if (error) {
+                        console.log(error)
+                        res.render(render, {
+                            alert: true,
+                            alertTitle: "¡Ocurrió un error!",
+                            alertMessage: "No fue posible actualizar el aforo. Si el error continúa, comuníquese con soporte técnico.",
+                            alertIcon: "error",
+                            showConfirmButton: false,
+                            timer: 3500,
+                            ruta: "",
+                        });
+                    } else {
+                        res.render(render, {
+                            alert: true,
+                            alertTitle: "Exito",
+                            alertMessage: "El aforo se ha actualizado correctamente.",
+                            alertIcon: "success",
+                            showConfirmButton: false,
+                            timer: 1500,
+                            ruta: "",
+                        });
+                    }
+                })
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.ReiniciarAforo = (req, res) => {
+    try {
+        var Id_Tour = req.body.Id_Tour;
+        var CupoBase = req.body.CupoBase;
+        var rol = req.body.rol;
+        var render;
+
+        if (rol == "Administrador") {
+            render = "index_admin";
+        } else if (rol == "Asesor") {
+            render = "index_asesor";
+        }
+
+        for (var t = 0; t < Id_Tour.length; t++) {
+            connection.query('UPDATE Tours SET ? WHERE Id_Tour = ?', [{
+                CupoDia: CupoBase[t]
+            }, Id_Tour[t]], async (error, result) => {
+                if (error) {
+                    console.log(error)
+                    res.render(render, {
+                        alert: true,
+                        alertTitle: "¡Ocurrió un error!",
+                        alertMessage: "No fue posible reiniciar el cupo diario. Si el error continúa, comuníquese con soporte técnico.",
+                        alertIcon: "error",
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: "",
+                    });
+                } else {
+                    res.render(render, {
+                        alert: true,
+                        alertTitle: "Exito",
+                        alertMessage: "El cupo diario se ha reiniciado correctamente.",
+                        alertIcon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: "",
+                    });
+                }
+            })
+        }
+
+    } catch (error) {
+
+    }
+}
+
+
 exports.saveNuevaReserva = async (req, res) => {
     try {
         var Id_Reserva = req.body.Id_Reserva;
+        var TipoReserva = req.body.TipoReserva;
         var NumeroPasajeros = req.body.input_numpas;
         var TotalPasajeros = req.body.total_pas;
         var TourReserva = req.body.SelectTour;
@@ -120,11 +411,11 @@ exports.saveNuevaReserva = async (req, res) => {
 
         var id_user = req.body.id_user;
 
-        var fecha = new Date();
-        var dia = String(fecha.getDate()).padStart(2, '0');
-        var mes = String(fecha.getMonth() + 1).padStart(2, '0');
-        var año = fecha.getFullYear();
-        var FechaRegistro = año + '-' + mes + '-' + dia
+        var Fecha = new Date();
+        var dia = String(Fecha.getDate()).padStart(2, '0');
+        var mes = String(Fecha.getMonth() + 1).padStart(2, '0');
+        var año = Fecha.getFullYear();
+        var FechaRegistro = año + '-' + mes + '-' + dia;
 
         connection.query('INSERT INTO History SET ?', {
             Id_Reserva: Id_Reserva, Tipo: TipoHistory, Accion: AccionHistory, id_user: id_user, FechaRegistro: FechaRegistro
@@ -141,7 +432,7 @@ exports.saveNuevaReserva = async (req, res) => {
                     ruta: "Reservas/NuevaReserva",
                 });
             } else {
-                connection.query('INSERT INTO Reservas SET ?', { Id_Reserva: Id_Reserva, NumeroPasajeros: NumeroPasajeros, TotalPasajeros: TotalPasajeros, TourReserva: TourReserva, PuntoEncuentro: PuntoEncuentro, FechaReserva: FechaReserva, TelefonoReserva: TelefonoReserva, IdiomaReserva: IdiomaReserva, CategoriaReserva: CategoriaReserva, NombreReporta: NombreReporta, HoraSalida: HoraSalida, Ruta: Ruta, Observaciones: Observaciones, FechaRegistro: FechaRegistro, Culminada: Culminada }, async (errorReserva, resultReserva) => {
+                connection.query('INSERT INTO Reservas SET ?', { Id_Reserva: Id_Reserva, TipoReserva: TipoReserva, NumeroPasajeros: NumeroPasajeros, TotalPasajeros: TotalPasajeros, TourReserva: TourReserva, PuntoEncuentro: PuntoEncuentro, FechaReserva: FechaReserva, TelefonoReserva: TelefonoReserva, IdiomaReserva: IdiomaReserva, CategoriaReserva: CategoriaReserva, NombreReporta: NombreReporta, HoraSalida: HoraSalida, Ruta: Ruta, Observaciones: Observaciones, FechaRegistro: FechaRegistro, Culminada: Culminada }, async (errorReserva, resultReserva) => {
                     if (errorReserva) {
                         console.log(errorReserva);
 
@@ -177,7 +468,7 @@ exports.saveNuevaReserva = async (req, res) => {
                                         alertMessage: "La reserva " + Id_Reserva + " se ha creado correctamente.",
                                         alertIcon: "success",
                                         showConfirmButton: false,
-                                        timer: 2000,
+                                        timer: 1500,
                                         ruta: "Reservas/NuevaReserva",
                                     });
                                 }
@@ -197,6 +488,7 @@ exports.saveNuevaReserva = async (req, res) => {
 exports.saveEditReserva = async (req, res, next) => {
     try {
         var Id_Reserva = req.body.Id_Reserva;
+        var TipoReserva = req.body.TipoReserva;
         var NumeroPasajeros = req.body.input_numpas;
         var TotalPasajeros = req.body.total_pas;
         var TotalPasajeros_Old = req.body.TotalPasajeros
@@ -233,11 +525,11 @@ exports.saveEditReserva = async (req, res, next) => {
         var TipoHistory = 'Reserva';
         var AccionHistory = 'Editar';
 
-        var fecha = new Date();
-        var dia = String(fecha.getDate()).padStart(2, '0');
-        var mes = String(fecha.getMonth() + 1).padStart(2, '0');
-        var año = fecha.getFullYear();
-        var FechaRegistro = año + '-' + mes + '-' + dia
+        var Fecha = new Date();
+        var dia = String(Fecha.getDate()).padStart(2, '0');
+        var mes = String(Fecha.getMonth() + 1).padStart(2, '0');
+        var año = Fecha.getFullYear();
+        var FechaRegistro = año + '-' + mes + '-' + dia;
 
         connection.query('INSERT INTO History SET ?', {
             Id_Reserva: Id_Reserva, Tipo: TipoHistory, Accion: AccionHistory, id_user: id_user, FechaRegistro: FechaRegistro
@@ -254,8 +546,7 @@ exports.saveEditReserva = async (req, res, next) => {
                     ruta: "Reservas/EditarReserva/" + Id_Reserva + "",
                 });
             } else {
-                console.log("ok 1")
-                connection.query('UPDATE Reservas SET ? WHERE Id_Reserva = ?', [{ NumeroPasajeros: NumeroPasajeros, TotalPasajeros: TotalPasajeros, TourReserva: TourReserva, PuntoEncuentro: PuntoEncuentro, FechaReserva: FechaReserva, TelefonoReserva: TelefonoReserva, IdiomaReserva: IdiomaReserva, CategoriaReserva: CategoriaReserva, NombreReporta: NombreReporta, HoraSalida: HoraSalida, Ruta: Ruta, Observaciones: Observaciones, FechaRegistro: FechaRegistro }, Id_Reserva], async (errorReserva, resultReserva) => {
+                connection.query('UPDATE Reservas SET ? WHERE Id_Reserva = ?', [{ TipoReserva: TipoReserva, NumeroPasajeros: NumeroPasajeros, TotalPasajeros: TotalPasajeros, TourReserva: TourReserva, PuntoEncuentro: PuntoEncuentro, FechaReserva: FechaReserva, TelefonoReserva: TelefonoReserva, IdiomaReserva: IdiomaReserva, CategoriaReserva: CategoriaReserva, NombreReporta: NombreReporta, HoraSalida: HoraSalida, Ruta: Ruta, Observaciones: Observaciones, FechaRegistro: FechaRegistro }, Id_Reserva], async (errorReserva, resultReserva) => {
                     if (errorReserva) {
                         console.log(errorReserva);
                         res.render("Reservas/EditarReserva", {
@@ -268,9 +559,9 @@ exports.saveEditReserva = async (req, res, next) => {
                             ruta: "Reservas/EditarReserva/" + Id_Reserva + "",
                         });
                     } else {
-                        console.log("ok 2")
+
                         for (i = 0; i < TotalPasajeros_Old; i++) {
-                            connection.query('UPDATE Pasajeros SET ? where id = ?', [{
+                            connection.query('UPDATE Pasajeros SET ? WHERE id = ?', [{
                                 NombrePasajero: NomPas[i], IdPas: IdPas[i], TelefonoPasajero: Telefono[i], PrecioTour: Precio[i], Comision: Comision[i], Fecha: FechaRegistro
                             }, id[i]], async (errorPasajeros, resultPasajeros) => {
 
@@ -306,30 +597,30 @@ exports.saveEditReserva = async (req, res, next) => {
                                                 timer: 3500,
                                                 ruta: "Reservas/EditarReserva/" + Id_Reserva + "",
                                             });
-                                            
-                                        } 
+
+                                        }
                                     })
                                 }
 
-                                if( i == NewPasajeros){
+                                if (i == NewPasajeros) {
                                     res.render("Reservas/EditarReserva", {
                                         alert: true,
                                         alertTitle: "Exito",
                                         alertMessage: "La reserva " + Id_Reserva + " se ha actualizado correctamente.",
                                         alertIcon: "success",
                                         showConfirmButton: false,
-                                        timer: 2000,
+                                        timer: 1500,
                                         ruta: "Reservas/EditarReserva/" + Id_Reserva + "",
                                     });
                                 }
-                            }else {
+                            } else {
                                 res.render("Reservas/EditarReserva", {
                                     alert: true,
                                     alertTitle: "Exito",
                                     alertMessage: "La reserva " + Id_Reserva + " se ha actualizado correctamente.",
                                     alertIcon: "success",
                                     showConfirmButton: false,
-                                    timer: 2000,
+                                    timer: 1500,
                                     ruta: "Reservas/EditarReserva/" + Id_Reserva + "",
                                 });
                             }
@@ -347,10 +638,10 @@ exports.saveEditReserva = async (req, res, next) => {
 exports.saveNuevoTransfer = async (req, res) => {
     try {
         var Id_Transfer = req.body.Id_Transfer;
-        var NumeroPasajeros = req.body.input_numpas;
-        var Servicio = req.body.total_pas;
-        var Salida = req.body.SelectTour;
-        var Llegada = req.body.NombrePunto;
+        var NumeroPasajeros = req.body.NumPas;
+        var Servicio = req.body.Servicio;
+        var Salida = req.body.Salida;
+        var Llegada = req.body.Llegada;
         var FechaTransfer = req.body.FechaTransfer;
         var NombreReporta = req.body.NombreReporta;
         var HoraRecogida = req.body.HoraRecogida;
@@ -369,21 +660,21 @@ exports.saveNuevoTransfer = async (req, res) => {
 
         var id_user = req.body.id_user;
 
-        var fecha = new Date();
-        var dia = String(fecha.getDate()).padStart(2, '0');
-        var mes = String(fecha.getMonth() + 1).padStart(2, '0');
-        var año = fecha.getFullYear();
-        var FechaRegistro = año + '-' + mes + '-' + dia
+        var Fecha = new Date();
+        var dia = String(Fecha.getDate()).padStart(2, '0');
+        var mes = String(Fecha.getMonth() + 1).padStart(2, '0');
+        var año = Fecha.getFullYear();
+        var FechaRegistro = año + '-' + mes + '-' + dia;
 
         connection.query('INSERT INTO History SET ?', {
-            Id_Reserva: Id_Reserva, Tipo: TipoHistory, Accion: AccionHistory, id_user: id_user, FechaRegistro: FechaRegistro
+            Id_Reserva: Id_Transfer, Tipo: TipoHistory, Accion: AccionHistory, id_user: id_user, FechaRegistro: FechaRegistro
         }, async (errorHistory, resultHistory) => {
             if (errorHistory) {
                 console.log(errorHistory)
                 res.render("Transfer/NuevoTransfer", {
                     alert: true,
                     alertTitle: "¡Ocurrió un error!",
-                    alertMessage: "No fue posible crear la reserva. Si el error continúa, comuníquese con soporte técnico.",
+                    alertMessage: "No fue posible crear el transfer. Si el error continúa, comuníquese con soporte técnico.",
                     alertIcon: "error",
                     showConfirmButton: false,
                     timer: 3500,
@@ -404,7 +695,7 @@ exports.saveNuevoTransfer = async (req, res) => {
                             ruta: "Transfer/NuevoTransfer",
                         });
                     } else {
-                        for (i = 0; i < TotalPasajeros; i++) {
+                        for (i = 0; i < NumeroPasajeros; i++) {
                             connection.query('INSERT INTO PasajerosTransfer SET ?', {
                                 Id_Transfer: Id_Transfer, NombrePasajero: NomPas[i], IdPas: IdPas[i], TelefonoPasajero: Telefono[i], Fecha: FechaRegistro, Confirmacion: Confirmacion
                             }, async (errorPasajeros, resultPasajeros) => {
@@ -423,10 +714,10 @@ exports.saveNuevoTransfer = async (req, res) => {
                                     res.render("Transfer/NuevoTransfer", {
                                         alert: true,
                                         alertTitle: "Exito",
-                                        alertMessage: "El transfer " + Id_Reserva + " se ha creado correctamente.",
+                                        alertMessage: "El transfer " + Id_Transfer + " se ha creado correctamente.",
                                         alertIcon: "success",
                                         showConfirmButton: false,
-                                        timer: 2000,
+                                        timer: 1500,
                                         ruta: "Transfer/NuevoTransfer",
                                     });
                                 }
@@ -443,6 +734,401 @@ exports.saveNuevoTransfer = async (req, res) => {
     }
 }
 
+exports.saveEditarTransfer = async (req, res) => {
+    try {
+        var Id_Transfer = req.body.Id_Transfer;
+        var NumeroPasajeros = req.body.NumPas;
+        var Old_Pasajeros = req.body.Old_Pasajeros;
+        var New_Pasajeros = req.body.New_Pasajeros;
+        var Servicio = req.body.Servicio;
+        var Salida = req.body.Salida;
+        var Llegada = req.body.Llegada;
+        var FechaTransfer = req.body.FechaTransfer;
+        var NombreReporta = req.body.NombreReporta;
+        var HoraRecogida = req.body.HoraRecogida;
+        var Vuelo = req.body.Vuelo;
+        var TelefonoTransfer = req.body.TelefonoTransfer;
+        var ValorServicio = req.body.ValorServicio;
+        var Observaciones = req.body.Observaciones;
+        var NomPas = req.body.NomPas;
+        var IdPas = req.body.IdPas;
+        var Telefono = req.body.Telefono;
+        var id = req.body.id;
+
+        var New_NomPas = req.body.New_NomPas;
+        var New_IdPas = req.body.New_IdPas;
+        var New_Telefono = req.body.New_Telefono;
+
+        var Confirmacion = 1;
+
+        var TipoHistory = 'Transfer';
+        var AccionHistory = 'Editar';
+
+        var id_user = req.body.id_user;
+
+        var Fecha = new Date();
+        var dia = String(Fecha.getDate()).padStart(2, '0');
+        var mes = String(Fecha.getMonth() + 1).padStart(2, '0');
+        var año = Fecha.getFullYear();
+        var FechaRegistro = año + '-' + mes + '-' + dia;
+
+        connection.query('INSERT INTO History SET ?', {
+            Id_Reserva: Id_Transfer, Tipo: TipoHistory, Accion: AccionHistory, id_user: id_user, FechaRegistro: FechaRegistro
+        }, async (errorHistory, resultHistory) => {
+            if (errorHistory) {
+                console.log(errorHistory)
+                res.render("Transfer/EditarTransfer", {
+                    alert: true,
+                    alertTitle: "¡Ocurrió un error!",
+                    alertMessage: "No fue posible actualizar el transfer. Si el error continúa, comuníquese con soporte técnico.",
+                    alertIcon: "error",
+                    showConfirmButton: false,
+                    timer: 3500,
+                    ruta: "Transfer/EditarTransfer/" + Id_Transfer + "",
+                });
+            } else {
+                connection.query('UPDATE Transfer SET ? WHERE Id_Transfer = ?', [{ NumeroPasajeros: NumeroPasajeros, Servicio: Servicio, Salida: Salida, Llegada: Llegada, FechaTransfer: FechaTransfer, NombreReporta: NombreReporta, HoraRecogida: HoraRecogida, Vuelo: Vuelo, TelefonoTransfer: TelefonoTransfer, ValorServicio: ValorServicio, Observaciones: Observaciones }, Id_Transfer], async (errorReserva, resultReserva) => {
+                    if (errorReserva) {
+                        console.log(errorReserva);
+
+                        res.render("Transfer/EditarTransfer", {
+                            alert: true,
+                            alertTitle: "¡Ocurrió un error!",
+                            alertMessage: "No fue posible actualizar el transfer. Si el error continúa, comuníquese con soporte técnico.",
+                            alertIcon: "error",
+                            showConfirmButton: false,
+                            timer: 3500,
+                            ruta: "Transfer/EditarTransfer/" + Id_Transfer + "",
+                        });
+                    } else {
+                        for (i = 0; i < Old_Pasajeros; i++) {
+                            connection.query('UPDATE PasajerosTransfer SET ? WHERE id = ?', [{
+                                NombrePasajero: NomPas[i], IdPas: IdPas[i], TelefonoPasajero: Telefono[i]
+                            }, id[i]], async (errorPasajeros, resultPasajeros) => {
+                                if (errorPasajeros) {
+                                    console.log(errorPasajeros);
+                                    res.render("Transfer/EditarTransfer", {
+                                        alert: true,
+                                        alertTitle: "¡Ocurrió un error!",
+                                        alertMessage: "No fue posible actualizar el transfer. Si el error continúa, comuníquese con soporte técnico.",
+                                        alertIcon: "error",
+                                        showConfirmButton: false,
+                                        timer: 3500,
+                                        ruta: "Transfer/EditarTransfer/" + Id_Transfer + "",
+                                    });
+                                }
+
+                            })
+                        }
+                        if (i == Old_Pasajeros) {
+                            if (New_NomPas != undefined) {
+                                for (i = 0; i < New_Pasajeros; i++) {
+                                    connection.query('INSERT INTO PasajerosTransfer SET ?', {
+                                        Id_Transfer: Id_Transfer, NombrePasajero: New_NomPas[i], IdPas: New_IdPas[i], TelefonoPasajero: New_Telefono[i], Fecha: FechaRegistro, Confirmacion: Confirmacion
+                                    }, async (errorPasajeros, resultPasajeros) => {
+                                        if (errorPasajeros) {
+                                            console.log(errorPasajeros);
+                                            res.render("Transfer/EditarTransfer", {
+                                                alert: true,
+                                                alertTitle: "¡Ocurrió un error!",
+                                                alertMessage: "No fue posible actualizar el transfer. Si el error continúa, comuníquese con soporte técnico.",
+                                                alertIcon: "error",
+                                                showConfirmButton: false,
+                                                timer: 3500,
+                                                ruta: "Transfer/EditarTransfer/" + Id_Transfer + "",
+                                            });
+
+                                        }
+                                    })
+                                }
+
+                                if (i == New_Pasajeros) {
+                                    res.render("Transfer/EditarTransfer", {
+                                        alert: true,
+                                        alertTitle: "Exito",
+                                        alertMessage: "El transfer " + Id_Transfer + " se ha actualizado correctamente.",
+                                        alertIcon: "success",
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                        ruta: "Transfer/EditarTransfer/" + Id_Transfer + "",
+                                    });
+                                }
+                            } else {
+                                res.render("Transfer/EditarTransfer", {
+                                    alert: true,
+                                    alertTitle: "Exito",
+                                    alertMessage: "El transfer " + Id_Transfer + " se ha actualizado correctamente.",
+                                    alertIcon: "success",
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                    ruta: "Transfer/EditarTransfer/" + Id_Transfer + "",
+                                });
+                            }
+                        }
+
+                    }
+                })
+            }
+        })
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.saveNuevoTour = async (req, res) => {
+    var Id_Tour = req.body.Id_Tour;
+    var NombreTour = req.body.NombreTour;
+    var Abreviacion = req.body.Abreviacion;
+    var PrecioAdulto = req.body.PrecioAdulto;
+    var PrecioNiño = req.body.PrecioNiño;
+    var PrecioInfante = req.body.PrecioInfante;
+    var Comision = req.body.Comision;
+    var Cupos = req.body.Cupos;
+
+    connection.query('INSERT INTO Tours SET ?', { Id_Tour: Id_Tour, NombreTour: NombreTour, Abreviacion: Abreviacion, PrecioAdulto: PrecioAdulto, PrecioNiño: PrecioNiño, PrecioInfante: PrecioInfante, Comision: Comision, CupoBase: Cupos, CupoDia: Cupos }, async (error, result) => {
+        if (error) {
+            console.log(error);
+            res.render("Tours/NuevoTour", {
+                alert: true,
+                alertTitle: "¡Ocurrió un error!",
+                alertMessage: "No fue posible crear el tour. Si el error continúa, comuníquese con soporte técnico.",
+                alertIcon: "error",
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: "Tours/NuevoTour",
+            });
+        } else {
+            res.render("Tours/NuevoTour", {
+                alert: true,
+                alertTitle: "Exito",
+                alertMessage: "El tour se ha creado correctamente.",
+                alertIcon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: "Tours/NuevoTour",
+            });
+        }
+    })
+
+}
+
+exports.saveEditarTour = async (req, res) => {
+    Id_Tour = req.body.Id_Tour;
+    NombreTour = req.body.NombreTour;
+    Abreviacion = req.body.Abreviacion;
+    PrecioAdulto = req.body.PrecioAdulto;
+    PrecioNiño = req.body.PrecioNiño;
+    PrecioInfante = req.body.PrecioInfante;
+    Comision = req.body.Comision;
+
+    connection.query('UPDATE Tours SET ? WHERE Id_Tour = ?', [{ NombreTour: NombreTour, Abreviacion: Abreviacion, PrecioAdulto: PrecioAdulto, PrecioNiño: PrecioNiño, PrecioInfante: PrecioInfante, Comision: Comision }, Id_Tour], async (error, result) => {
+        if (error) {
+            console.log(error);
+            res.render("Tours/EditarTour", {
+                alert: true,
+                alertTitle: "¡Ocurrió un error!",
+                alertMessage: "No fue posible actualizar el tour. Si el error continúa, comuníquese con soporte técnico.",
+                alertIcon: "error",
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: "Tours/EditarTour/" + Id_Tour + "",
+            });
+        } else {
+            res.render("Tours/EditarTour", {
+                alert: true,
+                alertTitle: "Exito",
+                alertMessage: "El tour se ha actualizando correctamente.",
+                alertIcon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+                ruta: "Tours/EditarTour/" + Id_Tour + "",
+            });
+        }
+    })
+
+}
+
+exports.saveNuevoPunto = async (req, res) => {
+    var Id_Punto = req.body.Id_Punto;
+    var Id_Tour = req.body.Id_Tour;
+    var NombrePunto = req.body.NombrePunto;
+    var Sector = req.body.Sector;
+    var Latitud = req.body.Latitud;
+    var Longitud = req.body.Longitud;
+    var Nuevo = req.body.Nuevo;
+    var HoraSalida = req.body.HoraSalida;
+    var HoraLlegada = req.body.HoraLlegada;
+    var Ruta = req.body.Ruta;
+    var Nuevo = 1;
+
+    connection.query('INSERT INTO Puntos SET ?', { Id_Punto: Id_Punto, NombrePunto: NombrePunto, Sector: Sector, Latitud: Latitud, Longitud: Longitud, Posicion: Id_Punto, Nuevo: Nuevo }, async (error, result) => {
+        if (error) {
+            console.log(error);
+            res.render("Puntos/NuevoPunto", {
+                alert: true,
+                alertTitle: "¡Ocurrió un error!",
+                alertMessage: "No fue posible crear el punto de encuentro. Si el error continúa, comuníquese con soporte técnico.",
+                alertIcon: "error",
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: "Puntos/NuevoPunto",
+            });
+        } else {
+            for (var i = 0; i < Id_Tour.length; i++) {
+                connection.query('INSERT INTO Horarios SET ?', { Id_Punto: Id_Punto, Id_Tour: Id_Tour[i], HoraSalida: HoraSalida[i], HoraLlegada: HoraLlegada[i], Ruta: Ruta[i] }, async (error, result) => {
+                    if (error) {
+                        console.log(error);
+                        res.render("Puntos/NuevoPunto", {
+                            alert: true,
+                            alertTitle: "¡Ocurrió un error!",
+                            alertMessage: "No fue posible crear el punto de encuentro. Si el error continúa, comuníquese con soporte técnico.",
+                            alertIcon: "error",
+                            showConfirmButton: false,
+                            timer: 3500,
+                            ruta: "Puntos/NuevoPunto",
+                        });
+                    } else {
+                        res.render("Puntos/NuevoPunto", {
+                            alert: true,
+                            alertTitle: "Exito",
+                            alertMessage: "El nuevo punto de encuentro se ha creado correctamente.",
+                            alertIcon: "success",
+                            showConfirmButton: false,
+                            timer: 1500,
+                            ruta: "Puntos/NuevoPunto",
+                        });
+                    }
+                })
+            }
+        }
+    })
+
+}
+
+exports.saveEditarPunto = async (req, res) => {
+    var Id_Punto = req.body.Id_Punto;
+    var Id_Tour = req.body.Id_Tour;
+    var NombrePunto = req.body.NombrePunto;
+    var Sector = req.body.Sector;
+    var Latitud = req.body.Latitud;
+    var Longitud = req.body.Longitud;
+    var HoraSalida = req.body.HoraSalida;
+    var HoraLlegada = req.body.HoraLlegada;
+    var Ruta = req.body.Ruta;
+
+
+    connection.query('UPDATE Puntos SET ? WHERE Id_Punto = ?', [{ NombrePunto: NombrePunto, Sector: Sector, Latitud: Latitud, Longitud: Longitud }, Id_Punto], async (error, result) => {
+        if (error) {
+            console.log(error);
+            res.render("Puntos/EditarPunto", {
+                alert: true,
+                alertTitle: "¡Ocurrió un error!",
+                alertMessage: "No fue posible actualizar el punto de encuentro. Si el error continúa, comuníquese con soporte técnico.",
+                alertIcon: "error",
+                showConfirmButton: false,
+                timer: 3500,
+                ruta: "Puntos/EditarPunto/" + Id_Punto + "",
+            });
+        } else {
+            for (var i = 0; i < Id_Tour.length; i++) {
+                connection.query('UPDATE Horarios SET ? WHERE Id_Punto = ? AND Id_Tour = ?', [{ HoraSalida: HoraSalida[i], HoraLlegada: HoraLlegada[i], Ruta: Ruta }, Id_Punto, Id_Tour[i]], async (error, result) => {
+                    if (error) {
+                        console.log(error);
+                        res.render("Puntos/EditarPunto", {
+                            alert: true,
+                            alertTitle: "¡Ocurrió un error!",
+                            alertMessage: "No fue posible actualizar el punto de encuentro. Si el error continúa, comuníquese con soporte técnico.",
+                            alertIcon: "error",
+                            showConfirmButton: false,
+                            timer: 3500,
+                            ruta: "Puntos/EditarPunto/" + Id_Punto + "",
+                        });
+                    } else {
+                        res.render("Puntos/EditarPunto", {
+                            alert: true,
+                            alertTitle: "Exito",
+                            alertMessage: "El nuevo punto de encuentro se ha actalizado correctamente.",
+                            alertIcon: "success",
+                            showConfirmButton: false,
+                            timer: 1500,
+                            ruta: "Puntos/EditarPunto/" + Id_Punto + "",
+                        });
+                    }
+                })
+            }
+        }
+    })
+
+}
+
+exports.saveOrdenarPuntos = async (req, res) => {
+    var Id_Punto = req.body.Id_Punto;
+    var Posicion = req.body.Posicion;
+    var Nuevo = 0;
+
+    if (Id_Punto.length > 0) {
+        for (var i = 0; i < Id_Punto.length; i++) {
+            connection.query('UPDATE Puntos SET ? WHERE Id_Punto = ?', [{ Posicion: Posicion[i], Nuevo: Nuevo }, Id_Punto[i]], async (error, result) => {
+                if (error) {
+                    console.log(error);
+                    res.render("Puntos/OrdenarPuntos", {
+                        alert: true,
+                        alertTitle: "¡Ocurrió un error!",
+                        alertMessage: "No fue posible actualizar los puntos de encuentro. Si el error continúa, comuníquese con soporte técnico.",
+                        alertIcon: "error",
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: "Puntos/OrdenarPuntos",
+                    });
+                } else {
+                    res.render("Puntos/OrdenarPuntos", {
+                        alert: true,
+                        alertTitle: "Exito",
+                        alertMessage: "Los puntos de encuentro se ha ordenado correctamente.",
+                        alertIcon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: "Puntos/OrdenarPuntos",
+                    });
+                }
+            })
+        }
+    }
+}
+
+exports.saveConfirmacion = async (req, res) => {
+    var id = req.body.id;
+    var Confirmacion = req.body.con;
+    if (id.length > 0) {
+        for (var i = 0; i < Confirmacion.length; i++) {
+            connection.query('UPDATE Pasajeros SET ? WHERE id = ?', [{ Confirmacion: Confirmacion[i] }, id[i]], async (error, result) => {
+                if (error) {
+                    console.log(error);
+                    res.render("Programacion/Confirmacion", {
+                        alert: true,
+                        alertTitle: "¡Ocurrió un error!",
+                        alertMessage: "No fue posible guardar la confirmación. Si el error continúa, comuníquese con soporte técnico.",
+                        alertIcon: "error",
+                        showConfirmButton: false,
+                        timer: 3500,
+                        ruta: "Programacion/Confirmacion",
+                    });
+                } else {
+                    res.render("Programacion/Confirmacion", {
+                        alert: true,
+                        alertTitle: "Exito",
+                        alertMessage: "Confimacion de viaje guardada correctamente.",
+                        alertIcon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                        ruta: "Programacion/Confirmacion",
+                    });
+                }
+            })
+        }
+    }
+}
 
 
 exports.Tours = async (req, res, next) => {
@@ -470,6 +1156,18 @@ exports.Categoria = async (req, res, next) => {
     }
 }
 
+exports.ServicioTransfer = async (req, res, next) => {
+    try {
+        connection.query('SELECT * FROM ServicioTransfer', (error, resultsServicio) => {
+            if (!resultsServicio) { return next() }
+            req.resultsServicio = resultsServicio
+            return next()
+        })
+    } catch (error) {
+        console.log(error)
+        return next()
+    }
+}
 
 exports.VerReservas = async (req, res, next) => {
     try {
@@ -496,20 +1194,6 @@ exports.VerTransfer = async (req, res, next) => {
         return next()
     }
 }
-
-// exports.VerReservasTours = async (req, res, next) => {
-//     try {
-//         connection.query('SELECT Id_Tour, NombreTour FROM Tours', (error, resultsTours) => {
-//             if (!resultsTours) { return next() }
-//             req.resultsTours = resultsTours
-//             return next()
-//         })
-//     } catch (error) {
-//         console.log(error)
-//         return next()
-//     }
-
-// }
 
 exports.Cupos = async (req, res, next) => {
     try {
@@ -550,4 +1234,3 @@ exports.CuposH = async (req, res, next) => {
         return next()
     }
 }
-

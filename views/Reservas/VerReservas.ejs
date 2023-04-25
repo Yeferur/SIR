@@ -238,40 +238,6 @@
             transition: all 0.3s 0.2s ease-out;
         }
 
-        .form-style {
-            padding-left: 13px;
-            height: 40px;
-            width: 100%;
-            font-weight: 500;
-            border-radius: 4px;
-            font-size: 14px;
-            line-height: 22px;
-            letter-spacing: 0.5px;
-            outline: none;
-            color: #c4c3ca;
-            background-color: #1f2029;
-            border: none;
-            -webkit-transition: all 200ms linear;
-            transition: all 200ms linear;
-            box-shadow: 0 4px 8px 0 rgba(20, 20, 20, 0.2);
-        }
-
-        .form-styleSelect {
-            padding-left: 13px;
-            width: 100%;
-            font-weight: 500;
-            border-radius: 4px;
-            font-size: 14px;
-            line-height: 22px;
-            letter-spacing: 0.5px;
-            outline: none;
-            color: #c4c3ca;
-            background-color: #1f2029;
-            border: none;
-            -webkit-transition: all 200ms linear;
-            transition: all 200ms linear;
-            box-shadow: 0 4px 8px 0 rgba(20, 20, 20, 0.2);
-        }
 
         :root {
             --bg: #f3f3f3;
@@ -365,6 +331,7 @@
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
         }
+
         a.edit {
             background: #ffd900;
             border-radius: 4px;
@@ -376,6 +343,7 @@
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
         }
+
         a.delete {
             background: #c10303;
             border-radius: 4px;
@@ -387,7 +355,6 @@
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
         }
-
     </style>
 </head>
 
@@ -401,17 +368,17 @@
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Fecha del tour</label>
-                        <input type="date" name="FechaReserva" id="FechaReserva" class="form-style">
+                        <input type="date" name="FechaReserva" id="FechaReserva" class="form-style mayusculas ">
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Fecha de registro</label>
-                        <input type="date" name="FechaRegistro" id="FechaRegistro" class="form-style">
+                        <input type="date" name="FechaRegistro" id="FechaRegistro" class="form-style mayusculas ">
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="form-label">Tipo de cliente</label>
-                        <select class="form-styleSelect" multiple="multiple" name="" id="CategoriaReserva">
+                        <select class="form-styleSelect mayusculas Select" multiple="multiple" name="" id="CategoriaReserva">
                             <% resultsCategoria.forEach((Categoria)=>{ %>
                                 <option value="<%= Categoria.Id_Categoria %>">
                                     <%= Categoria.Categoria %>
@@ -423,7 +390,7 @@
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Tour</label>
-                        <select class="form-styleSelect" name="" id="tour" multiple>
+                        <select class="form-styleSelect mayusculas Select" name="" id="tour" multiple>
                             <% resultsTours.forEach((Tours)=>{ %>
                                 <option value="<%= Tours.Id_Tour %>">
                                     <%= Tours.NombreTour %>
@@ -437,13 +404,19 @@
                 <div class="col-lg-4 ">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Id de reserva</label>
-                        <input type="text" name="reserva" id="Id_Reserva" class="form-style">
+                        <input type="text" name="reserva" id="Id_Reserva" class="form-style mayusculas ">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="">Nombres y Apellidos del pasajero</label>
+                        <input type="text" name="NombreApellido" id="NombreApellido" class="form-style mayusculas ">
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">DNI del pasajero</label>
-                        <input type="text" name="id" id="IdPas" class="form-style">
+                        <input type="text" name="id" id="IdPas" class="form-style mayusculas ">
                     </div>
                 </div>
                 <div class="col-lg-2">
@@ -486,14 +459,21 @@
                                 </a>
                                 <h2>
                                     <%= Reservas.Id_Reserva %>
+                                    <% if (Reservas.TipoReserva=="Privada" ){ %>
+                                        <i class='bx bxs-lock-alt'></i>
+                                        <% } %>
                                 </h2>
+
                             </div>
                             <div class="cardd-flap flap1" id="pdf<%= Reservas.Id_Reserva %>">
 
                                 <div class="cardd-info">
-                                    <h3>
+                                    <h4>
                                         <%= Reservas.Id_Reserva %>
-                                    </h3>
+                                        <% if (Reservas.TipoReserva=="Privada" ){ %>
+                                            <i class='bx bxs-lock-alt'></i>
+                                            <% } %>
+                                    </h4>
                                     <div class="info_Reserva">
                                         <h5>Fecha del Tour:
                                             <%= Reservas.FechaReserva %>
@@ -501,7 +481,7 @@
                                         <h5>Ruta:
                                             <%= Reservas.Ruta %>
                                         </h5>
-                                        <h5>Numero de Pasjeros:
+                                        <h5>Número de Pasajeros:
                                             <%= Reservas.NumeroPasajeros %>
                                         </h5>
                                         <h5>Tour:
@@ -518,10 +498,29 @@
                                 </div>
                                 <div class="cardd-flap flap2">
                                     <div class="cardd-actions">
-                                        <a class="pdf" onclick="PDF('<%= Reservas.Id_Reserva %>');"><iconify-icon icon="material-symbols:download" style="color: white;" width="30" height="30"></iconify-icon></a>
-                                        <a href="../Reservas/EditarReserva/<%= Reservas.Id_Reserva %>" class="edit" ><iconify-icon icon="material-symbols:edit" style="color: white;" width="30" height="30"></iconify-icon></a>
-                                        <a class="delete"><iconify-icon icon="material-symbols:delete-outline" style="color: white;" width="30" height="30"></iconify-icon></a>
+                                        <a class="pdf" onclick="PDF('<%= Reservas.Id_Reserva %>');"><iconify-icon
+                                                icon="material-symbols:download" style="color: white;" width="30"
+                                                height="30"></iconify-icon></a>
+                                        <a href="../Reservas/EditarReserva/<%= Reservas.Id_Reserva %>"
+                                            class="edit"><iconify-icon icon="material-symbols:edit"
+                                                style="color: white;" width="30" height="30"></iconify-icon></a>
+                                        <a type="button" class="delete" id="delete<%= Reservas.Id_Reserva %>"><iconify-icon icon="material-symbols:delete-outline"
+                                                style="color: white;" width="30" height="30"></iconify-icon></a>
                                     </div>
+                                    <script>
+                                        $("#delete<%= Reservas.Id_Reserva %>").click(() => {
+                                            swal({
+                                                title: "¿Seguro desea eliminar la reserva <%= Reservas.Id_Reserva %>?",
+                                                icon: "warning",
+                                                buttons: true,
+                                                dangerMode: true,
+                                            }).then((go) => {
+                                                    if (go) {
+                                                        deleteReserva('<%= Reservas.Id_Reserva %>')
+                                                    }
+                                                });
+                                        })
+                                    </script>
                                 </div>
                             </div>
                         </div>
@@ -542,7 +541,7 @@
 
 
 
-    <!-- 
+<!--     
         <input type="date" name="" id="FechaReserva">
 <br>
 <input type="date" name="" id="FechaRegistro">
@@ -553,10 +552,6 @@
     </select>
 
     <button type="button" id="filtrar">Filtrar</button> -->
-
-
-
-
 
 
     <script>
@@ -604,7 +599,7 @@
 
             };
         });
-        
+
 
         load_Pas = (Id_Reserva) => {
             fetch('/VerRervas/Pasajeros?Id_Reserva=' + Id_Reserva + '').then(function (response) {
@@ -646,8 +641,8 @@
             });
         }
 
-        Filtro = (selectionTour = '', FechaReserva = '', FechaRegistro = '', CategoriaReserva = '', Id_Reserva = '', IdPas = '', Empty = '') => {
-            fetch('/FiltroVerReservas?selectionTour=' + selectionTour + '&FechaReserva=' + FechaReserva + '&FechaRegistro=' + FechaRegistro + '&CategoriaReserva=' + CategoriaReserva + '&Id_Reserva=' + Id_Reserva + '&IdPas=' + IdPas + '&Empty=' + Empty + '').then(function (response) {
+        Filtro = (selectionTour = '', FechaReserva = '', FechaRegistro = '', CategoriaReserva = '', Id_Reserva = '', IdPas = '', Empty = '', NombreApellido = '') => {
+            fetch('/VerReservas/FiltroVerReservas?selectionTour=' + selectionTour + '&FechaReserva=' + FechaReserva + '&FechaRegistro=' + FechaRegistro + '&CategoriaReserva=' + CategoriaReserva + '&Id_Reserva=' + Id_Reserva + '&IdPas=' + IdPas + '&Empty=' + Empty + '&NombreApellido=' + NombreApellido + '').then(function (response) {
 
                 return response.json();
 
@@ -683,14 +678,15 @@
             var CategoriaReserva = $('#CategoriaReserva').val();
             var Id_Reserva = $('#Id_Reserva').val();
             var IdPas = $('#IdPas').val();
+            var NombreApellido = $('#NombreApellido').val();
             var Empty = '';
             $("#empty").each(function () {
                 if ($(this).is(":checked")) {
                     Empty = $(this).val();
                 }
             })
-            if ((tour != '') || (FechaReserva != '') || (FechaRegistro != '') || (CategoriaReserva != '') || (Id_Reserva != '') || (IdPas != '') || (Empty != '')) {
-                Filtro(tour, FechaReserva, FechaRegistro, CategoriaReserva, Id_Reserva, IdPas, Empty);
+            if ((tour != '') || (FechaReserva != '') || (FechaRegistro != '') || (CategoriaReserva != '') || (Id_Reserva != '') || (IdPas != '') || (Empty != '') || (NombreApellido != '')) {
+                Filtro(tour, FechaReserva, FechaRegistro, CategoriaReserva, Id_Reserva, IdPas, Empty, NombreApellido);
             }
         });
         $("#deshacer").click(function () {
@@ -699,8 +695,8 @@
         });
 
         function PDF(Id_Reserva) {
-            var HTML_Width = $("#pdf"+Id_Reserva+"").width();
-            var HTML_Height = $("#pdf"+Id_Reserva+"").height();
+            var HTML_Width = $("#pdf" + Id_Reserva + "").width();
+            var HTML_Height = $("#pdf" + Id_Reserva + "").height();
             var top_left_margin = 15;
             var PDF_Width = HTML_Width + (top_left_margin * 2);
             var PDF_Height = (PDF_Width * 2) + (top_left_margin * 2);
@@ -709,7 +705,7 @@
 
             var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
 
-            html2canvas($("#pdf"+Id_Reserva+"")[0]).then(function (canvas) {
+            html2canvas($("#pdf" + Id_Reserva + "")[0]).then(function (canvas) {
                 var imgData = canvas.toDataURL("image/jpeg", 1.0);
                 var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
                 pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
@@ -717,10 +713,37 @@
                     pdf.addPage(PDF_Width, PDF_Height);
                     pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 4), canvas_image_width, canvas_image_height);
                 }
-                pdf.save(""+Id_Reserva+".pdf");
+                pdf.save("" + Id_Reserva + ".pdf");
 
             });
         }
+
+        deleteReserva = (Id_Reserva) => {
+        fetch('/Reservas/DeleteReserva?Id_Reserva=' + Id_Reserva + '').then(response => {
+            response.json();
+        }).then((res) => {
+            if (res == 'error') {
+                swal({
+                    title: "Ocurrió un error",
+                    text: "No fue posible eliminar la reserva, Si el error continúa, comuníquese con soporte técnico.",
+                    icon: "error",
+                    buttons: true,
+                    dangerMode: true,
+                })
+            } else {
+                swal({
+                    text: "La reserva se ha eliminado correctamente.",
+                    icon: "success",
+                    buttons: true,
+                    dangerMode: true,
+                }).then(()=>{
+                    $('#' + Id_Reserva + '').remove();
+                    $("div.cardds").addClass("showing");
+                })
+                
+            }
+        })
+    }
     </script>
 
 

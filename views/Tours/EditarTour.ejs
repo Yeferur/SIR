@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es	">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="AdminKit">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <title>Nuevo Tour</title>
+    <link rel="shortcut icon" href="../img/icons/icon.png" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="../../resources/css/layout.css">
+    <link rel="shortcut icon" href="../../resources/img/SIR.png" />
+
+</head>
+
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="container">
+            <button class="back-button" onclick="window.location.href = '../../Tours/VerTours'">&larr; Volver</button>
+            <div class="card">
+                <% if (typeof Tour !="undefined" ) { %>
+                    <form action="/EditarTour" method="post" autocomplete="OFF">
+                        <div class="card-header">
+                            <div class="input-group">
+                                <h3 class="mb-0"><strong>Editar <%= Tour.NombreTour %></strong></h3>
+                            </div>
+                            <input type="hidden" name="Id_Tour" id="Id_Tour" value="<%= Tour.Id_Tour %>">
+                            <span style="font-size:12px">Los campos con <span class="text-danger">*</span> son
+                                obligatorios.</span>
+                        </div>
+                        <div class="card-body" style="margin-top:-20px">
+                            <br>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Nombre del tour<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="NombreTour" id="NombreTour" class="form-style mayusculas "
+                                        required value="<%= Tour.NombreTour %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Abreviación<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="Abreviacion" id="Abreviacion"
+                                        class="form-style mayusculas " required value="<%= Tour.Abreviacion %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Precio Adultos<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="PrecioAdulto" id="PrecioAdulto"
+                                        class="form-style mayusculas " required value="<%= Tour.PrecioAdulto %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Precio Niños<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="PrecioNiño" id="PrecioNiño" class="form-style mayusculas "
+                                        required value="<%= Tour.PrecioNiño %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Precio Infantes<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="PrecioInfante" id="PrecioInfante"
+                                        class="form-style mayusculas " required value="<%= Tour.PrecioInfante %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Comisión<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="Comision" id="Comision" class="form-style mayusculas "
+                                        required value="<%= Tour.Comision %>">
+                                </div>
+                            </div><br>
+
+                            <hr>
+                            <br>
+                            <div class="d-flex align-items-center justify-content-end">
+                                <button type="button" class="btn btn-primary btn-lg" id="save-btn">Guardar</button>
+                                <input type="submit" value="" id="Submit">
+                            </div>
+
+                        </div>
+                    </form>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+</main>
+
+<% if(typeof alert !="undefined" ){ %>
+    <script>
+        swal({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: '<%= showConfirmButton %>',
+            timer: '<%= timer %>'
+        }).then(() => {
+            window.location = '/<%= ruta %>'
+        })
+    </script>
+    <% } %>
+
+        <script>
+            $("#save-btn").click(() => {
+                swal({
+                    title: "¿Todo Listo?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((go) => {
+                    if (go) {
+                        $("#Submit").click()
+                    }
+                });
+            })
+
+            $(document).ready(function () {
+                $("form").keypress(function (e) {
+                    if (e.which == 13) {
+                        return false;
+                    }
+                });
+            });
+
+            $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+            $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+            $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+            $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+            $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+            $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+            $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+            $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+            $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+            $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+            $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+            $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+            $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+            $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+            $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+            $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !==undefined ){ %><%= user.id %> <% } %>");
+            $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+
+
+        </script>
+
+
+
+        </body>
+
+</html>

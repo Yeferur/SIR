@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Ver Tours</title>
+</head>
+
+<main class="content">
+    <div class="container container-fluid p-0">
+       <div class="card">
+         <div class="card-header">
+             <div class="input-group">
+                 <h3 class="mb-0"><strong>Tours</strong></h3>
+             </div>
+         </div>
+        <div class="card-body table-responsive">
+             <table id="ToursGuardados" class="table table-striped table-hover table-dark">
+                 <thead>
+                     <tr>
+                         <th>
+                             Id Tour
+                         </th>
+                         <th>
+                             Nombre del Tour
+                         </th>
+                         <th>
+                             Precio Adulto
+                         </th>
+                         <th>
+                             Precio Niño
+                         </th>
+                         <th>
+                             Precio Infante
+                         </th>
+                         <th>
+                             Comisión
+                         </th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <% if(typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{ %>
+                         <tr id="<%= Tours.Id_Tour %>">
+                             <td>
+                                 <%= Tours.Id_Tour %>
+                             </td>
+                             <td>
+                                 <%= Tours.NombreTour %>
+                             </td>
+                             <td>
+                                 <%= Tours.PrecioAdulto %>
+                             </td>
+                             <td>
+                                 <%= Tours.PrecioNiño %>
+                             </td>
+                             <td>
+                                 <%= Tours.PrecioInfante %>
+                             </td>
+                             <td>
+                                 <%= Tours.Comision %>
+                             </td>
+                         </tr>
+                         <% }) } %>
+                 </tbody>
+             </table>
+        </div>
+       </div>
+    </div>
+</main>
+
+</body>
+
+</html>

@@ -1,12 +1,106 @@
 <!DOCTYPE html>
-<html lang="es	">
+<html lang="es">
 
 <head>
-    <title>Editar Reserva</title>
+    <title>Nuevo Transfer</title>
     <link rel="shortcut icon" href="../img/icons/icon.png" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="../../resources/css/layout.css">
+    <link rel="shortcut icon" href="../../resources/img/SIR.png" />
     <style>
+        #dropdown:checked,
+        #dropdown:not(:checked) {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .dropdown:checked+label,
+        .dropdown:not(:checked)+label {
+            position: relative;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 2;
+            height: 40px;
+            transition: all 200ms linear;
+            border-radius: 4px;
+            width: 100%;
+            letter-spacing: 1px;
+            display: -webkit-inline-flex;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-align-items: center;
+            -moz-align-items: center;
+            -ms-align-items: center;
+            align-items: center;
+            -webkit-justify-content: center;
+            -moz-justify-content: center;
+            -ms-justify-content: center;
+            justify-content: center;
+            -ms-flex-pack: center;
+            text-align: center;
+            border: none;
+            background-color: #1f2029;
+            cursor: pointer;
+            color: #c4c3ca;
+        }
+
+        .section-dropdown {
+            position: absolute;
+            padding: 5px;
+            background-color: #111;
+            margin: 10px;
+            left: 0;
+            max-width: 300px;
+            border-radius: 4px;
+            display: block;
+            box-shadow: 0 14px 35px 0 rgba(9, 9, 12, 0.4);
+            z-index: 2;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 200ms linear;
+        }
+
+        .dark-light:checked~.sec-center .section-dropdown {
+            background-color: #fff;
+            box-shadow: 0 14px 35px 0 rgba(9, 9, 12, 0.15);
+        }
+
+        .dropdown:checked~.section-dropdown {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .section-dropdown:before {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            content: '';
+            display: block;
+            z-index: 1;
+        }
+
+        .section-dropdown:after {
+            position: absolute;
+            top: -7px;
+            left: 30px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #111;
+            content: '';
+            display: block;
+            z-index: 2;
+            transition: all 200ms linear;
+        }
+
+
 
         .form-styleCount {
             padding: 13px 20px;
@@ -220,671 +314,333 @@
 </head>
 
 <body>
-    <main class="content">
 
-        <div class="container-fluid p-0">
-            <div class="container">
-                <% if (typeof Reserva !="undefined" ) { %>
+    <% if (typeof Transfer !="undefined" ) { %>
+        <main class="content">
+
+            <div class="container-fluid p-0">
+                <div class="container">
+                    <button class="back-button" onclick="window.location.href = '../../Transfer/VerTransfer'">&larr; Volver</button>
                     <div class="card">
                         <div class="card-header">
                             <div class="input-group">
                                 <h3 class="mb-0">
-                                    <strong>Transfer: <%=Reserva.Id_Reserva %></strong> &nbsp;&nbsp;&nbsp;
+                                    <strong>Transfer: <%= Transfer.Id_Transfer %> </strong> &nbsp;&nbsp;&nbsp;
                                 </h3>
                             </div>
+                            <span style="font-size: 12px">Los campos con <span class="text-danger">*</span> son
+                                obligatorios.</span>
                         </div>
                         <div class="card-body">
-                            <form action="/EditReserva" method="POST" autocomplete="OFF">
-                                <input type="hidden" name="Id_Reserva" id="Id_Reserva" value="<%=Reserva.Id_Reserva %>">
-                                <input type="hidden" name="id_user" id="" value="<%=user.id_user %>">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <label class="fw-bold">Numero de Pasajeros:</label>
-                                        <!-- <input class="dropdown" type="checkbox" id="dropdown" name="dropdown" /> -->
-                                        <label class="for-dropdown" for="dropdown" id="numpas">
-                                            <%=Reserva.NumeroPasajeros %>
-                                        </label>
-                                        <input type="hidden" name="NumeroPasajeros" id="NumeroPasajeros"
-                                            value="<%=Reserva.NumeroPasajeros %>">
-                                        <input type="hidden" name="input_numpas" id="input_numpas"
-                                            value="<%=Reserva.NumeroPasajeros %>">
-                                        <input type="hidden" name="TotalPasajeros" id="TotalPasajeros"
-                                            value="<%=Reserva.TotalPasajeros %>">
-                                        <input type="hidden" name="total_pas" id="total_pas"
-                                            value="<%=Reserva.TotalPasajeros %>">
-                                        <input type="hidden" name="NewPasajeros" id="NewPasajeros">
-                                        <div class="section-dropdown" style="display: none;">
-                                            <div class="form-group">
-                                                <input type="text" name="adultos" class="form-styleCount"
-                                                    placeholder="Adultos" id="adultos" onkeyup="numpas();"
-                                                    autocomplete="off">
+                            <form action="/EditarTransfer" method="POST" autocomplete="off">
+                                <input type="hidden" name="Id_Transfer" id="Id_Transfer"
+                                    value="<%= Transfer.Id_Transfer %>">
+                                <% if (typeof user !="undefined" ){ %>
+                                    <input type="hidden" name="id_user" id="" value="<%=user.id_user %>">
+                                    <% } %>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Numero de Pasajeros:</label>
+                                                <input type="text" name="NumPas" class="form-style mayusculas "
+                                                    placeholder="Número de pasajeros" id="NumPas"
+                                                    value="<%= Transfer.NumeroPasajeros %>" autocomplete="off">
+                                                <input type="text" name="Old_Pasajeros" id="Old_Pasajeros"
+                                                    value="<%= Transfer.NumeroPasajeros %>">
+                                                <input type="text" name="New_Pasajeros" id="New_Pasajeros">
                                             </div>
-                                            <div class="form-group">
-                                                <input type="text" name="niños" class="form-styleCount"
-                                                    placeholder="Niños" id="niños" onkeyup="numpas();"
-                                                    autocomplete="off">
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Tipo de servicio</label>
+                                                <select name="Servicio" id="Servicio" class="form-style mayusculas ">
+                                                    <% if (typeof resultsServicio !="undefined" ){
+                                                        resultsServicio.forEach((Servicio)=>{
+                                                        %>
+                                                        <option value="<%= Servicio.id %>">
+                                                            <%= Servicio.Servicio %>
+                                                        </option>
+                                                        <% }) } %>
+                                                </select>
                                             </div>
-                                            <div class="form-group">
-                                                <input type="text" name="infantes" class="form-styleCount"
-                                                    placeholder="Infantes" id="infantes" onkeyup="numpas();"
-                                                    autocomplete="off">
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Punto de salida</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" name="Salida" class="form-style mayusculas "
+                                                        value="<%= Transfer.Salida %>">
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label class="fw-bold">Tour</label>
-                                        <select class="form-style" name="SelectTour" id="SelectTour">
-                                            <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{
-                                                %>
-                                                <option value="<%= Tours.Id_Tour %>">
-                                                    <%= Tours.NombreTour %>
-                                                </option>
-                                                <% }) } %>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-3" id="punto">
-                                        <label class="fw-bold">Punto de encuentro</label>
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-style" placeholder="" id="NombrePunto"
-                                                name="NombrePunto" value="<%=Reserva.PuntoEncuentro %>">
-                                            <div id="search">
-                                                <span id="search_result"></span>
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Punto de llegada</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" name="Llegada" class="form-style mayusculas "
+                                                        value="<%= Transfer.Llegada %>">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label class="fw-bold">Fecha del tour<span style="color: red">*</span></label>
-                                        <input type="date" class="form-style" name="FechaReserva"
-                                            value="<%=Reserva.FechaReserva %>" id="FechaReserva" onchange="CallCupos()" required />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <label class="fw-bold"># Tel. Reserva</label>
-                                        <input type="text" class="form-style" name="TelefonoReserva"
-                                            id="TelefonoReserva" value="<%=Reserva.TelefonoReserva %>" required />
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <label class="fw-bold">Idioma</label>
-                                        <select class="form-style" name="IdiomaReserva" id="IdiomaReserva">
-                                            <option value="Español">Español</option>
-                                            <option value="Inglés">Inglés</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <label class="fw-bold">Categoría</label>
-                                        <select class="selectpicker form-style" title="Seleccionar" name="Categoria"
-                                            id="Categoria">
-                                            <% if(typeof resultsCategoria !="undefined" ){
-                                                resultsCategoria.forEach((Categoria)=>{ %>
-                                                <option value="<%= Categoria.Id_Categoria %>">
-                                                    <%= Categoria.Categoria %>
-                                                </option>
-                                                <% }) }%>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <label class="fw-bold">¿Quién Reporta?</label>
-                                        <input type="text" class="form-style" name="NombreReporta" placeholder="Nombre"
-                                            value="<%=Reserva.NombreReporta %>" />
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <label class="fw-bold">Hora recogida</label>
-                                        <input type="text" class="form-style" name="HoraSalida" id="HoraSalida"
-                                            value="<%=Reserva.HoraSalida %>" />
-                                    </div>
-                                    <div class="col-lg-1">
-                                        <label class="fw-bold">Ruta</label>
-                                        <input type="text" class="form-style" name="Ruta" id="Ruta"
-                                            value="<%=Reserva.Ruta %>" />
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <label class="fw-bold">Observaciones</label>
-                                    <div class="form-floating">
-                                        <input type="text" class="form-style" value="<%=Reserva.Observaciones %>"
-                                            name="Observaciones" style="height: 100px">
-                                    </div>
-                                </div>
-                                <br />
-                                <div class="input-group">
-                                    <h3 class="mb-0">
-                                        <strong>Datos de los pasajeros</strong> &nbsp;
-                                    </h3>
-                                </div>
-                                <br />
-                                <div>
-                                    <h3>Adultos</h3>
-                                    <div id="div_adultos">
-                                    </div>
-                                    <br>
-                                    <div class="">
-                                        <button type="button" class="icon-btn add-btn plus" onclick="CallCupos()" id="Agregar_Adulto">
-                                            <div class="add-icon"></div>
-                                            <div class="btn-txt">Agregar</div>
-                                        </button>
-                                    </div>
-                                    <hr>
-                                </div>
-                                <div>
-                                    <h3>Niños</h3>
-                                    <div id="div_niños">
-                                    </div>
-                                    <br>
-                                    <div class="">
-                                        <button type="button" class="icon-btn add-btn plus" onclick="CallCupos()" id="Agregar_Niños">
-                                            <div class="add-icon"></div>
-                                            <div class="btn-txt">Agregar</div>
-                                        </button>
-                                    </div>
-                                    <hr>
-                                </div>
-                                <div>
-                                    <h3>Infantes</h3>
-                                    <div id="div_infantes">
-                                    </div>
-                                    <br>
-                                    <div class="">
-                                        <button type="button" class="icon-btn add-btn plus" onclick="CallCupos()" id="Agregar_Infantes">
-                                            <div class="add-icon"></div>
-                                            <div class="btn-txt">Agregar</div>
-                                        </button>
-                                    </div>
-                                    <hr>
-                                </div>
-                                <div class=" d-flex align-items-center justify-content-end ">
-                                    <button type="button" class="btn btn-primary btn-lg" id="save-btn">Guardar</button>
-                                </div>
-                                <input type="submit" value="" id="Submit">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Elige la fecha<span
+                                                        style="color: red">*</span></label>
+                                                <input type="date" class="form-style mayusculas " name="FechaTransfer"
+                                                    id="FechaTransfer" value="<%= Transfer.FechaTransfer %>" required />
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">¿Quién Reporta?</label>
+                                                <input type="text" class="form-style mayusculas " name="NombreReporta"
+                                                    placeholder="Nombre" value="<%= Transfer.NombreReporta %>" />
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Hora recogida</label>
+                                                <input type="text" class="form-style mayusculas " name="HoraRecogida"
+                                                    id="HoraSalida" value="<%= Transfer.HoraRecogida %>" />
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold"># Vuelo</label>
+                                                <input type="text" class="form-style mayusculas " name="Vuelo" id="Vuelo"
+                                                    value="<%= Transfer.Vuelo %>" />
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold"># Tel. Reserva<span
+                                                        style="color: red">*</span></label>
+                                                <input type="text" class="form-style mayusculas " name="TelefonoTransfer"
+                                                    id="TelefonoTransfer" value="<%= Transfer.TelefonoTransfer %>"
+                                                    required autocomplete="off" />
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Valor del servicio</label>
+                                                <input type="text" class="form-style mayusculas " name="ValorServicio"
+                                                    value="<%= Transfer.ValorServicio %>" />
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <label class="fw-bold">Observaciones</label>
+                                            <div class="form-floating">
+                                                <input type="text" class="form-style mayusculas "
+                                                    value="<%=Transfer.Observaciones %>" name="Observaciones"
+                                                    style="height: 100px">
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="input-group">
+                                            <h3 class="mb-0">
+                                                <strong>Datos de los pasajeros</strong> &nbsp;
+                                            </h3>
+                                        </div>
+                                        <br />
+                                        <div>
+                                            <h3>Pasajeros</h3>
+                                            <div id="div_Pasajeros">
+                                            </div>
+                                            <br>
+                                            <div class="">
+                                                <button type="button" class="icon-btn add-btn plus"
+                                                    id="Agregar_Pasajero">
+                                                    <div class="add-icon"></div>
+                                                    <div class="btn-txt">Agregar</div>
+                                                </button>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                        <div class=" d-flex align-items-center justify-content-end ">
+                                            <button type="button" class="btn btn-primary btn-lg"
+                                                id="save-btn">Guardar</button>
+                                        </div>
+                                        <input type="submit" value="" id="Submit">
                             </form>
                         </div>
                     </div>
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('#SelectTour > option[value="<%=Reserva.TourReserva %>"]').attr('selected', 'selected');
-                            $('#IdiomaReserva > option[value="<%=Reserva.IdiomaReserva %>"]').attr('selected', 'selected');
-                            $('#Categoria > option[value="<%=Reserva.CategoriaReserva %>"]').attr('selected', 'selected');
-                        });
-                    </script>
-                    <% } %>
+                </div>
             </div>
-        </div>
-    </main>
-
-
-    <% if(typeof alert !="undefined" ){ %>
-        <script>
-            swal({
-                title: '<%= alertTitle %>',
-                text: '<%= alertMessage %>',
-                icon: '<%= alertIcon %>',
-                showConfirmButton: '<%= showConfirmButton %>',
-                timer: '<%= timer %>'
-            }).then(() => {
-                window.location = '/<%= ruta %>'
-            })
+        </main>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#Servicio').val('<%=Transfer.Servicio %>');
+            });
         </script>
         <% } %>
 
-            <script>
-
-                $("#save-btn").click(() => {
+            <% if(typeof alert !="undefined" ){ %>
+                <script>
                     swal({
-                        title: "¿Todo Listo?",
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
+                        title: '<%= alertTitle %>',
+                        text: '<%= alertMessage %>',
+                        icon: '<%= alertIcon %>',
+                        showConfirmButton: '<%= showConfirmButton %>',
+                        timer: '<%= timer %>'
+                    }).then(() => {
+                        window.location = '/<%= ruta %>'
                     })
-                        .then((go) => {
-                            if (go) {
-                                $("#Submit").click()
-                            }
-                        });
-                })
+                </script>
+                <% } %>
 
-                $(document).ready(function () {
-                    var Id_Reserva = $('#Id_Reserva').val();
-                    load_Pas(Id_Reserva)
-                });
-                function load_Pas(Id_Reserva) {
-                    fetch('/Edit/Pasajeros?Id_Reserva=' + Id_Reserva + '').then(function (response) {
+                    <script>
 
-                        return response.json();
-
-                    }).then(function (responseData) {
-
-
-                        if (responseData.length > 0) {
-                            var htmlAdulto = '';
-                            var htmlNiño = '';
-                            var htmlInfanet = '';
-                            for (var count = 0; count < responseData.length; count++) {
-                                var dis;
-                                console.log(responseData.length)
-                                if (responseData[count].TipoPasajero == "Adulto") {
-
-                                    htmlAdulto += "<div class='row lista-producto' id='" + responseData[count].id + "'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style' value='" + responseData[count].NombrePasajero + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' value='" + responseData[count].IdPas + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style' value='" + responseData[count].TelefonoPasajero + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioAdulto' value='" + responseData[count].PrecioTour + "'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style Comision' value='" + responseData[count].Comision + "'/></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' onclick='removePasajero(" + responseData[count].id + ");' class='icon-btn add-btn'><div class='btn-txt'>Eliminar</div></button></div></div><input type='hidden' name='tipo[]' value='Adulto'></div></div><input type='hidden' name='id[]' value='" + responseData[count].id + "'></div><br /></div></div>";
-
-                                    dis = $('#div_adultos');
-                                    $(dis).html(htmlAdulto);
-                                }
-                                if (responseData[count].TipoPasajero == "Niño") {
-                                    htmlNiño += "<div class='row lista-producto1' id='" + responseData[count].id + "'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='NomPas[]' class='form-style' value='" + responseData[count].NombrePasajero + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' value='" + responseData[count].IdPas + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style' value='" + responseData[count].TelefonoPasajero + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioNiño' value='" + responseData[count].PrecioTour + "'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style Comision' value='" + responseData[count].Comision + "'/></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' onclick='removePasajero(" + responseData[count].id + ");' class='icon-btn add-btn'><div class='btn-txt'>Eliminar</div></button></div></div><input type='hidden' name='tipo[]' value='Niño'></div></div><input type='hidden' name='id[]' value='" + responseData[count].id + "'></div><br /></div></div>";
-
-                                    dis = $('#div_niños');
-                                    $(dis).html(htmlNiño);
-                                }
-                                if (responseData[count].TipoPasajero == "Infante") {
-                                    htmlInfanet += "<div class='row lista-producto2' id='" + responseData[count].id + "'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='NomPas[]' class='form-style' value='" + responseData[count].NombrePasajero + "'/></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style' value='" + responseData[count].IdPas + "'/></div> <input type='hidden' name='Telefono[]' class='form-style' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style PrecioInfante' value='" + responseData[count].PrecioTour + "'></div><input type='hidden' name='Comision[]' class='form-style' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' onclick='removeInfante(" + responseData[count].id + ");' class='icon-btn add-btn'><div class='btn-txt'>Eliminar</div></button></div></div><input type='hidden' name='tipo[]' value='Infante'></div></div><input type='hidden' name='id[]' value='" + responseData[count].id + "'></div><br /></div></div>";
-
-                                    dis = $('#div_infantes');
-                                    $(dis).html(htmlInfanet);
-                                }
-
-                            }
-                        }
-
-                    });
-                }
-
-
-                load_data = (query = '', Id_Tour) => {
-                    fetch('/autocompletar?search_query=' + query + '&Id_Tour=' + Id_Tour + '').then(function (response) {
-
-                        return response.json();
-
-                    }).then(function (responseData) {
-
-                        var html = '<ul class="list-group">';
-
-                        if (responseData.length > 0) {
-                            for (var count = 0; count < responseData.length; count++) {
-                                var regular_expression = new RegExp('(' + query + ')', 'gi');
-
-                                html += '<a class="list-group-item list-group-item-action list-group-color" onclick="get_text(this)">' + responseData[count].NombrePunto.replace(regular_expression, '<span class="text-primary fw-bold">$1</span>') + '</a>';
-                            }
-                        }
-                        else {
-                            html += '<a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>';
-                            html += '<a href="#" class="list-group-item list-group-item-action list-group-create-color">Crear nuevo punto</a>';
-                        }
-
-                        html += '</ul>';
-
-                        document.getElementById('search_result').innerHTML = html;
-
-                    });
-                }
-
-
-
-                function load_HR(Id_Tour, Punto) {
-                    fetch('/HoraRuta?Id_Tour=' + Id_Tour + '&Punto=' + Punto + '').then(function (response) {
-
-                        return response.json();
-
-                    }).then(function (responseData) {
-
-                        if (responseData.length > 0) {
-                            $("#Ruta").val(responseData[0].Ruta)
-                            $("#HoraSalida").val(responseData[0].HoraSalida);
-                            $(".PrecioAdulto").val(responseData[0].PrecioAdulto);
-                            $(".PrecioNiño").val(responseData[0].PrecioNiño);
-                            $(".PrecioInfante").val(responseData[0].PrecioInfante);
-                            $(".Comision").val(responseData[0].Comision);
-                        } else {
-                            $("Ruta").val("")
-                            $("#HoraSalida").val("");
-                        }
-
-                    });
-                }
-
-                function DeletePasajero(id) {
-                    fetch('/DeletePasajero?id=' + id + '').then(function (response) {
-
-                        return response.json();
-
-                    }).then(function (responseData) {
-
-                        if (responseData == 'error') {
-                            alert('Ocurrió un error');
-                        } else {
-                            $('#' + responseData + '').remove();
-                        }
-
-                    });
-                }
-
-
-                cupos = (Id_Tour, Cupos) => {
-                    fetch('/Cupos?Id_Tour=' + Id_Tour + '&Cupos=' + Cupos + '').then((response) => {
-                        return response.json();
-                    }).then((resCupos) => {
-                        var TotalCupos = resCupos[0].Cupos
-                        var FechaReserva = $('#FechaReserva').val();
-                        var Id_Tour = $('#SelectTour').val();
-                        fetch('/TotalPasajeros?Id_Tour=' + Id_Tour + '&FechaReserva=' + FechaReserva + '').then((res) => {
-                            return res.json();
-                        }).then((TotalPasajeros) => {
-                            var Pasajeros = 0;
-                            var NumPas = $('#input_numpas').val();
-                            if (TotalPasajeros[0].Total != null) {
-                                Pasajeros = TotalPasajeros[0].Total;
-                            }
-                            var TotalPas = Pasajeros + parseInt(NumPas);
-
-                            if (TotalPas > TotalCupos) {
-                                $("#save-btn").attr("disabled", true);
-                                swal({
-                                    title: "Error",
-                                    text: "No tenemos suficientes cupos para la fa fecha "+FechaReserva+"... ¿Desea revisas los cupos disponibles? ",
-                                    icon: "error",
-                                    buttons: true,
-                                    dangerMode: true,
-                                })
-                                    .then((go) => {
-                                        if (go) {
-                                            window.location = "/";
-                                        }
-                                    });
-                            }else{
-                                $("#save-btn").removeAttr("disabled");
-                            }
+                        $("#save-btn").click(() => {
+                            swal({
+                                title: "¿Todo Listo?",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            })
+                                .then((go) => {
+                                    if (go) {
+                                        $("#Submit").click()
+                                    }
+                                });
                         })
-                    })
-                }
-//----------------------------------------------------------------------------------------
 
-                var search_element = document.getElementById("NombrePunto");
-                var Select = document.getElementById("SelectTour");
+                        $('#NumPas').keyup(function () {
+                            var val = $(this).val();
+                            var innerhtml = '';
+                            for (var i = 0; i < val; i++) {
+                                innerhtml += "<div class='row lista-producto' id='cont_Pasajeros'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removePasajero'>Eliminar</div></button></div></div></div><br /></div></div>";
 
-                search_element.onkeyup = function () {
+                            }
+                            var dis = $('#div_Pasajeros');
+                            dis.html(innerhtml);
+                        });
+                        //---------------------------------------------------------------- JSON --------------------------------------------------------
 
-                    var query = search_element.value;
-                    var Id_Tour = Select.value;
-                    load_data(query, Id_Tour);
+                        $(document).ready(function () {
+                            var Id_Transfer = $('#Id_Transfer').val();
+                            load_Pas(Id_Transfer)
+                        });
+                        load_Pas = (Id_Transfer) => {
+                            fetch('/EditarTransfer/Pasajeros?Id_Transfer=' + Id_Transfer + '').then(function (response) {
 
-                };
+                                return response.json();
 
-                search_element.onfocus = function () {
-
-                    var query = search_element.value;
-                    var Id_Tour = Select.value;
-                    load_data(query, Id_Tour);
-
-                    // console.log(Id_Tour)
-
-                };
-
-                Select.onchange = function () {
-                    if (search_element.value == "") {
-                        var query = search_element.value;
-                        var Id_Tour = Select.value;
-                        load_data(query, Id_Tour);
-                    } else {
-                        var Id_Tour = Select.value;
-                        var Punto = document.getElementById('NombrePunto').value;
-                        load_HR(Id_Tour, Punto);
-                    }
-                    CallCupos()
-                };
+                            }).then(function (responseData) {
 
 
-                // search_element.onblur = function () {
-                //     document.getElementById('search_result').innerHTML = '';
-                // };
-
-                function get_text(event) {
-                    var country_name = event.textContent;
-
-                    document.getElementById('NombrePunto').value = country_name;
-                    document.getElementById('search_result').innerHTML = '';
-
-                    var Id_Tour = Select.value;
-                    var Punto = country_name;
-                    load_HR(Id_Tour, Punto);
-                }
+                                if (responseData.length > 0) {
+                                    var html = '';
+                                    var dis = $('#div_Pasajeros');
+                                    for (var count = 0; count < responseData.length; count++) {
 
 
-                CallCupos = () => {
-                    var Id_Tour = Select.value;
-                    var FechaReserva = $('#FechaReserva').val();
-                    var Cupos = "CupoBase";
+                                        html += "<div class='row lista-producto' id='" + responseData[count].id + "'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' value='" + responseData[count].NombrePasajero + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' value='" + responseData[count].IdPas + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' value='" + responseData[count].TelefonoPasajero + "'/></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' onclick='removePasajero(" + responseData[count].id + ");'>Eliminar</div></button><input type='hidden' name='id[]' value='" + responseData[count].id + "'></div></div></div><br/></div></div>";
 
-                    var fecha = new Date();
-                    var diaActual = String(fecha.getDate()).padStart(2, '0');
-                    var mesActual = String(fecha.getMonth() + 1).padStart(2, '0');
+                                        $(dis).html(html);
+                                    }
+                                }
 
-                    var diaTomorrow = String(fecha.getDate() + 1).padStart(2, '0');
-                    var mesTomorrow = String(fecha.getMonth() + 1).padStart(2, '0');
-
-                    var año = fecha.getFullYear();
-
-                    var FechaActual = año + '-' + mesActual + '-' + diaActual
-                    var FechaTomorrow = año + '-' + mesTomorrow + '-' + diaTomorrow
-
-                    if ((FechaReserva == FechaActual) || (FechaReserva == FechaTomorrow)) {
-                        Cupos = "CupoDia";
-                    }
-
-                    if (Id_Tour == 1) {
-                        Id_Tour = 5;
-                    }
-
-                    if ((Id_Tour != 'Seleccionar') && (FechaReserva != '')) {
-                        cupos(Id_Tour, Cupos);
-                    }
-
-                }
-
-
-                // numpas = () => {
-                //     var cont = document.getElementById("adultos").value;
-                //     var cont1 = document.getElementById("niños").value;
-                //     var numpas = document.getElementById("numpas");
-                //     var input_numpas = document.getElementById("input_numpas");
-
-
-                //     if (cont == "") {
-                //         cont = 0;
-                //     }
-                //     if (cont1 == "") {
-                //         cont1 = 0;
-                //     }
-
-                //     var num = parseInt(cont) + parseInt(cont1);
-                //     numpas.innerText = num;
-                //     input_numpas.value = num;
-                // }
-
-
-                // change = () => {
-                //     var adultos = document.getElementById("adultos");
-                //     adultos.value = 2;
-                // }
-
-                // numpas = () => {
-                //     var adultos = document.getElementById("adultos").value;
-                //     var niños = document.getElementById("niños").value;
-                //     var infantes = document.getElementById("infantes").value;
-                //     var numpas = document.getElementById("numpas");
-                //     var input_numpas = document.getElementById("input_numpas");
-                //     var total_pas = document.getElementById("total_pas");
-
-                //     if (adultos == "") {
-                //         adultos = 0;
-                //     }
-                //     if (niños == "") {
-                //         niños = 0;
-                //     }
-                //     if (infantes == "") {
-                //         infantes = 0;
-                //     }
-
-                //     var num = parseInt(adultos) + parseInt(niños);
-                //     var total = parseInt(adultos) + parseInt(niños) + parseInt(infantes);
-                //     numpas.innerText = num;
-                //     input_numpas.value = num;
-                //     total_pas.value = total;
-                // }
-
-                total = () => {
-                    var NumeroPasajeros = $("#NumeroPasajeros").val();
-                    var adultos = $("#adultos").val();
-                    var niños = $("#niños").val();
-                    var infantes = $("#infantes").val();
-                    var numpas = $("#numpas");
-                    var input_numpas = $("#input_numpas").val();
-                    var TotalPasajeros = $("#TotalPasajeros").val();
-                    if (adultos == "") {
-                        adultos = 0;
-                    }
-                    if (niños == "") {
-                        niños = 0;
-                    }
-                    if (infantes == "") {
-                        infantes = 0;
-                    }
-
-                    var num_pas = parseInt(adultos) + parseInt(niños) + parseInt(NumeroPasajeros);
-                    var total = parseInt(adultos) + parseInt(niños) + parseInt(infantes) + parseInt(TotalPasajeros);
-                    var Nuevos = parseInt(adultos) + parseInt(niños) + parseInt(infantes);
-
-                    numpas.html(num_pas);
-                    $('#input_numpas').val(num_pas);
-                    $("#total_pas").val(total);
-                    $("#NewPasajeros").val(Nuevos);
-                }
-
-                $('#Agregar_Adulto').click(() => {
-                    var val = $('#adultos').val();
-                    if (val == '') {
-                        val = 0;
-                    }
-                    var num = parseInt(val) + 1;
-                    var innerhtml = '';
-                    innerhtml += "<div class='row lista-producto' id='cont_adultos'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='New_NomPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='New_IdPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='New_Telefono[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='New_Precio[]' class='form-style PrecioAdulto'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='New_Comision[]' class='form-style Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeAdulto'>Eliminar</div></button></div></div><input type='hidden' name='New_TipoPasajero[]' value='Adulto'></div><br /></div></div>";
-
-                    var dis = $('#div_adultos');
-                    dis.append(innerhtml);
-                    $('#adultos').val(num);
-                    total();
-
-                    var Id_Tour = Select.value;
-                    var Punto = document.getElementById('NombrePunto').value;
-                    load_HR(Id_Tour, Punto);
-                });
-
-                $('#Agregar_Niños').click(() => {
-                    var val = $('#niños').val();
-                    if (val == '') {
-                        val = 0;
-                    }
-                    var num = parseInt(val) + 1;
-                    var innerhtml = '';
-                    innerhtml += "<div class='row lista-producto1' id='cont_niños'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='New_NomPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='New_IdPas[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='New_Telefono[]' class='form-style' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='New_Precio[]' class='form-style PrecioNiño'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='New_Comision[]' class='form-style Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNiño'>Eliminar</div></button></div></div><input type='hidden' name='New_TipoPasajero[]' value='Niño'></div><br /></div></div>";
-
-                    var dis = $('#div_niños');
-                    dis.append(innerhtml);
-                    $('#niños').val(num);
-                    total();
-
-                    var Id_Tour = Select.value;
-                    var Punto = document.getElementById('NombrePunto').value;
-                    load_HR(Id_Tour, Punto);
-                });
-
-                $('#Agregar_Infantes').click(() => {
-                    var val = $('#infantes').val();
-                    if (val == '') {
-                        val = 0;
-                    }
-                    var num = parseInt(val) + 1;
-                    var innerhtml = '';
-
-                    innerhtml += "<div class='row lista-producto2' id='cont_infantes'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='New_NomPas[]' class='form-style' /></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='New_IdPas[]' class='form-style' /></div> <input type='hidden' name='New_Telefono[]' class='form-style' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='New_Precio[]' class='form-style PrecioInfante'></div><input type='hidden' name='New_Comision[]' class='form-style' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeInfante'>Eliminar</div></button></div></div><input type='hidden' name='New_TipoPasajero[]' value='Infante'></div><br /></div></div>";
-
-                    var dis = $('#div_infantes');
-                    dis.append(innerhtml);
-                    $('#infantes').val(num);
-                    total();
-
-                    var Id_Tour = Select.value;
-                    var Punto = document.getElementById('NombrePunto').value;
-                    load_HR(Id_Tour, Punto);
-                });
-
-                removePasajero = (id) => {
-                    var val = $('#NumeroPasajeros').val();
-                    var TotalPasajeros = $('#TotalPasajeros').val();
-                    var totalPas = parseInt(TotalPasajeros) - 1
-                    var num = parseInt(val) - 1;
-                    $('#NumeroPasajeros').val(num);
-                    $('#TotalPasajeros').val(totalPas);
-
-                    DeletePasajero(id);
-
-                    total();
-                };
-
-                removeInfante = (id) => {
-                    var TotalPasajeros = $('#TotalPasajeros').val();
-                    var totalPas = parseInt(TotalPasajeros) - 1
-                    $('#TotalPasajeros').val(totalPas);
-                    DeletePasajero(id);
-                    total();
-                };
-
-                $(document).on('click', '#removeAdulto', function () {
-                    var val = $('#adultos').val();
-                    var num = parseInt(val) - 1;
-                    $('#adultos').val(num);
-                    $(this).closest('#cont_adultos').remove();
-
-                    total();
-                });
-
-                $(document).on('click', '#removeNiño', function () {
-                    var val = $('#niños').val();
-                    var num = parseInt(val) - 1;
-                    $('#niños').val(num);
-                    $(this).closest('#cont_niños').remove();
-
-                    total();
-                });
-
-                $(document).on('click', '#removeInfante', function () {
-                    var val = $('#infantes').val();
-                    var num = parseInt(val) - 1;
-                    $('#infantes').val(num);
-                    $(this).closest('#cont_infantes').remove();
-
-                    total();
-                });
-
-                $(document).ready(() => {
-                    $("form").keypress((e) => {
-                        if (e.which == 13) {
-                            return false;
+                            });
                         }
-                    });
 
-                    var fecha = new Date();
-                    var dia = String(fecha.getDate()).padStart(2, '0');
-                    var mes = String(fecha.getMonth() + 1).padStart(2, '0');
-                    var año = fecha.getFullYear();
-                    var FechaMin = año + '-' + mes + '-' + dia
 
-                    $("#FechaReserva").attr('min', FechaMin);
+                        DeletePasajero = (id) => {
+                            fetch('/EditarTransfer/DeletePasajero?id=' + id + '').then(function (response) {
 
-                    $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
-                    $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
-                    $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
-                });
+                                return response.json();
 
-            </script>
+                            }).then(function (responseData) {
+
+                                if (responseData == 'error') {
+                                    swal({
+                                        title: "Ocurrió un error",
+                                        text: "No fue posible eliminar el pasajero, Si el error continúa, comuníquese con soporte técnico.",
+                                        icon: "error",
+                                        buttons: true,
+                                        dangerMode: true,
+                                    })
+                                } else {
+                                    $('#' + responseData + '').remove();
+                                }
+
+                            });
+                        }
+
+
+                        //--------------------------------------------------------------------------------------------------------------
+
+                        removePasajero = (id) => {
+                            var NumPas = $('#NumPas').val();
+                            var num = parseInt(NumPas) - 1;
+                            $('#NumPas').val(num);
+
+                            DeletePasajero(id);
+
+                        };
+
+                        $('#Agregar_Pasajero').click(() => {
+                            var val = $('#NumPas').val();
+                            if (val == '') {
+                                val = 0;
+                            }
+                            var New = $('#New_Pasajeros').val();
+                            if (New == '') {
+                                New = 0;
+                            }
+
+                            var NewPas = parseInt(New) + 1;
+                            var num = parseInt(val) + 1;
+                            var innerhtml = '';
+                            innerhtml += "<div class='row lista-producto' id='cont_Pasajeros'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='New_NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='New_IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='New_Telefono[]' class='form-style mayusculas ' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNewPasajero'>Eliminar</div></button></div></div></div><br /></div></div>";
+
+                            var dis = $('#div_Pasajeros');
+                            dis.append(innerhtml);
+                            $('#NumPas').val(num);
+                            $('#New_Pasajeros').val(NewPas);
+
+                        });
+
+                        $(document).on('click', '#removeNewPasajero', function () {
+                            var val = $('#NumPas').val();
+                            var num = parseInt(val) - 1;
+                            $('#NumPas').val(num);
+                            $(this).closest('#cont_Pasajeros').remove();
+
+
+                        });
+
+                        $(document).ready(() => {
+                            $("form").keypress((e) => {
+                                if (e.which == 13) {
+                                    return false;
+                                }
+                            });
+                        });
+
+                        var fecha = new Date();
+                        var dia = String(fecha.getDate()).padStart(2, '0');
+                        var mes = String(fecha.getMonth() + 1).padStart(2, '0');
+                        var año = fecha.getFullYear();
+                        var FechaMin = año + '-' + mes + '-' + dia
+
+                        console.log(FechaMin);
+
+                        $("#FechaTransfer").attr('min', FechaMin);
+
+                        $(document).ready(function () {
+                            $("form").keypress(function (e) {
+                                if (e.which == 13) {
+                                    return false;
+                                }
+                            });
+                        });
+
+                        $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+                        $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+                        $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+                        $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+                        $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+                        $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+                        $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+                        $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+                        $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+                        $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+                        $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+                        $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+                        $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+                        $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+                        $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+        $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
+                        $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+
+                    </script>
 </body>
 
 </html>

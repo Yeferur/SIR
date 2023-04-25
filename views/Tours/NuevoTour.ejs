@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es	">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="AdminKit">
+    <meta name="keywords"
+        content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <title>Nuevo Tour</title>
+
+
+</head>
+
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="container">
+            <div class="card">
+                <form action="/NuevoTour" method="post" autocomplete="OFF">
+                    <div class="card-header">
+                        <div class="input-group">
+                            <h3 class="mb-0"><strong>Nuevo Tour:</strong></h3>
+                        </div>
+                        <input type="hidden" name="Id_Tour" id="Id_Tour">
+                        <span style="font-size:12px">Los campos con <span class="text-danger">*</span> son
+                            obligatorios.</span>
+                    </div>
+                    <div class="card-body" style="margin-top:-20px">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="NombreTourCrear" class="FormNewTour">Nombre del tour<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="NombreTour" id="NombreTour" class="form-style mayusculas " required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="NombreTourCrear" class="FormNewTour">Abreviación<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="Abreviacion" id="Abreviacion" class="form-style mayusculas " required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="NombreTourCrear" class="FormNewTour">Precio Adultos<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="PrecioAdulto" id="PrecioAdulto" class="form-style mayusculas " required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="NombreTourCrear" class="FormNewTour">Precio Niños<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="PrecioNiño" id="PrecioNiño" class="form-style mayusculas " required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="NombreTourCrear" class="FormNewTour">Precio Infantes<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="PrecioInfante" id="PrecioInfante" class="form-style mayusculas " required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="NombreTourCrear" class="FormNewTour">Comisión<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="Comision" id="Comision" class="form-style mayusculas " required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="" class="FormNewTour">Cupo Base<span class="text-danger">*</span></label>
+                                <input type="text" name="Cupos" id="" class="form-style mayusculas " required>
+                            </div>
+                        </div><br>
+
+                        <hr>
+                        <br>
+                        <div class="d-flex align-items-center justify-content-end">
+                            <button type="button" class="btn btn-primary btn-lg" id="save-btn">Guardar</button>
+                            <input type="submit" value="" id="Submit">
+                        </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</main>
+
+<% if(typeof alert !="undefined" ){ %>
+    <script>
+        swal({
+            title: '<%= alertTitle %>',
+            text: '<%= alertMessage %>',
+            icon: '<%= alertIcon %>',
+            showConfirmButton: '<%= showConfirmButton %>',
+            timer: '<%= timer %>'
+        }).then(() => {
+            window.location = '/<%= ruta %>'
+        })
+    </script>
+    <% } %>
+
+        <script>
+            $("#save-btn").click(() => {
+                swal({
+                    title: "¿Todo Listo?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((go) => {
+                    if (go) {
+                        $("#Submit").click()
+                    }
+                });
+            })
+
+
+            $(document).ready(() => {
+                fetch('/Tours/Id_Tour').then((response) => {
+                    return response.json();
+                }).then((Id) => {
+                    if (Id != null) {
+                        $("#Id_Tour").val(Id);
+                    }
+                })
+            })
+
+            $(document).ready(function () {
+                $("form").keypress(function (e) {
+                    if (e.which == 13) {
+                        return false;
+                    }
+                });
+            });
+
+        </script>
+
+
+
+        </body>
+
+</html>

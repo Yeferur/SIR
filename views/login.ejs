@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Iniciar Sesión</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
+    <link rel="shortcut icon" href="../resources/img/SIR.png" />
     <style>
         html {
             background: url(resources/img/img2.jpeg) no-repeat center center fixed;
@@ -31,10 +32,10 @@
         }
 
         #logo {
-                padding-top: 30px;
-                width: 70%;
-                margin: auto;
-            }
+            padding-top: 30px;
+            width: 70%;
+            margin: auto;
+        }
 
         #login-button {
             cursor: pointer;
@@ -189,7 +190,7 @@
             left: 20px;
         }
 
-        #welcome {
+        #help {
             position: absolute;
             top: 0;
             left: 0;
@@ -226,6 +227,14 @@
             font-weight: bold;
             font-size: 100px;
             border-radius: 4px;
+        }
+
+        a {
+            text-align: center;
+            display: block;
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.626);
         }
 
         @media (max-width: 530px) {
@@ -276,7 +285,7 @@
             <img src="https://cdn4.iconfinder.com/data/icons/miu/22/circle_close_delete_-128.png"></img>
         </span>
         <form id="form" action="/login" method="post" name="form" autocomplete="off">
-            <input type="email" name="user" placeholder="E-mail">
+            <input type="text" name="user" placeholder="Usuario">
             <input type="password" name="pass" placeholder="Contraseña">
             <button type="submit" name="btn_login" class="btn-signin btn btn-primary" id="login">ENTRAR</button>
             <% if(typeof error !="undefined" ) { %>
@@ -295,16 +304,10 @@
                     });
                 </script>
                 <% } %>
-                    <!-- <div id="remember-container">
-                <input type="checkbox" id="checkbox-2-1" class="checkbox" checked="checked" />
-                <span id="remember">Remember me</span>
-            </div> -->
+
         </form>
-
+        <a href="https://wa.me/573025783379?text=Necesito ayuda." target="_blank">Necesita Ayuda</a>
     </div>
-
-    <!-- Forgotten Password Container -->
-    <div id="welcome"></div>
 
     <script>
         $('#login-button').click(function () {
@@ -318,7 +321,7 @@
         $(".close-btn").click(function () {
             TweenMax.from("#container", .4, { scale: 1, ease: Sine.easeInOut });
             TweenMax.to("#container", .4, { left: "0px", scale: 0, ease: Sine.easeInOut });
-            $("#container, #welcome").fadeOut(800, function () {
+            $("#container, #help").fadeOut(800, function () {
                 $("#login-button,#clock,#img").fadeIn(800);
             });
         });
@@ -346,10 +349,7 @@
 
     <% if (typeof name !="undefined" ) { %>
         <script>
-            $("#welcome").append("<h1>Bienvenid@, <%= name %></h1>");
-            $("#container,#login-button,#clock").fadeOut(function () {
-                $("#welcome,#img").fadeIn();
-            }).then(setTimeout(function () { window.location = '/' }, 3000));
+            window.location = '/';
         </script>
         <% } %>
 </body>
