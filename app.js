@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const layout = require('express-ejs-layouts');
-const port = 3000;
+const port = 5000;
 const app = express();
 
 // Seteamos el motor de vistas
