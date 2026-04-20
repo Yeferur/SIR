@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <style>
+        .btn-flotante {
+            font-size: 16px;
+            /* Cambiar el tamaño de la tipografia */
+            text-transform: uppercase;
+            /* Texto en mayusculas */
+            font-weight: bold;
+            /* Fuente en negrita o bold */
+            color: #ffffff;
+            /* Color del texto */
+            border-radius: 5px;
+            /* Borde del boton */
+            letter-spacing: 2px;
+            /* Espacio entre letras */
+            background-color: #be1919;
+            /* Color de fondo */
+            padding: 18px 30px;
+            /* Relleno del boton */
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            transition: all 300ms ease 0ms;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            z-index: 99;
+        }
+
+        .btn-flotante:hover {
+            background-color: #2c2fa5;
+            /* Color de fondo al pasar el cursor */
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-7px);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .btn-flotante {
+                font-size: 14px;
+                padding: 12px 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="content">
+        <div class="container container-fluid ">
+            <div class="card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <h3 class="mb-0"><strong>Listado de programación</strong></h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="">Fecha del tour</label>
+                                <input type="date" name="fecha" id="fecha" class="form-style mayusculas ">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mx-sm-3 mb-6">
+                                <label for="form-label">Tour</label>
+                                <select name="" class="form-style mayusculas Select" id="select">
+                                    <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{
+                                        %>
+                                        <option value="<%= Tours.Id_Tour %>">
+                                            <%= Tours.NombreTour %>
+                                        </option>
+                                        <% }) } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mx-sm-3 mb-6">
+                                <label for="form-label">Ruta</label>
+                                <select name="ruta[]" class="form-style mayusculas Select" id="ruta">
+                                    <option value="" selected>
+                                        Seleccionar
+                                    </option>
+                                    <% if (typeof resultRutas !="undefined" ){ resultRutas.forEach((Rutas)=>{
+                                        %>
+                                        <option value="<%= Rutas.Ruta %>">
+                                            <%= Rutas.Ruta %>
+                                        </option>
+                                        <% }) } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="capacidad-autobus">Nombre Guia</label>
+                                <input type="text" id="guia" class="form-style mayusculas">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="capacidad-autobus">Placa del bus</label>
+                                <input type="text" id="placaBus" class="form-style mayusculas">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="capacidad-autobus">Capacidad del bus</label>
+                                <select class="form-style mayusculas Select" id="capacidad">
+                                    <option value="38">38 asientos</option>
+                                    <option value="30">30 asientos</option>
+                                    <!-- Agrega más opciones según la capacidad de los autobuses disponibles -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <button class="btn btn-bg-primary" type="button" id="save-btn">Guardar</button>
+                            </div>
+                        </div>
+
+                        <div class="col-4" id="div_Info"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <button type="button" class="btn btn-primary btn-sm " id="filtrar">Filtrar</button>
+                            </div>
+                            <br><br>
+                        </div>
+                    </div>
+                    <br>
+
+
+
+                    <button class="btn-flotante" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#restoDeReservasMenu" aria-controls="restoDeReservasMenu"
+                        id="restoDeReservasBtn">Reservas</button>
+
+
+                    <!-- Dentro del cuerpo del documento HTML -->
+                    <div class="offcanvas offcanvas-end text-bg-dark" data-bs-scroll="true" data-bs-backdrop="false"
+                        tabindex="-1" id="restoDeReservasMenu" aria-labelledby="restoDeReservasMenuLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="restoDeReservasMenuLabel">Resto de Reservas</h5>
+                            <button type="button" class="btn-close text-reset btn-close-white"
+                                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <div id="restoDeReservasContent">
+                                <!-- Aquí se mostrarán las reservas -->
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row" id="div_Table">
+                        <div class="d-flex align-items-center justify-content-center" id="div_Text">
+                            <p>Seleccione una fecha y/o un tour para filtrar</p>
+                        </div>
+                    </div>
+                    <br><br><br><br>
+
+                </div>
+            </div>
+
+            <!-- <div class="row" id="div_Table"></div>
+            <input type="button" name="Exportar" value="Exportar" class="btn-flotante"
+                onclick="exportTableToExcel('Listado', 'Listado.xls')" id="save-btn"> -->
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
+    <% if(typeof alert !="undefined" ){ %>
+        <script>
+            swal({
+                title: '<%= alertTitle %>',
+                text: '<%= alertMessage %>',
+                icon: '<%= alertIcon %>',
+                showConfirmButton: '<%= showConfirmButton %>',
+                timer: '<%= timer %>'
+            }).then(() => {
+                window.location = '/<%= ruta %>'
+            })
+        </script>
+        <% } %>
+
+
+            <script>
+                let capacidadAutobus;
+                let Fecha;
+                let Tour;
+                let Ruta;
+
+                $("#save-btn").click(() => {
+                    swal({
+                        title: "¿Todo Listo?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                        .then((go) => {
+                            if (go) {
+                                var placaBus = $("#placaBus").val();
+                                var Guia = $("#guia").val();
+                                if (Guia == "") {
+                                    swal({
+                                        text: "Por favor seleccione un guia.",
+                                        icon: "warning",
+                                    })
+                                } else if (placaBus == "") {
+                                    swal({
+                                        text: "Por favor ingrese la placa del bus.",
+                                        icon: "warning",
+                                    })
+                                } else {
+                                    guardarAsignacionBus(placaBus, Guia);
+                                }
+
+
+                            }
+                        });
+                })
+
+
+                $("#filtrar").click(function () {
+                    Fecha = $("#fecha").val();
+                    Tour = $("#select").val();
+                    Ruta = $("#ruta").val();
+                    if (Tour === '1' || Tour === '5') {
+                        Tour = ['1', '5'];
+                    }
+                    capacidadAutobus = $("#capacidad").val();
+                    if ((Tour != '') || (Fecha != '') || (Ruta != '') || (capacidadAutobus != '')) {
+                        obtenerYMostrarListado(Tour, Fecha, Ruta, capacidadAutobus)
+                    }
+                })
+
+
+                function organizarReservas(reservas) {
+                    let grupos = {};
+                    reservas.forEach(reserva => {
+                        const pasajeros = reserva.NumeroPasajeros;
+                        if (!grupos[pasajeros]) {
+                            grupos[pasajeros] = [];
+                        }
+                        grupos[pasajeros].push(reserva);
+                    });
+                    return grupos;
+                }
+
+                let asientosDisponibles;
+                let autobus = [];
+                let restoDeReservas = [];
+                // Función para asignar grupos de reservas a un solo autobús y devolver el resto de las reservas
+                function asignarAutobusYRestoDeReservas(reservas, capacidadAutobus) {
+                    autobus = [];
+                    restoDeReservas = [];
+                    asientosDisponibles = capacidadAutobus;
+
+                    reservas.forEach(reserva => {
+                        const numPasajeros = parseInt(reserva.NumeroPasajeros);
+                        if (numPasajeros <= asientosDisponibles) {
+                            autobus.push(reserva);
+                            asientosDisponibles -= reserva.NumeroPasajeros;
+                        } else {
+                            restoDeReservas.push(reserva);
+                        }
+                    });
+
+                    return { autobus, restoDeReservas };
+                }
+
+
+                // Función para obtener y mostrar el listado de reservas y el resto de las reservas según el filtro
+                function obtenerYMostrarListado(selectionTour, Fecha, Ruta, capacidadAutobus) {
+                    fetch(`/Listado/Listado?selectionTour=${selectionTour}&Fecha=${Fecha}&Ruta=${Ruta}`)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (responseData) {
+                            // Organizar reservas en grupos según el número de pasajeros
+                            const gruposDeReservas = organizarReservas(responseData);
+                            // Convertir el objeto de reservas en un array aplanado
+                            const reservasArray = Object.values(gruposDeReservas).flat();
+                            // Asignar un solo autobús a las reservas y devolver el resto de las reservas
+                            const { autobus, restoDeReservas } = asignarAutobusYRestoDeReservas(reservasArray, capacidadAutobus); // Capacidad del autobús (38 asientos)
+                            const autobusListado = autobus;
+                            const reservas = autobusListado ? autobusListado : []; // Si hay autobús, obtenemos sus reservas, de lo contrario, mostramos un array vacío
+                            const restoDeReservasListado = restoDeReservas ? restoDeReservas : []; // Obtenemos el resto de las reservas
+
+                            mostrarListado(reservas, capacidadAutobus);
+                            mostrarRestoDeReservas(restoDeReservasListado);
+                            $("#restoDeReservasBtn").show()
+                        })
+                        .catch(function (error) {
+                            console.error('Error al obtener el listado de reservas:', error);
+                            // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+                        });
+                }
+
+                // Función para mostrar el listado de reservas
+                function mostrarListado(reservas, capacidadAutobus) {
+                    var dis = $('#div_Table');
+                    var tabla = '';
+
+                    tabla += `<h2>Bus con capacidad de ${capacidadAutobus} asientos</h2>`; // Título del autobús
+                    tabla += '<div class="col-lg-12 table-responsive">';
+                    tabla += '<table class="table table-striped table-hover table-bordered table-dark" id="Listado">';
+                    tabla += '<thead>';
+                    tabla += '<th>Id_Reserva</th>';
+                    // tabla += '<th>NOMBRE DEL PASAJERO</th>';
+                    // tabla += '<th>DNI/PASAPORTE</th>';
+                    // tabla += '<th>TELEFONO</th>';
+                    // tabla += '<th>PRECIO</th>';
+                    tabla += '<th>NÚMERO DE PASAJEROS</th>';
+                    tabla += '<th>PUNTO DE ENCUENTRO</th>';
+                    // tabla += '<th>REPORTA</th>';
+                    tabla += '<th>RUTA</th>';
+                    tabla += '<th>FECHA DE RESERVA</th>';
+                    tabla += '<th>IDIOMA</th>';
+                    // tabla += '<th>ACCIONES</th>'; // Agregamos una columna para acciones
+                    tabla += '</thead>';
+                    tabla += '<tbody>';
+
+                    reservas.forEach(fila => {
+                        const NombrePasajero = fila.NombrePasajero.split(', ');
+                        // const IdPas = fila.IdPas.split(', ');
+                        // const TelefonoPasajero = fila.TelefonoPasajero.split(', ');
+                        // const PrecioTour = fila.PrecioTour.split(', ');
+                        // let filasNombrePasajeros = '';
+                        // let filasIdPas = '';
+                        // let filasTelefonoPasajero = '';
+                        // let filasPrecioTour = '';
+                        // for (let i = 0; i < NombrePasajero.length; i++) {
+                        //     filasNombrePasajeros += `<tr><td>${NombrePasajero[i]}</td></tr>`;
+                        //     filasIdPas += `<tr><td>${IdPas[i]}</td></tr>`;
+                        //     filasTelefonoPasajero += `<tr><td>${TelefonoPasajero[i]}</td></tr>`;
+                        //     filasPrecioTour += `<tr><td>${PrecioTour[i]}</td></tr>`;
+                        // }
+                        // <td><table>${filasNombrePasajeros}</table></td>
+                        // <td><table>${filasIdPas}</table></td>
+                        // <td><table>${filasTelefonoPasajero}</table></td>
+                        // <td><table>${filasPrecioTour}</table></td>
+                        // <td>${fila.NombreReporta}</td>
+                        // <td><button class="eliminar-reserva-btn" onclick="eliminarReserva('${fila.Id_Reserva}')">Eliminar</button></td>
+
+
+                        tabla += `<tr onclick="eliminarReserva('${fila.Id_Reserva}')">
+                                <td>${fila.Id_Reserva}</td>
+                                <td>${fila.NumeroPasajeros}</td>
+                                <td>${fila.PuntoEncuentro}</td>
+                                <td>${fila.Ruta}</td>
+                                <td>${fila.FechaReserva}</td>
+                                <td>${fila.IdiomaReserva}</td>
+                                
+                                </tr>`;
+                    });
+
+                    tabla += '</tbody>';
+                    tabla += '</table>';
+                    tabla += '<br>';
+                    tabla += '</div>';
+
+                    $(dis).html(tabla);
+                }
+
+
+                // Función para mostrar el resto de las reservas en el menú desplegable
+                function mostrarRestoDeReservas(restoDeReservasData) {
+                    restoDeReservas = restoDeReservasData;
+                    // Puedes agregar más información de la reserva según tus necesidades
+                    var tabla = '';
+                    if (restoDeReservas.length > 0) {
+
+                        tabla += '<div class="col-lg-12 table-responsive">'
+                        tabla += '<table class="table table-striped table-hover table-bordered table-dark" id="Listado">'
+                        tabla += '<thead>'
+                        tabla += '<th>Id_Reserva</th>'
+                        tabla += '<th>NUMERO DE PASAJEROS</th>'
+                        tabla += '<th>PUNTO DE ENCUENTRO</th>'
+                        tabla += '<th>RUTA</th>'
+                        // tabla += '<th>ACCIONES</th>'; // Agregamos una columna para acciones
+                        tabla += '</thead>'
+                        tabla += '<tbody id="tbody">'
+
+                        restoDeReservas.forEach(fila => {
+
+                            tabla += `<tr onclick="agregarReserva('${fila.Id_Reserva}')">
+                                <td>${fila.Id_Reserva}</td>
+                                <td>${fila.NumeroPasajeros}</td>
+                                <td>${fila.PuntoEncuentro}</td>
+                                <td>${fila.Ruta}</td>
+                                <td style="display:none;"><button class="agregar-reserva-btn" onclick="agregarReserva('${fila.Id_Reserva}')">Agregar</button></td>
+                                </tr>`;
+                        });
+                        tabla += '</tbody>'
+                        tabla += '</table>'
+                        tabla += '<br>'
+                        tabla += '</div>'
+
+                        $("#restoDeReservasBtn").show()
+                    } else {
+                        tabla += '<div class="d-flex align-items-center justify-content-center" id="div_Text">'
+                        tabla += '<p>No se encontraron datos.</p>'
+                        tabla += '</div>'
+                        $("#restoDeReservasBtn").hide()
+                    }
+                    $("#restoDeReservasContent").html(tabla);
+
+                }
+
+
+                // Función para agregar una reserva al autobús
+                function agregarReserva(idReserva) {
+                    // Buscar la reserva en el resto de reservas
+                    const reserva = restoDeReservas.find(reserva => reserva.Id_Reserva === idReserva);
+                    if (reserva) {
+                        // Verificar si hay espacio en el autobús
+                        const numPasajeros = parseInt(reserva.NumeroPasajeros);
+                        if (numPasajeros <= asientosDisponibles) {
+                            // Agregar la reserva al autobús
+                            autobus.push(reserva);
+                            asientosDisponibles -= parseInt(reserva.NumeroPasajeros);
+                            // Eliminar la reserva del resto de reservas
+                            restoDeReservas = restoDeReservas.filter(reserva => reserva.Id_Reserva !== idReserva);
+                            // Actualizar la visualización
+                            mostrarListado(autobus, capacidadAutobus);
+                            mostrarRestoDeReservas(restoDeReservas);
+                        } else {
+                            swal({
+                                title: "¡Error!",
+                                text: "El bus se encuentra en su maxima capacidad",
+                                icon: "error",
+                            })
+                        }
+                    }
+                }
+
+                // Función para eliminar una reserva del autobús
+                function eliminarReserva(idReserva) {
+                    // Buscar la reserva en el autobús
+                    const reservaIndex = autobus.findIndex(reserva => reserva.Id_Reserva === idReserva);
+                    const reserva = autobus.find(reserva => reserva.Id_Reserva === idReserva);
+                    if (reservaIndex !== -1) {
+                        // Eliminar la reserva del autobús
+                        const reservaEliminada = autobus.splice(reservaIndex, 1)[0];
+                        asientosDisponibles += parseInt(reserva.NumeroPasajeros);
+                        // Agregar la reserva de vuelta al resto de reservas
+                        restoDeReservas.push(reservaEliminada);
+                        // Actualizar la visualización
+                        mostrarListado(autobus, capacidadAutobus);
+                        mostrarRestoDeReservas(restoDeReservas);
+                    }
+                }
+
+
+
+
+                function guardarAsignacionBus(placaBus, Guia) {
+                    const Id_Reservas = autobus.map(item => item.Id_Reserva);
+                    fetch('/Listado/AsignarBus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ Id_Reservas: Id_Reservas, Tour: Tour, Fecha: Fecha, placaBus: placaBus, Guia: Guia, capacidadBus: capacidadAutobus, asientosDisponibles: asientosDisponibles })
+                    })
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
+                            if (data.success) {
+                                swal({
+                                    title: "¡Exito!",
+                                    text: "La asignación del autobús se guardó correctamente.",
+                                    icon: "success",
+                                })
+                            } else {
+                                swal({
+                                    title: "¡Error!",
+                                    Text: "Hubo un error al guardar la asignación del autobús.",
+                                    icon: "error",
+                                })
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error('Error al guardar la asignación del autobús:', error);
+                            swal({
+                                title: "¡Error!",
+                                Text: "Hubo un error al guardar la asignación del autobús.",
+                                icon: "error",
+                            })
+
+                        });
+                }
+
+                function exportTableToExcel(tableID, filename = '') {
+                    const downloadLink = document.createElement('a');
+                    const dataType = 'application/vnd.ms-excel';
+                    const tableSelect = document.getElementById(tableID);
+
+                    // Añade estilos CSS para los bordes de la tabla
+                    const css = `
+                    table {
+                    border-collapse: collapse;
+                    }
+                    table, th, td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    }
+                `;
+                    const style = document.createElement('style');
+                    style.type = 'text/css';
+                    style.appendChild(document.createTextNode(css));
+
+                    const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+                    filename = filename || 'excel_data.xls';
+
+                    downloadLink.href = `data:${dataType}, ${tableHTML}`;
+                    downloadLink.download = filename;
+
+                    // Agrega los estilos CSS al inicio del archivo Excel
+                    const excelFile = document.createElement('div');
+                    excelFile.appendChild(style);
+                    excelFile.appendChild(tableSelect.cloneNode(true));
+
+                    downloadLink.href = URL.createObjectURL(new Blob([excelFile.innerHTML], { type: dataType }));
+                    downloadLink.download = filename;
+
+                    downloadLink.click();
+                }
+
+                $(document).ready(function () {
+                    $("form").keypress(function (e) {
+                        if (e.which == 13) {
+                            return false;
+                        }
+                    });
+                    $("#restoDeReservasBtn").hide()
+                });
+            </script>
+
+</body>
+
+</html>

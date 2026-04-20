@@ -48,28 +48,34 @@
                                         class="form-style mayusculas " required value="<%= Tour.Abreviacion %>">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="NombreTourCrear" class="FormNewTour">Precio Adultos<span
-                                            class="text-danger">*</span></label>
+                                    <label for="NombreTourCrear" class="FormNewTour">Precio Adultos</label>
                                     <input type="text" name="PrecioAdulto" id="PrecioAdulto"
-                                        class="form-style mayusculas " required value="<%= Tour.PrecioAdulto %>">
+                                        class="form-style mayusculas " value="<%= Tour.PrecioAdulto %>">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="NombreTourCrear" class="FormNewTour">Precio Niños<span
-                                            class="text-danger">*</span></label>
+                                    <label for="NombreTourCrear" class="FormNewTour">Precio Niños</label>
                                     <input type="text" name="PrecioNiño" id="PrecioNiño" class="form-style mayusculas "
-                                        required value="<%= Tour.PrecioNiño %>">
+                                        value="<%= Tour.PrecioNiño %>">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="NombreTourCrear" class="FormNewTour">Precio Infantes<span
-                                            class="text-danger">*</span></label>
+                                    <label for="NombreTourCrear" class="FormNewTour">Precio Infantes</label>
                                     <input type="text" name="PrecioInfante" id="PrecioInfante"
-                                        class="form-style mayusculas " required value="<%= Tour.PrecioInfante %>">
+                                        class="form-style mayusculas " value="<%= Tour.PrecioInfante %>">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="NombreTourCrear" class="FormNewTour">Comisión<span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" name="Comision" id="Comision" class="form-style mayusculas "
-                                        required value="<%= Tour.Comision %>">
+                                    <label for="NombreTourCrear" class="FormNewTour">Comisión Hotel</label>
+                                    <input type="text" name="Comision1" id="Comision2" class="form-style mayusculas "
+                                        value="<%= Tour.Comision1 %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Comisión Agencia</label>
+                                    <input type="text" name="Comision2" id="Comision2" class="form-style mayusculas"
+                                        value="<%= Tour.Comision2 %>">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="NombreTourCrear" class="FormNewTour">Comisión Freelance</label>
+                                    <input type="text" name="Comision3" id="Comision3" class="form-style mayusculas"
+                                        value="<%= Tour.Comision3 %>">
                                 </div>
                             </div><br>
 
@@ -124,29 +130,25 @@
                 });
             });
 
-            $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
-            $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
-            $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
-            $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
-            $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
-            $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
-            $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
-            $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
-            $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
-            $("#Layout_Listado").attr("href", "../../Programacion/Listado");
-            $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
-            $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
-            $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
-            $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
-            $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
-            $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !==undefined ){ %><%= user.id %> <% } %>");
-            $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
-
+            // $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+            // $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+            // $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+            // $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+            // $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+            // $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+            // $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+            // $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+            // $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+            // $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+            // $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+            // $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+            // $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+            // $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+            // $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+            // $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
+            // $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
 
         </script>
 
-
-
         </body>
-
 </html>

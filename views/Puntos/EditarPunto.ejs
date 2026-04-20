@@ -4,7 +4,7 @@
 <head>
     <title>Editar Punto</title>
     <link rel="stylesheet" href="../../resources/css/layout.css">
-    <link rel="shortcut icon" href="../../resources/img/SIR.png" />
+    <link rel="shortcut icon" href="../../public/img/SIR.png" />
 
 </head>
 <main class="content">
@@ -16,7 +16,7 @@
                     <form action="/EditarPunto" method="post" autocomplete="OFF">
                         <div class="card-header">
                             <div class="input-group">
-                                <h3 class="mb-0"><strong>Nuevo punto de encuentro:</strong></h3>
+                                <h3 class="mb-0"><strong>Editar punto de encuentro:</strong></h3>
                             </div>
                             <input type="hidden" name="Id_Punto" id="Id_Punto" value="<%= Punto.Id_Punto %>">
                             <span style="font-size:12px">Los campos con <span class="text-danger">*</span> son
@@ -77,13 +77,13 @@
                                                 id="Salida<%= Tours.Id_Tour %>">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <!-- <div class="col-md-3">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-style mayusculas "
                                                 placeholder="Hora de Llegada" aria-label="Llegada" name="HoraLlegada[]"
                                                 id="Llegada<%= Tours.Id_Tour %>">
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <script>
                                     $(document).ready(() => {
@@ -151,23 +151,24 @@
                 });
             });
 
-            $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
-            $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
-            $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
-            $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
-            $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
-            $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
-            $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
-            $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
-            $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
-            $("#Layout_Listado").attr("href", "../../Programacion/Listado");
-            $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
-            $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
-            $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
-            $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
-            $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
-            $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
-            $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+            // $("#Layout_Aforos").attr("href", "../../Aforos");
+            // $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+            // $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+            // $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+            // $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+            // $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+            // $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+            // $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+            // $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+            // $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+            // $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+            // $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+            // $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+            // $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+            // $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+            // $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+            // $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
+            // $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
 
         </script>
         </body>

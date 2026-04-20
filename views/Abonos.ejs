@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Aforos</title>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h3>Abonos de Reservas</h3>
+        </div>
+        <div class="card-body">
+
+            <% if (typeof user !="undefined" ){ %>
+                <input type="hidden" name="id_user" id="" value="<%=user.id_user %>">
+                <% } %>
+
+                    <div>
+                        <label for="Fecha">Fecha:</label>
+                        <input type="date" id="Fecha" name="Fecha" class="form-style" required>
+                    </div>
+
+                    <br><br>
+                    <div>
+                        <div id="div_Table"></div>
+                    </div>
+        </div>
+
+    </div>
+    <input type="button" name="Exportar" value="Exportar" class="btn-flotante" id="export-btn">
+    <script>
+        $(document).ready(function () {
+            $("#export-btn").hide()
+            // Función que hace la consulta
+
+            // Cargar abonos al cargar la página
+            cargarAbonos();
+
+            // Escuchar cambios en el input de fecha
+            $("#Fecha").on("change", function () {
+                cargarAbonos();
+            });
+
+        });
+
+        function cargarAbonos() {
+            const fecha = $("#Fecha").val();
+            let url = '/abonos/abonos';
+            if (fecha) {
+                url += `?fecha=${fecha}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then((res) => {
+                    const divTable = document.getElementById("div_Table");
+                    let tabla = '';
+
+                    if (res.length > 0) {
+                        tabla += `<table class="table table-hover table-striped table-bordered table-dark">`;
+                        tabla += `<thead class="thead-dark">`;
+                        tabla += `<tr>`;
+                        tabla += `<th scope="col">Fecha del tour</th>`;
+                        tabla += `<th scope="col">Id_Reserva</th>`;
+                        tabla += `<th scope="col">Reporta</th>`;
+                        tabla += `<th scope="col">#Pax</th>`;
+                        tabla += `<th scope="col">Pago Agencia</th>`;
+                        tabla += `<th scope="col">Accion</th>`;
+                        tabla += `</tr>`;
+                        tabla += `</thead>`;
+                        tabla += `<tbody>`;
+                        res.forEach(element => {
+                            tabla += `<tr>`;
+                            tabla += `<th>${element.FechaReserva}</th>`;
+                            tabla += `<td>${element.Id_Reserva}</td>`;
+                            tabla += `<td>${element.NombreReporta}</td>`;
+                            tabla += `<td>${element.TotalPasajeros}</td>`;
+                            tabla += `<td>${element.PagoAgencia}</td>`;
+                            tabla += `<td><button type="button" class="btn btn-primary" onclick="pagoAgencia('${element.Id_Reserva}')">¿Pagó?</button></td>`;
+                            tabla += `</tr>`;
+                        });
+                        tabla += `</tbody>`;
+                        tabla += `</table>`;
+                        $("#export-btn").show()
+                    } else {
+                        tabla = '<p>No hay resultados.</p>';
+                        $("#export-btn").hide()
+                    }
+
+                    divTable.innerHTML = tabla;
+                });
+        }
+
+        function pagoAgencia(Id_Reserva) {
+            swal({
+                title: `¿Deseas marcar como pagado el abono de la reserva ${Id_Reserva}?`,
+                text: "El pago de la agencia se marcará como 0",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((go) => {
+                if (go) {
+                    fetch('/abonos/pagoAgencia?Id_Reserva=' + encodeURIComponent(Id_Reserva))
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (responseData) {
+                            cargarAbonos();
+                            if (responseData.success) {
+                                swal({
+                                    title: "¡Éxito!",
+                                    text: "El pago de la agencia se marcó como pagado",
+                                    icon: "success",
+                                });
+                            } else {
+                                swal({
+                                    title: "Ocurrió un error",
+                                    text: "No se pudo marcar el pago de la agencia",
+                                    icon: "error",
+                                });
+                            }
+                        });
+                }
+            });
+        }
+
+        $("#export-btn").click(function () {
+            const fecha = $("#Fecha").val(); // Tu input de fecha
+
+            // Construir querystring si hay fecha
+            const params = fecha ? `?fecha=${encodeURIComponent(fecha)}` : '';
+
+            const downloadFile = (url, fileNameFallback) => {
+                fetch(url, { method: 'GET' })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error: ${response.statusText}`);
+                        }
+                        const contentDisposition = response.headers.get('Content-Disposition');
+                        const fileNameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
+                        const fileName = fileNameMatch ? fileNameMatch[1] : fileNameFallback;
+
+                        return response.blob().then(blob => ({ blob, fileName }));
+                    })
+                    .then(({ blob, fileName }) => {
+                        const blobUrl = window.URL.createObjectURL(new Blob([blob]));
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = blobUrl;
+                        a.download = fileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(blobUrl);
+
+                        swal({
+                            title: "Descarga Exitosa",
+                            text: `El archivo ${fileName} ha sido descargado correctamente.`,
+                            icon: "success",
+                        });
+                    })
+                    .catch(err => {
+                        console.error(`Error al descargar archivo:`, err);
+                        swal({
+                            title: "Error en la Descarga",
+                            text: `Ocurrió un error al intentar descargar el archivo.`,
+                            icon: "error",
+                        });
+                    });
+            };
+
+            // Confirmar con el usuario antes de descargar
+            swal({
+                title: "¿Exportar Abonos?",
+                text: fecha ? `Se exportarán los abonos de la fecha ${fecha}.` : "Se exportarán todos los abonos.",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            }).then((confirm) => {
+                if (confirm) {
+                    downloadFile(`/abonos/exportar${params}`, 'Abonos.xlsx');
+                }
+            });
+        });
+
+
+
+    </script>
+</body>
+
+</html>

@@ -2905,7 +2905,6 @@ router.get('/Listado/Exportar/ReservasNuevo', (req, res) => {
       Pt.Posicion, 
       T.NombreTour, 
       H.Ruta,
-      C.Categoria AS CategoriaNombre,
       Pasajeros.NombrePasajero,
       Pasajeros.IdPas,
       Pasajeros.TelefonoPasajero,
@@ -2925,7 +2924,6 @@ router.get('/Listado/Exportar/ReservasNuevo', (req, res) => {
     LEFT JOIN Tours AS T ON R.TourReserva = T.Id_Tour
     LEFT JOIN Puntos AS Pt ON Pt.Id_Punto = R.Id_Punto
     LEFT JOIN Horarios AS H ON Pt.Id_Punto = H.Id_Punto
-    LEFT JOIN CategoriaCliente AS C ON R.CategoriaReserva = C.Id_Categoria
     ${FechaRegistro || HoraRegistro || TipoAccion ? 'LEFT JOIN History ON R.Id_Reserva = History.Id_' : ''}
     ${whereClause}
     GROUP BY Pasajeros.Id_Reserva ORDER BY H.Ruta, Pt.Posicion ;
@@ -3350,6 +3348,201 @@ router.get('/abonos/exportar', (req, res) => {
 });
 
 
+
+
+// router.get('/Listado/Exportar/Grupales_Privadas', (req, res) => {
+//   const { selectionTour, FechaReserva, FechaRegistro, Ruta, Estado, HoraRegistro, TipoAccion } = req.query;
+//   const selectionTourArray = Array.isArray(selectionTour) ? selectionTour : [selectionTour];
+//   const selectionEstadoArray = Array.isArray(Estado) ? Estado : [Estado];
+//   const selectionRutaArray = Array.isArray(Ruta) ? Ruta : [Ruta];
+//   const selectionTipoAccionArray = Array.isArray(TipoAccion) ? TipoAccion : [TipoAccion];
+
+//   const filters = [
+//     FechaReserva && `FechaReserva = "${FechaReserva}"`,
+//     selectionTour && `TourReserva IN (${selectionTourArray.join("','")})`,
+//     Ruta && `H.Ruta = "${selectionRutaArray.join("','")}"`,
+//     Estado && `R.Estado = "${selectionEstadoArray.join("','")}"`,
+//     FechaRegistro && `History.FechaRegistro = "${FechaRegistro}"`,
+//     HoraRegistro && `STR_TO_DATE(History.HoraRegistro, '%r') >= STR_TO_DATE("${HoraRegistro}", '%H:%i:%s')`,
+//     TipoAccion && `History.Accion = "${selectionTipoAccionArray.join("','")}"`,
+//   ].filter(Boolean);
+//   const whereClause = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
+
+//   getFileName(selectionTour, FechaReserva, Ruta)
+//     .then(fileName => {
+//       const ListadoQuery = `
+//     SELECT 
+//       R.*,
+//       Pt.Posicion, 
+//       T.NombreTour, 
+//       H.Ruta,
+//       Pasajeros.NombrePasajero,
+//       Pasajeros.IdPas,
+//       Pasajeros.TelefonoPasajero,
+//       Pasajeros.PrecioTour
+//       ${FechaRegistro || HoraRegistro || TipoAccion ? ', History.Accion, History.HoraRegistro, History.FechaRegistro' : ''}
+//     FROM Reservas AS R 
+//     INNER JOIN (
+//       SELECT 
+//         Id_Reserva, 
+//         GROUP_CONCAT(NombrePasajero SEPARATOR ', ') AS NombrePasajero,
+//         GROUP_CONCAT(IdPas SEPARATOR ', ') AS IdPas,
+//         GROUP_CONCAT(TelefonoPasajero SEPARATOR ', ') AS TelefonoPasajero,
+//         GROUP_CONCAT(PrecioTour SEPARATOR ', ') AS PrecioTour
+//       FROM Pasajeros
+//       GROUP BY Id_Reserva
+//     ) AS Pasajeros ON R.Id_Reserva = Pasajeros.Id_Reserva
+//     LEFT JOIN Tours AS T ON R.TourReserva = T.Id_Tour
+//     LEFT JOIN Puntos AS Pt ON Pt.Id_Punto = R.Id_Punto
+//     LEFT JOIN Horarios AS H ON Pt.Id_Punto = H.Id_Punto
+//     ${FechaRegistro || HoraRegistro || TipoAccion ? 'LEFT JOIN History ON R.Id_Reserva = History.Id_' : ''}
+//     ${whereClause}
+//     GROUP BY Pasajeros.Id_Reserva ORDER BY Pt.Posicion;
+//   `;
+//       console.log(ListadoQuery);
+//       connection.query(ListadoQuery, async (error, result) => {
+//         if (error) {
+//           console.error('Error al ejecutar la consulta:', error);
+//           return res.status(500).send('Error al generar el listado. Por favor, inténtelo de nuevo más tarde.');
+//         }
+//         console.log(result);
+//         const workbook = new excel.Workbook();
+//         const worksheet = workbook.addWorksheet('LISTADO');
+//         // Definir las columnas del archivo Excel
+//         const columns = [
+//           { header: 'TOUR', key: 'NombreTour', width: 30 },
+//           { header: 'NOMBRE DEL PASAJERO', key: 'NombrePasajero', width: 40 },
+//           { header: 'DNI/PASAPORTE', key: 'IdPas', width: 15 },
+//           { header: 'TELEFONO', key: 'TelefonoPasajero', width: 20 },
+//           { header: '# PAX', key: 'NumeroPasajeros', width: 10 },
+//           { header: 'PUNTO DE ENCUENTRO', key: 'PuntoEncuentro', width: 20 },
+//           { header: 'OBSERVACIONES', key: 'Observaciones', width: 30 },
+//           { header: 'PRECIO', key: 'PrecioTour', width: 15 },
+//           { header: 'DOLARES', key: 'Dolares', width: 20 },
+//           { header: 'TRANSFER', key: 'Transfer', width: 20 },
+//           { header: 'REPORTA', key: 'NombreReporta', width: 20 },
+//           { header: 'IDIOMA', key: 'IdiomaReserva', width: 10 },
+//           { header: 'TIPO DE RESERVA', key: 'TipoReserva', width: 20 },
+//           { header: 'RUTA', key: 'Ruta', width: 10 },
+//           { header: 'ESTADO DE RESERVA', key: 'Estado', width: 20 },
+//         ];
+//         if (FechaRegistro || HoraRegistro || TipoAccion) {
+//           columns.push({ header: 'ACCIONES (HISTORIAL)', key: 'Accion', width: 20 });
+//         }
+
+//         worksheet.columns = columns;
+
+//         // Definir los estilos de borde
+//         const borderStyleThin = {
+//           top: { style: 'thin' },
+//           left: { style: 'thin' },
+//           bottom: { style: 'thin' },
+//           right: { style: 'thin' }
+//         };
+
+//         // Aplicar estilo a las celdas del encabezado
+//         const headerRow = worksheet.getRow(1);
+//         headerRow.font = { bold: true };
+//         headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
+//         headerRow.eachCell({ includeEmpty: true }, (cell) => {
+//           cell.border = borderStyleThin;
+//         });
+
+//         // Mapa para realizar un seguimiento de las filas combinadas por Id_Reserva
+//         const mergedRows = {};
+
+//         // Llenar el archivo Excel con los datos
+//         result.forEach(row => {
+//           const idReserva = row.Id_Reserva;
+
+//           // Obtener listas separadas por ', ' y dividirlas en arrays
+//           const nombresPasajeros = row.NombrePasajero ? row.NombrePasajero.split(', ') : [];
+//           const idsPasajeros = row.IdPas ? row.IdPas.split(', ') : [];
+//           const telefonosPasajeros = row.TelefonoPasajero ? row.TelefonoPasajero.split(', ') : [];
+//           const preciosTour = row.PrecioTour ? row.PrecioTour.split(', ') : [];
+
+//           // Determinar la cantidad de filas que se necesitan
+//           const rowCount = Math.max(nombresPasajeros.length, idsPasajeros.length, telefonosPasajeros.length, preciosTour.length);
+
+//           // Añadir filas a la hoja de cálculo
+//           for (let i = 0; i < rowCount; i++) {
+//             const data = {
+//               // Id_Reserva: i === 0 ? idReserva : '', // Mostrar Id_Reserva solo en la primera fila del grupo de pasajeros
+//               NombrePasajero: nombresPasajeros[i] || '',
+//               IdPas: idsPasajeros[i] || '',
+//               TelefonoPasajero: telefonosPasajeros[i] || '',
+//               PrecioTour: preciosTour[i] || '',
+//               Ruta: row.Ruta
+//             };
+
+//             if (i === 0) {
+//               // Mostrar los datos generales solo en la primera fila del grupo de pasajeros
+//               data.NombreTour = row.NombreTour;
+//               data.NumeroPasajeros = row.NumeroPasajeros;
+//               data.PuntoEncuentro = row.PuntoEncuentro;
+//               data.NombreReporta = row.NombreReporta;
+//               data.IdiomaReserva = row.IdiomaReserva;
+//               data.Observaciones = row.Observaciones;
+//               data.TipoReserva = row.TipoReserva;
+//               data.Estado = row.Estado;
+//               if (FechaRegistro || HoraRegistro || TipoAccion) {
+//                 data.Accion = row.Accion;
+//               }
+//             }
+
+//             // Agregar la fila al worksheet
+//             const newRow = worksheet.addRow(data);
+//             // Aplicar borde fino a cada celda en la fila
+
+
+
+//             // Si es la primera fila de la reserva, guardar la posición de la fila
+//             if (i === 0) {
+//               mergedRows[idReserva] = {
+//                 start: worksheet.rowCount,
+//                 end: worksheet.rowCount
+//               };
+//             } else {
+//               // Si no es la primera fila, incrementar el final de la fusión de celdas
+//               mergedRows[idReserva].end = worksheet.rowCount;
+//             }
+//           }
+//         });
+
+//         // Combinar celdas para Id_Reserva según el mapa de filas combinadas
+//         Object.keys(mergedRows).forEach(idReserva => {
+//           const { start, end } = mergedRows[idReserva];
+//           if (start !== end) {
+//             // Combinar celdas en las columnas específicas
+//             worksheet.mergeCells(`A${start}:A${end}`); // ID RESERVA
+//             worksheet.mergeCells(`E${start}:E${end}`); // NUMERO DE PASAJEROS
+//             worksheet.mergeCells(`F${start}:F${end}`); // PUNTO DE ENCUENTRO
+//             worksheet.mergeCells(`K${start}:K${end}`); // REPORTA
+//             worksheet.mergeCells(`L${start}:L${end}`); // IDIOMA
+//             worksheet.mergeCells(`G${start}:G${end}`); // OBSERVACIONES
+//             worksheet.mergeCells(`M${start}:M${end}`); // TIPO DE RESERVA
+//             worksheet.mergeCells(`O${start}:O${end}`); // Estado
+//             worksheet.mergeCells(`P${start}:P${end}`); // ACCION
+
+//           }
+//         });
+
+//         // Ajustar la alineación vertical y horizontal de las celdas combinadas
+//         worksheet.eachRow(row => {
+//           row.alignment = { vertical: 'middle', horizontal: 'center' };
+//         });
+
+//         const buffer = await workbook.xlsx.writeBuffer();
+//         res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+//         res.send(buffer);
+
+//       });
+//     }).catch(err => {
+//       console.error(err);
+//       res.status(500).send('Error al generar el archivo.');
+//     });
+// });
+
 router.get('/Listado/Exportar/Reservas', (req, res) => {
   const { selectionTour, FechaReserva, FechaRegistro, Ruta, Estado, HoraRegistro, TipoAccion } = req.query;
   const selectionTourArray = Array.isArray(selectionTour) ? selectionTour : [selectionTour];
@@ -3376,7 +3569,6 @@ router.get('/Listado/Exportar/Reservas', (req, res) => {
       Pt.Posicion, 
       T.NombreTour, 
       H.Ruta,
-      C.Categoria AS CategoriaNombre,
       Pasajeros.NombrePasajero,
       Pasajeros.IdPas,
       Pasajeros.TelefonoPasajero,
@@ -3396,7 +3588,6 @@ router.get('/Listado/Exportar/Reservas', (req, res) => {
     LEFT JOIN Tours AS T ON R.TourReserva = T.Id_Tour
     LEFT JOIN Puntos AS Pt ON Pt.Id_Punto = R.Id_Punto
     LEFT JOIN Horarios AS H ON Pt.Id_Punto = H.Id_Punto
-    LEFT JOIN CategoriaCliente AS C ON R.CategoriaReserva = C.Id_Categoria
     ${FechaRegistro || HoraRegistro || TipoAccion ? 'LEFT JOIN History ON R.Id_Reserva = History.Id_' : ''}
     ${whereClause}
 
@@ -3494,7 +3685,7 @@ router.get('/Listado/Exportar/Reservas', (req, res) => {
               if (FechaRegistro || HoraRegistro || TipoAccion) {
                 data.Accion = row.Accion;
               }
-              data.CategoriaReserva = row.CategoriaNombre || row.CategoriaReserva || '';
+              data.CategoriaReserva = row.CategoriaReserva;
             }
 
             // Agregar la fila al worksheet
@@ -3562,6 +3753,31 @@ router.get('/Listado/Exportar/Reservas', (req, res) => {
     });
 });
 
+// function aplicarBordesBloque(worksheet, startRow, endRow, startColumn, endColumn) {
+//   // Borde superior (primera fila del bloque)
+//   for (let col = startColumn; col <= endColumn; col++) {
+//     worksheet.getCell(startRow, col).border = {
+//       top: { style: 'thin' },
+//       ...(col === startColumn ? { left: { style: 'thin' } } : {}),
+//       ...(col === endColumn ? { right: { style: 'thin' } } : {}),
+//     };
+//   }
+
+//   // Borde inferior (última fila del bloque)
+//   for (let col = startColumn; col <= endColumn; col++) {
+//     worksheet.getCell(endRow, col).border = {
+//       bottom: { style: 'thin' },
+//       ...(col === startColumn ? { left: { style: 'thin' } } : {}),
+//       ...(col === endColumn ? { right: { style: 'thin' } } : {}),
+//     };
+//   }
+
+//   // Borde izquierdo y derecho para las filas intermedias
+//   for (let row = startRow + 1; row < endRow; row++) {
+//     worksheet.getCell(row, startColumn).border = { left: { style: 'thin' } };
+//     worksheet.getCell(row, endColumn).border = { right: { style: 'thin' } };
+//   }
+// }
 
 router.get('/Listado/Exportar/Privadas', (req, res) => {
   const { selectionTour, FechaReserva, FechaRegistro, Ruta, Estado, HoraRegistro, TipoAccion } = req.query;

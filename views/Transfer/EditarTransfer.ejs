@@ -2,7 +2,7 @@
 <html lang="es">
 
 <head>
-    <title>Nuevo Transfer</title>
+    <title>Editar Transfer</title>
     <link rel="shortcut icon" href="../img/icons/icon.png" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="../../resources/css/layout.css">
@@ -320,13 +320,23 @@
 
             <div class="container-fluid p-0">
                 <div class="container">
-                    <button class="back-button" onclick="window.location.href = '../../Transfer/VerTransfer'">&larr; Volver</button>
+                    <button class="back-button" onclick="window.location.href = '../../Transfer/VerTransfer'">&larr;
+                        Volver</button>
                     <div class="card">
                         <div class="card-header">
-                            <div class="input-group">
-                                <h3 class="mb-0">
-                                    <strong>Transfer: <%= Transfer.Id_Transfer %> </strong> &nbsp;&nbsp;&nbsp;
-                                </h3>
+                            <div class="row">
+                                <div class="col input-group">
+                                    <h3 class="mb-0">
+                                        <strong>Transfer: <%= Transfer.Id_Transfer %> </strong> &nbsp;&nbsp;&nbsp;
+                                    </h3>
+                                </div>
+                                <div class="col d-flex justify-content-end">
+                                    <a type="button" class="delete" id="deleteTransfer">
+                                        <iconify-icon icon="material-symbols:delete-outline" style="color: white;"
+                                            width="30" height="30"></iconify-icon>
+                                    </a>
+                                    <input type="hidden" name="" id="Id_Transfer" value="<%= Transfer.Id_Transfer %>">
+                                </div>
                             </div>
                             <span style="font-size: 12px">Los campos con <span class="text-danger">*</span> son
                                 obligatorios.</span>
@@ -336,20 +346,46 @@
                                 <input type="hidden" name="Id_Transfer" id="Id_Transfer"
                                     value="<%= Transfer.Id_Transfer %>">
                                 <% if (typeof user !="undefined" ){ %>
-                                    <input type="hidden" name="id_user" id="" value="<%=user.id_user %>">
+                                    <input type="hidden" name="id_user" id="id_user" value="<%=user.id_user %>">
                                     <% } %>
                                         <div class="row">
                                             <div class="col-lg-3">
-                                                <label class="fw-bold">Numero de Pasajeros:</label>
+                                                <label class="fw-bold">Estado del transfer</label>
+                                                <select class="form-style" name="Estado" id="Estado">
+                                                    <option value="Activo">ACTIVO</option>
+                                                    <option value="Pendiente">PENDIENTE</option>
+                                                    <option value="Cancelado">CANCELADO</option>
+                                                    <option value="Completado">COMPLETADO</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Titular del servicio<span
+                                                    style="color: red">*</span></label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" name="Titular" class="form-style mayusculas"
+                                                        value="<%= Transfer.Titular %>" id="Titular">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Número de contacto</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" name="Tel_Contacto" class="form-style mayusculas"
+                                                        value="<%= Transfer.Tel_Contacto %>">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <label class="fw-bold">Número de Pasajeros<span
+                                                    style="color: red">*</span></label>
                                                 <input type="text" name="NumPas" class="form-style mayusculas "
                                                     placeholder="Número de pasajeros" id="NumPas"
                                                     value="<%= Transfer.NumeroPasajeros %>" autocomplete="off">
-                                                <input type="text" name="Old_Pasajeros" id="Old_Pasajeros"
-                                                    value="<%= Transfer.NumeroPasajeros %>">
-                                                <input type="text" name="New_Pasajeros" id="New_Pasajeros">
                                             </div>
                                             <div class="col-lg-3">
-                                                <label class="fw-bold">Tipo de servicio</label>
+                                                <label class="fw-bold">Tipo de servicio<span
+                                                    style="color: red">*</span></label>
                                                 <select name="Servicio" id="Servicio" class="form-style mayusculas ">
                                                     <% if (typeof resultsServicio !="undefined" ){
                                                         resultsServicio.forEach((Servicio)=>{
@@ -374,8 +410,6 @@
                                                         value="<%= Transfer.Llegada %>">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-lg-3">
                                                 <label class="fw-bold">Elige la fecha<span
                                                         style="color: red">*</span></label>
@@ -383,10 +417,14 @@
                                                     id="FechaTransfer" value="<%= Transfer.FechaTransfer %>" required />
                                             </div>
                                             <div class="col-lg-3">
-                                                <label class="fw-bold">¿Quién Reporta?</label>
+                                                <label class="fw-bold">¿Quién Reporta?<span
+                                                    style="color: red">*</span></label>
                                                 <input type="text" class="form-style mayusculas " name="NombreReporta"
-                                                    placeholder="Nombre" value="<%= Transfer.NombreReporta %>" />
+                                                    placeholder="Nombre" value="<%= Transfer.NombreReporta %>" id="NombreReporta"/>
                                             </div>
+                                        </div>
+                                        <div class="row">
+
                                             <div class="col-lg-3">
                                                 <label class="fw-bold">Hora recogida</label>
                                                 <input type="text" class="form-style mayusculas " name="HoraRecogida"
@@ -394,18 +432,18 @@
                                             </div>
                                             <div class="col-lg-3">
                                                 <label class="fw-bold"># Vuelo</label>
-                                                <input type="text" class="form-style mayusculas " name="Vuelo" id="Vuelo"
-                                                    value="<%= Transfer.Vuelo %>" />
+                                                <input type="text" class="form-style mayusculas " name="Vuelo"
+                                                    id="Vuelo" value="<%= Transfer.Vuelo %>" />
                                             </div>
-                                        </div>
-                                        <br>
-                                        <div class="row">
+
+
                                             <div class="col-lg-3">
                                                 <label class="fw-bold"># Tel. Reserva<span
                                                         style="color: red">*</span></label>
-                                                <input type="text" class="form-style mayusculas " name="TelefonoTransfer"
-                                                    id="TelefonoTransfer" value="<%= Transfer.TelefonoTransfer %>"
-                                                    required autocomplete="off" />
+                                                <input type="text" class="form-style mayusculas "
+                                                    name="TelefonoTransfer" id="TelefonoTransfer"
+                                                    value="<%= Transfer.TelefonoTransfer %>" required
+                                                    autocomplete="off" />
                                             </div>
                                             <div class="col-lg-3">
                                                 <label class="fw-bold">Valor del servicio</label>
@@ -423,26 +461,6 @@
                                             </div>
                                         </div>
                                         <br />
-                                        <div class="input-group">
-                                            <h3 class="mb-0">
-                                                <strong>Datos de los pasajeros</strong> &nbsp;
-                                            </h3>
-                                        </div>
-                                        <br />
-                                        <div>
-                                            <h3>Pasajeros</h3>
-                                            <div id="div_Pasajeros">
-                                            </div>
-                                            <br>
-                                            <div class="">
-                                                <button type="button" class="icon-btn add-btn plus"
-                                                    id="Agregar_Pasajero">
-                                                    <div class="add-icon"></div>
-                                                    <div class="btn-txt">Agregar</div>
-                                                </button>
-                                            </div>
-                                            <hr>
-                                        </div>
                                         <div class=" d-flex align-items-center justify-content-end ">
                                             <button type="button" class="btn btn-primary btn-lg"
                                                 id="save-btn">Guardar</button>
@@ -457,7 +475,9 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#Servicio').val('<%=Transfer.Servicio %>');
+                $('#Estado').val('<%=Transfer.Estado %>');
             });
+
         </script>
         <% } %>
 
@@ -476,125 +496,68 @@
                 <% } %>
 
                     <script>
-
-                        $("#save-btn").click(() => {
+                        $("#deleteTransfer").click(() => {
+                            const Id_Transfer = $("#Id_Transfer").val();
+                            const id_user = $("#id_user").val();
                             swal({
-                                title: "¿Todo Listo?",
+                                title: `¿Seguro desea cancelar el Transfer ${Id_Transfer}?`,
                                 icon: "warning",
                                 buttons: true,
                                 dangerMode: true,
-                            })
-                                .then((go) => {
+                            }).then((go) => {
+                                if (go) {
+                                    deleteTransfer(Id_Transfer, id_user);
+                                }
+                            });
+                        });
+
+                        deleteTransfer = (Id_Transfer, id_user) => {
+                            fetch(`/Transfer/CancelarTransfer?Id_Transfer=${Id_Transfer}&id_user=${id_user}`)
+                                .then(response => response.json())
+                                .then(res => {
+                                    if (res.error) {
+                                        swal({
+                                            title: "Ocurrió un error",
+                                            text: "No fue posible cancelar el transfer. Si el error continúa, comuníquese con soporte técnico.",
+                                            icon: "error",
+                                        });
+                                    } else {
+                                        swal({
+                                            text: "El transfer se ha cancelado correctamente.",
+                                            icon: "success",
+                                        }).then(() => {
+                                            window.location.reload();
+                                        });
+                                    }
+                                })
+                                .catch(err => {
+                                    swal({
+                                        title: "Ocurrió un error",
+                                        text: "No fue posible procesar la solicitud. Intente nuevamente más tarde.",
+                                        icon: "error",
+                                    });
+                                });
+                        };
+
+                        $("#save-btn").click(() => {
+                                swal({
+                                    title: "¿Todo Listo?",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                }).then((go) => {
                                     if (go) {
                                         $("#Submit").click()
                                     }
                                 });
-                        })
-
-                        $('#NumPas').keyup(function () {
-                            var val = $(this).val();
-                            var innerhtml = '';
-                            for (var i = 0; i < val; i++) {
-                                innerhtml += "<div class='row lista-producto' id='cont_Pasajeros'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removePasajero'>Eliminar</div></button></div></div></div><br /></div></div>";
-
                             }
-                            var dis = $('#div_Pasajeros');
-                            dis.html(innerhtml);
-                        });
+                        );
+
                         //---------------------------------------------------------------- JSON --------------------------------------------------------
-
-                        $(document).ready(function () {
-                            var Id_Transfer = $('#Id_Transfer').val();
-                            load_Pas(Id_Transfer)
-                        });
-                        load_Pas = (Id_Transfer) => {
-                            fetch('/EditarTransfer/Pasajeros?Id_Transfer=' + Id_Transfer + '').then(function (response) {
-
-                                return response.json();
-
-                            }).then(function (responseData) {
-
-
-                                if (responseData.length > 0) {
-                                    var html = '';
-                                    var dis = $('#div_Pasajeros');
-                                    for (var count = 0; count < responseData.length; count++) {
-
-
-                                        html += "<div class='row lista-producto' id='" + responseData[count].id + "'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' value='" + responseData[count].NombrePasajero + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' value='" + responseData[count].IdPas + "'/></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' value='" + responseData[count].TelefonoPasajero + "'/></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' onclick='removePasajero(" + responseData[count].id + ");'>Eliminar</div></button><input type='hidden' name='id[]' value='" + responseData[count].id + "'></div></div></div><br/></div></div>";
-
-                                        $(dis).html(html);
-                                    }
-                                }
-
-                            });
-                        }
-
-
-                        DeletePasajero = (id) => {
-                            fetch('/EditarTransfer/DeletePasajero?id=' + id + '').then(function (response) {
-
-                                return response.json();
-
-                            }).then(function (responseData) {
-
-                                if (responseData == 'error') {
-                                    swal({
-                                        title: "Ocurrió un error",
-                                        text: "No fue posible eliminar el pasajero, Si el error continúa, comuníquese con soporte técnico.",
-                                        icon: "error",
-                                        buttons: true,
-                                        dangerMode: true,
-                                    })
-                                } else {
-                                    $('#' + responseData + '').remove();
-                                }
-
-                            });
-                        }
 
 
                         //--------------------------------------------------------------------------------------------------------------
 
-                        removePasajero = (id) => {
-                            var NumPas = $('#NumPas').val();
-                            var num = parseInt(NumPas) - 1;
-                            $('#NumPas').val(num);
-
-                            DeletePasajero(id);
-
-                        };
-
-                        $('#Agregar_Pasajero').click(() => {
-                            var val = $('#NumPas').val();
-                            if (val == '') {
-                                val = 0;
-                            }
-                            var New = $('#New_Pasajeros').val();
-                            if (New == '') {
-                                New = 0;
-                            }
-
-                            var NewPas = parseInt(New) + 1;
-                            var num = parseInt(val) + 1;
-                            var innerhtml = '';
-                            innerhtml += "<div class='row lista-producto' id='cont_Pasajeros'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='New_NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='New_IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='New_Telefono[]' class='form-style mayusculas ' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNewPasajero'>Eliminar</div></button></div></div></div><br /></div></div>";
-
-                            var dis = $('#div_Pasajeros');
-                            dis.append(innerhtml);
-                            $('#NumPas').val(num);
-                            $('#New_Pasajeros').val(NewPas);
-
-                        });
-
-                        $(document).on('click', '#removeNewPasajero', function () {
-                            var val = $('#NumPas').val();
-                            var num = parseInt(val) - 1;
-                            $('#NumPas').val(num);
-                            $(this).closest('#cont_Pasajeros').remove();
-
-
-                        });
 
                         $(document).ready(() => {
                             $("form").keypress((e) => {
@@ -610,7 +573,6 @@
                         var año = fecha.getFullYear();
                         var FechaMin = año + '-' + mes + '-' + dia
 
-                        console.log(FechaMin);
 
                         $("#FechaTransfer").attr('min', FechaMin);
 
@@ -622,23 +584,25 @@
                             });
                         });
 
-                        $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
-                        $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
-                        $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
-                        $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
-                        $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
-                        $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
-                        $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
-                        $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
-                        $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
-                        $("#Layout_Listado").attr("href", "../../Programacion/Listado");
-                        $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
-                        $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
-                        $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
-                        $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
-                        $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
-        $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
-                        $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+                        // $("#Layout_Aforos").attr("href", "../../Aforos");
+                        // $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+                        // $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+                        // $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+                        // $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+                        // $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+                        // $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+                        // $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+                        // $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+                        // $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+                        // $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+                        // $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+                        // $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+                        // $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+                        // $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+                        // $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+                        // $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
+                        // $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+
 
                     </script>
 </body>

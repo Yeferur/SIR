@@ -63,17 +63,48 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group mx-sm-3 mb-2">
-                                <label for="">Fecha del tour</label>
-                                <input type="date" name="fecha" id="fecha" class="form-style mayusculas ">
+                                <label for="" class="fw-bold">Fecha del tour</label>
+                                <input type="date" name="FechaReserva" id="FechaReserva" class="form-style ">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="" class="fw-bold">Fecha de registro (Historial)</label>
+                                <input type="date" name="FechaRegistro" id="FechaRegistro" class="form-style ">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label for="" class="fw-bold">Hora de registro (Historial)</label>
+                                <input type="time" name="HoraRegistro" id="HoraRegistro" class="form-style ">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label class="fw-bold">Acción (Historial)</label>
+                                <select class="form-styleSelect" name="TipoAccion" id="TipoAccion" multiple>
+                                    <option value="NUEVO">NUEVO</option>
+                                    <option value="EDITAR">EDITAR</option>
+                                    <option value="DUPLICAR">DUPLICAR</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mx-sm-3 mb-2">
+                                <label class="fw-bold">Estado de la reserva</label>
+                                <select class="form-styleSelect" name="Estado" id="Estado" multiple="multiple">
+                                    <option value="Activo">ACTIVO</option>
+                                    <option value="Pendiente">PENDIENTE</option>
+                                    <option value="Completado">COMPLETADO</option>
+                                    <option value="Cancelado">CANCELADO</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group mx-sm-3 mb-6">
-                                <label for="form-label">Tour</label>
-                                <select name="" class="form-style mayusculas Select" id="select">
-                                    <option value="" selected>
-                                        Seleccionar
-                                    </option>
+                                <label for="form-label" class="fw-bold">Tour</label>
+                                <select name="" class="form-styleSelect mayusculas Select" id="select" multiple>
+                                    <option value=""disabled selected>SELECCIONAR</option>
                                     <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{
                                         %>
                                         <option value="<%= Tours.Id_Tour %>">
@@ -85,11 +116,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group mx-sm-3 mb-6">
-                                <label for="form-label">Ruta</label>
-                                <select name="ruta[]" class="form-style mayusculas Select" id="ruta">
-                                    <option value="" selected>
-                                        Seleccionar
-                                    </option>
+                                <label for="form-label" class="fw-bold">Ruta</label>
+                                <select name="ruta" class="form-styleSelect" id="ruta" multiple>
                                     <% if (typeof resultRutas !="undefined" ){ resultRutas.forEach((Rutas)=>{
                                         %>
                                         <option value="<%= Rutas.Ruta %>">
@@ -118,11 +146,9 @@
                         </div>
                     </div>
                     <br><br><br><br>
-                    <input type="button" name="Exportar" value="Exportar" class="btn-flotante"
-                        onclick="exportTableToExcel('Listado', 'Listado.xls')" id="save-btn">
+                    <input type="button" name="Exportar" value="Exportar" class="btn-flotante" id="save-btn">
                 </div>
             </div>
-
         </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
@@ -142,154 +168,352 @@
         </script>
         <% } %>
 
-
             <script>
-
-
                 $(document).ready(() => {
-                    $("#save-btn").hide()
-                })
-
-                $("#filtrar").click(function () {
-                    var Fecha = $("#fecha").val();
-                    var Tour = $("#select").val();
-                    var Ruta = $("#ruta").val();
-                    if ((Tour != '') || (Fecha != '') || (Ruta != '')) {
-                        tabla(Tour, Fecha, Ruta)
-                        console.log(Tour, Fecha, Ruta)
-                    }
-                })
-
-                tabla = (Tour = '', Fecha = '', Ruta = '') => {
-                    fetch('/Listado/Listado?Tour=' + Tour + '&Fecha=' + Fecha + '&Ruta=' + Ruta + '').then(function (response) {
-                        return response.json();
-                    }).then(function (responseData) {
-                        var dis = $('#div_Table');
-                        var tabla = '';
-                        if (responseData.length > 0) {
-
-                            tabla += '<div class="col-lg-12 table-responsive">'
-                            tabla += '<table class="table table-striped table-bordered table-dark" id="Listado">'
-                            tabla += '<thead>'
-                            tabla += '<th>Id_Reserva</th>'
-                            tabla += '<th>Nombre Pasajero</th>'
-                            tabla += '<th>DNI/Pasaporte</th>'
-                            tabla += '<th>Teléfono</th>'
-                            tabla += '<th>Precio</th>'
-                            tabla += '<th>Número Pasajeros</th>'
-                            tabla += '<th>Pundo de Encuentro</th>'
-                            tabla += '<th>Reporta</th>'
-                            tabla += '<th>Ruta</th>'
-                            tabla += '<th>Fecha Reserva</th>'
-                            tabla += '<th>Idioma</th>'
-                            tabla += '</thead>'
-                            tabla += '<tbody id="tbody">'
-
-                            responseData.forEach(fila => {
-                                const NombrePasajero = fila.NombrePasajero.split(', ');
-                                const IdPas = fila.IdPas.split(', ');
-                                const TelefonoPasajero = fila.TelefonoPasajero.split(', ');
-                                const PrecioTour = fila.PrecioTour.split(', ');
-                                let filasNombrePasajeros = '';
-                                let filasIdPas = '';
-                                let filasTelefonoPasajero = '';
-                                let filasPrecioTour = '';
-                                for (let i = 0; i < NombrePasajero.length; i++) {
-                                    filasNombrePasajeros += `<tr><td>${NombrePasajero[i]}</td></tr>`;
-                                    filasIdPas += `<tr><td>${IdPas[i]}</td></tr>`;
-                                    filasTelefonoPasajero += `<tr><td>${TelefonoPasajero[i]}</td></tr>`;
-                                    filasPrecioTour += `<tr><td>${PrecioTour[i]}</td></tr>`;
-                                }
-
-                                tabla += `<tr>
-                                    <td>${fila.Id_Reserva}</td>
-                                    <td><table>${filasNombrePasajeros}</table></td>
-                                    <td><table>${filasIdPas}</table></td>
-                                    <td><table>${filasTelefonoPasajero}</table></td>
-                                    <td><table>${filasPrecioTour}</table></td>
-                                    <td>${fila.NumeroPasajeros}</td>
-                                    <td>${fila.PuntoEncuentro}</td>
-                                    <td>${fila.NombreReporta}</td>
-                                    <td>${fila.Ruta}</td>
-                                    <td>${fila.FechaReserva}</td>
-                                    <td>${fila.IdiomaReserva}</td>
-                                    </tr>`;
-                            });
-                            tabla += '</tbody>'
-                            tabla += '</table>'
-                            tabla += '<br>'
-                            tabla += '</div>'
-
-                            $("#save-btn").show()
-                        } else {
-                            tabla += '<div class="d-flex align-items-center justify-content-center" id="div_Text">'
-                            tabla += '<p>No se encontraron datos.</p>'
-                            tabla += '</div>'
-                            $("#save-btn").hide()
-                        }
-                        $(dis).html(tabla);
-
-                    });
-
-                }
-
-
-
-                // function exportTableToExcel(tableID, filename = '') {
-                //     const downloadLink = document.createElement('a');
-                //     const dataType = 'application/vnd.ms-excel';
-                //     const tableSelect = document.getElementById(tableID);
-                //     const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-                //     filename = filename || 'excel_data.xls';
-                //     downloadLink.href = `data:${dataType}, ${tableHTML}`;
-                //     downloadLink.download = filename;
-                //     downloadLink.click();
-                // }
-
-                function exportTableToExcel(tableID, filename = '') {
-                    const downloadLink = document.createElement('a');
-                    const dataType = 'application/vnd.ms-excel';
-                    const tableSelect = document.getElementById(tableID);
-
-                    // Añade estilos CSS para los bordes de la tabla
-                    const css = `
-                    table {
-                    border-collapse: collapse;
-                    }
-                    table, th, td {
-                    border: 1px solid black;
-                    padding: 5px;
-                    }
-                `;
-                    const style = document.createElement('style');
-                    style.type = 'text/css';
-                    style.appendChild(document.createTextNode(css));
-
-                    const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-                    filename = filename || 'excel_data.xls';
-
-                    downloadLink.href = `data:${dataType}, ${tableHTML}`;
-                    downloadLink.download = filename;
-
-                    // Agrega los estilos CSS al inicio del archivo Excel
-                    const excelFile = document.createElement('div');
-                    excelFile.appendChild(style);
-                    excelFile.appendChild(tableSelect.cloneNode(true));
-
-                    downloadLink.href = URL.createObjectURL(new Blob([excelFile.innerHTML], { type: dataType }));
-                    downloadLink.download = filename;
-
-                    downloadLink.click();
-                }
-
-                $(document).ready(function () {
+                    $("#save-btn").hide();
                     $("form").keypress(function (e) {
                         if (e.which == 13) {
                             return false;
                         }
                     });
+
+                    $("#filtrar").click(function () {
+                        var FechaReserva = $("#FechaReserva").val();
+                        var Tour = $("#select").val();
+                        var Ruta = $("#ruta").val();
+                        var FechaRegistro = $("#FechaRegistro").val();
+                        var HoraRegistro = $("#HoraRegistro").val();
+                        var Estado = $("#Estado").val();
+                        var TipoAccion = $("#TipoAccion").val();
+
+                        if ((Tour != '') || (FechaReserva != '') || (Ruta != '') || (FechaRegistro != '') || (HoraRegistro != '') || (Estado != '') || (TipoAccion != '')) {
+                            tabla(Tour, FechaReserva, FechaRegistro, Ruta, HoraRegistro, Estado, TipoAccion);
+                        }
+                        console.log(Tour, FechaReserva, FechaRegistro, Ruta, HoraRegistro, Estado, TipoAccion);
+                    });
+
+                    tabla = (Tour = '', FechaReserva = '', FechaRegistro = '', Ruta = '', HoraRegistro = '', Estado = '', TipoAccion = '', TipoReserva = '') => {
+                        fetch('/Listado/Listado?selectionTour=' + Tour + '&Ruta=' + Ruta + '&FechaReserva=' + FechaReserva + '&FechaRegistro=' + FechaRegistro + '&HoraRegistro=' + HoraRegistro + '&Estado=' + Estado + '&TipoAccion=' + TipoAccion + '')
+                            .then(response => response.json())
+                            .then(responseData => {
+                                var dis = $('#div_Table');
+                                var tabla = '';
+                                var reservasConError = [];
+
+                                if (responseData.length > 0) {
+                                    tabla += '<div class="col-lg-12 table-responsive">';
+                                    tabla += '<table class="table table-striped table-bordered table-dark" id="Listado">';
+                                    tabla += '<thead>';
+                                    tabla += '<th>TOUR</th>';
+                                    tabla += '<th>NOMBRE DEL PASAJERO</th>';
+                                    tabla += '<th>DNI/PASAPORTE</th>';
+                                    tabla += '<th>TELEFONO</th>';
+                                    tabla += '<th>PRECIO</th>';
+                                    tabla += '<th># PAX</th>';
+                                    tabla += '<th>PUNTO DE ENCUENTRO</th>';
+                                    tabla += '<th>REPORTA</th>';
+                                    tabla += '<th>IDIOMA</th>';
+                                    tabla += '<th>OBSERVACIONES</th>';
+                                    tabla += '<th>TIPO DE RESERVA</th>';
+                                    tabla += '<th>RUTA</th>';
+                                    tabla += '<th>ESTADO DE RESERVA</th>';
+                                    if (TipoAccion.length > 0 || FechaRegistro != '' || HoraRegistro != '') {
+                                        tabla += '<th>ACCIONES</th>';
+                                    }
+                                    tabla += '</thead>';
+                                    tabla += '<tbody>';
+
+                                    responseData.forEach(fila => {
+                                        try {
+                                            // Verifica si alguno de los campos necesarios está vacío o es nulo
+                                            if (fila.NombrePasajero && fila.IdPas && fila.TelefonoPasajero && fila.PrecioTour) {
+                                                // Divide los campos en arrays y filtra valores vacíos
+                                                const NombrePasajero = fila.NombrePasajero.split(', ').filter(val => val.trim() !== '');
+                                                const IdPas = fila.IdPas.split(', ').filter(val => val.trim() !== '');
+                                                const TelefonoPasajero = fila.TelefonoPasajero.split(', ').filter(val => val.trim() !== '');
+                                                const PrecioTour = fila.PrecioTour.split(', ').filter(val => val.trim() !== '');
+
+                                                // Verifica que la cantidad de elementos coincida entre los campos
+                                                if (NombrePasajero.length !== IdPas.length || NombrePasajero.length !== PrecioTour.length) {
+                                                    throw new Error(`Cantidad de elementos no coincide entre campos. NombrePasajero: ${NombrePasajero.length}, IdPas: ${IdPas.length}, PrecioTour: ${PrecioTour.length}`);
+                                                }
+
+                                                // Verifica que al menos un teléfono esté presente
+                                                if (TelefonoPasajero.length === 0) {
+                                                    throw new Error('Debe haber al menos un teléfono asociado a la reserva');
+                                                }
+
+                                                let filasNombrePasajeros = '';
+                                                let filasIdPas = '';
+                                                let filasTelefonoPasajero = '';
+                                                let filasPrecioTour = '';
+
+                                                for (let i = 0; i < NombrePasajero.length; i++) {
+                                                    // Asegúrate de que los valores no sean nulos o vacíos
+
+                                                    filasNombrePasajeros += `<tr><td>${NombrePasajero[i]}</td></tr>`;
+                                                    filasIdPas += `<tr><td>${IdPas[i]}</td></tr>`;
+                                                    filasTelefonoPasajero += `<tr><td>${TelefonoPasajero[i] || ''}</td></tr>`;
+                                                    filasPrecioTour += `<tr><td>${PrecioTour[i]}</td></tr>`;
+
+                                                }
+
+                                                tabla += `<tr>
+                                                    <td>${fila.NombreTour || 'Desconocido'}</td>
+                                                    <td><table>${filasNombrePasajeros}</table></td>
+                                                    <td><table>${filasIdPas}</table></td>
+                                                    <td><table>${filasTelefonoPasajero}</table></td>
+                                                    <td><table>${filasPrecioTour}</table></td>
+                                                    <td>${fila.NumeroPasajeros || 'No especificado'}</td>
+                                                    <td>${fila.PuntoEncuentro || 'No especificado'}</td>
+                                                    <td>${fila.NombreReporta || 'No especificado'}</td>
+                                                    <td>${fila.IdiomaReserva || 'No especificado'}</td>
+                                                    <td>${fila.Observaciones || 'Sin observaciones'}</td>
+                                                    <td>${fila.TipoReserva || 'No especificado'}</td>
+                                                    <td>${fila.Ruta || 'No especificada'}</td>
+                                                    <td>${fila.Estado || 'Desconocido'}</td>`;
+
+                                                if (TipoAccion.length > 0 || FechaRegistro !== '' || HoraRegistro !== '') {
+                                                    tabla += `<td>${fila.Accion || 'Acción no especificada'}</td>`;
+                                                }
+
+                                                tabla += '</tr>';
+                                            } else {
+                                                throw new Error('Datos nulos encontrados en campos principales');
+                                            }
+                                        } catch (error) {
+                                            reservasConError.push({
+                                                Id_Reserva: fila.Id_Reserva,
+                                                error: error.message
+                                            });
+                                        }
+                                    });
+                                    tabla += '</tbody>';
+                                    tabla += '</table>';
+                                    tabla += '<br>';
+                                    tabla += '</div>';
+
+                                    $("#save-btn").show();
+                                } else {
+                                    tabla += '<div class="d-flex align-items-center justify-content-center" id="div_Text">';
+                                    tabla += '<p>No se encontraron datos.</p>';
+                                    tabla += '</div>';
+                                    $("#save-btn").hide();
+                                }
+                                $(dis).html(tabla);
+
+                                if (reservasConError.length > 0) {
+                                    // Genera el mensaje con los errores encontrados
+                                    const errores = reservasConError.map(error =>
+                                        `Reserva ${error.Id_Reserva}: ${error.error}`
+                                    ).join('\n');
+
+                                    swal({
+                                        title: 'Datos incompletos',
+                                        text: `Las siguientes reservas tienen datos incompletos y deben ser verificadas:\n${errores}`,
+                                        icon: 'warning'
+                                    });
+                                }
+
+                            })
+                            .catch(error => {
+                                console.error('Error al obtener datos:', error);
+                                swal({
+                                    title: 'Error al obtener datos',
+                                    text: error.message,
+                                    icon: 'error',
+                                    button: 'OK'
+                                });
+                            });
+                    };
+
+                    $("#save-btn").click(function () {
+                        const FechaReserva = $("#FechaReserva").val();
+                        const Tour = $("#select").val();
+                        const Ruta = $("#ruta").val();
+                        const FechaRegistro = $("#FechaRegistro").val();
+                        const HoraRegistro = $("#HoraRegistro").val();
+                        const Estado = $("#Estado").val();
+                        const TipoAccion = $("#TipoAccion").val();
+
+                        const params = `selectionTour=${encodeURIComponent(Tour)}&FechaReserva=${encodeURIComponent(FechaReserva)}&FechaRegistro=${encodeURIComponent(FechaRegistro)}&Ruta=${encodeURIComponent(Ruta)}&HoraRegistro=${encodeURIComponent(HoraRegistro)}&Estado=${encodeURIComponent(Estado)}&TipoAccion=${encodeURIComponent(TipoAccion)}`;
+
+                        const downloadFile = (url, fileNameFallback) => {
+                            fetch(url, { method: 'GET' })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`Error: ${response.statusText}`);
+                                    }
+                                    const contentDisposition = response.headers.get('Content-Disposition');
+                                    const fileNameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
+                                    const fileName = fileNameMatch ? fileNameMatch[1] : fileNameFallback;
+
+                                    return response.blob().then(blob => ({ blob, fileName }));
+                                })
+                                .then(({ blob, fileName }) => {
+                                    const blobUrl = window.URL.createObjectURL(new Blob([blob]));
+                                    const a = document.createElement('a');
+                                    a.style.display = 'none';
+                                    a.href = blobUrl;
+                                    a.download = fileName;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    window.URL.revokeObjectURL(blobUrl);
+                                    swal({
+                                        title: "Descarga Exitosa",
+                                        text: `El archivo ${fileName} ha sido descargado correctamente.`,
+                                        icon: "success",
+                                    });
+                                })
+                                .catch(err => {
+                                    console.error(`Error al descargar ${fileNameFallback}:`, err);
+                                    swal({
+                                        title: "Error en la Descarga",
+                                        text: `Ocurrió un error al intentar descargar el archivo. Por favor, inténtalo nuevamente.`,
+                                        icon: "error",
+                                    });
+                                });
+                        };
+
+                        // Validar que al menos un parámetro esté presente
+                        if (!FechaReserva && !Tour && !Ruta && !FechaRegistro && !HoraRegistro && !Estado && !TipoAccion) {
+                            swal({
+                                title: "Error en el Formulario",
+                                text: "Por favor, completa al menos un campo antes de proceder.",
+                                icon: "warning",
+                            });
+                            return;
+                        }
+
+                        // Verificar si hay reservas privadas
+                        fetch(`/Listado/Exportar/Privadas?${params}`, { method: 'GET' })
+                            .then(response => {
+                                if (response.status === 204) {
+                                    // No hay reservas privadas
+                                    swal({
+                                        title: "Descargar Reservas",
+                                        text: "No se encontraron reservas privadas. Por favor, selecciona el formato de descarga.",
+                                        icon: "info",
+                                        buttons: {
+                                            tradicional: {
+                                                text: "Formato Tradicional",
+                                                value: "tradicional",
+                                            },
+                                            nuevo: {
+                                                text: "Nuevo Formato",
+                                                value: "nuevo",
+                                            },
+                                        }
+                                    }).then((value) => {
+                                        switch (value) {
+                                            case "tradicional":
+                                                swal({
+                                                    title: "Descargando Reservas en Formato Tradicional",
+                                                    icon: "success",
+                                                });
+                                                downloadFile(`/Listado/Exportar/Reservas?${params}`, 'Reservas_Tradicional.xlsx');
+                                                break;
+
+                                            case "nuevo":
+                                                swal({
+                                                    title: "Descargando Reservas en Nuevo Formato",
+                                                    icon: "success",
+                                                });
+                                                downloadFile(`/Listado/Exportar/ReservasNuevo?${params}`, 'Reservas_Nuevo.xlsx');
+                                                break;
+
+                                            default:
+                                                swal("No se realizó ninguna descarga.");
+                                        }
+                                    });
+                                } else if (response.ok) {
+                                    // Hay reservas privadas
+                                    swal({
+                                        title: "Descargar Reservas",
+                                        text: "El archivo incluirá tanto las reservas grupales como las privadas. Por favor, selecciona el formato de descarga.",
+                                        icon: "info",
+                                        buttons: {
+                                            tradicional: {
+                                                text: "Formato Tradicional",
+                                                value: "tradicional",
+                                            },
+                                            nuevo: {
+                                                text: "Nuevo Formato",
+                                                value: "nuevo",
+                                            },
+                                        }
+                                    }).then((value) => {
+                                        switch (value) {
+                                            case "tradicional":
+                                                swal({
+                                                    title: "Descargando Reservas en Formato Tradicional",
+                                                    icon: "success",
+                                                });
+                                                downloadFile(`/Listado/Exportar/Reservas?${params}`, 'Reservas_Tradicional.xlsx');
+                                                break;
+
+                                            case "nuevo":
+                                                swal({
+                                                    title: "Descargando Reservas en Nuevo Formato",
+                                                    icon: "success",
+                                                });
+                                                downloadFile(`/Listado/Exportar/ReservasNuevo?${params}`, 'Reservas_Nuevo.xlsx');
+                                                break;
+
+                                            default:
+                                                swal("No se realizó ninguna descarga.");
+                                        }
+                                    });
+                                } else {
+                                    throw new Error("Error inesperado al verificar reservas privadas.");
+                                }
+                            })
+                            .catch(err => {
+                                console.error("Error al verificar reservas privadas:", err);
+                                swal({
+                                    title: "Error en la Verificación",
+                                    text: "Ocurrió un error al verificar las reservas privadas. Por favor, inténtalo más tarde.",
+                                    icon: "error",
+                                });
+                            });
+                    });
+
+                });
+
+                document.getElementById('exportarExcel').addEventListener('click', async () => {
+                    try {
+                        // Realiza la solicitud al backend
+                        const response = await fetch('/Listado/Exportar/Nuevo', {
+                            method: 'GET',
+                        });
+
+                        // Verifica si la respuesta es exitosa
+                        if (!response.ok) {
+                            throw new Error('Error al descargar el archivo');
+                        }
+
+                        // Extrae el archivo como Blob
+                        const blob = await response.blob();
+
+                        // Crea un enlace temporal para la descarga
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'reservas.xlsx'; // Nombre del archivo
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+
+                        // Limpia el objeto URL
+                        window.URL.revokeObjectURL(url);
+                    } catch (error) {
+                        console.error('Error al descargar el archivo:', error);
+                        alert('Hubo un error al descargar el archivo. Por favor, inténtalo de nuevo.');
+                    }
                 });
             </script>
+            </script>
+
 
 </body>
 

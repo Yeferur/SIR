@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inicio</title>
+    <style>
+        .stretch-card>.card {
+            width: 100%;
+        }
+
+        .flex {
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+        }
+
+        @media (max-width: 991.98px) {
+            .padding {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .padding {
+                padding: 1rem;
+            }
+        }
+
+        .padding {
+            padding: 3rem;
+        }
+
+        .card {
+            box-shadow: none;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            -ms-box-shadow: none;
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #2a2f3a;
+            background-clip: border-box;
+            border-radius: 30px;
+            color: #fff;
+        }
+
+        .card .card-block {
+            padding: 1.25rem;
+
+        }
+
+        .m-l-10 {
+            margin-left: 10px;
+        }
+
+
+
+        .proj-progress-card .progress {
+            height: 6px;
+            overflow: visible;
+            margin-bottom: 10px;
+        }
+
+        .proj-progress-card .progress .progress-bar {
+            position: relative;
+        }
+
+        .progress .progress-bar {
+            height: 100%;
+            color: inherit;
+        }
+
+        .proj-progress-card .progress .progress-bar:after {
+            content: "";
+
+            position: absolute;
+            right: -6px;
+            top: -4px;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+        }
+
+
+        .m-b-30 {
+            margin-bottom: 30px;
+        }
+
+        .text {
+            color: #ff5370;
+        }
+
+        #collapseAforos {
+
+            position: absolute;
+            background-color: #282b34;
+            padding: 5px;
+            margin-top: 70px;
+            margin-left: 20px;
+            max-width: 600px;
+            border-radius: 6px;
+            box-shadow: 0 14px 35px 0 rgba(9, 9, 12, 0.4);
+            z-index: 1;
+            transition: all 200ms linear;
+        }
+
+        .Div_Aforos_Fecha {
+            margin-top: 15px;
+            margin-left: 20px;
+        }
+
+        .Div_Aforos {
+            margin-top: 10px;
+        }
+
+        .card-aforos {
+            margin: 10px;
+        }
+
+        .btn-aforos {
+            height: 40px;
+            margin-left: 5px;
+        }
+
+        .input-group-text {
+            background-color: #1f2029;
+        }
+
+        .icon-btn {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #1f2029;
+            background: #1f2029;
+            border-radius: 25px;
+            overflow: hidden;
+            position: relative;
+            transition: width 0.2s ease-in-out;
+            color: #fff;
+        }
+
+        .add-btn:hover {
+            width: 120px;
+        }
+
+        .add-btn::before,
+        .add-btn::after {
+            transition: width 0.2s ease-in-out, border-radius 0.2s ease-in-out;
+            content: "";
+            position: absolute;
+            height: 4px;
+            width: 10px;
+            top: calc(50% - 2px);
+            background: red;
+        }
+
+        .plus::before,
+        .plus::after {
+            background: #66ff00;
+        }
+
+        .add-btn::after {
+            right: 14px;
+            overflow: hidden;
+            border-top-right-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+
+        .add-btn::before {
+            left: 14px;
+            border-top-left-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        .icon-btn:focus {
+            outline: none;
+        }
+
+        .btn-txt {
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+        }
+
+        .add-btn:hover::before,
+        .add-btn:hover::after {
+            width: 4px;
+            border-radius: 2px;
+        }
+
+        .add-btn:hover .btn-txt {
+            opacity: 1;
+        }
+
+        .add-icon::after,
+        .add-icon::before {
+            transition: all 0.2s ease-in-out;
+            content: "";
+            position: absolute;
+            height: 20px;
+            width: 2px;
+            top: calc(50% - 10px);
+            background: #66ff00;
+            overflow: hidden;
+        }
+
+        .add-icon::before {
+            left: 22px;
+            border-top-left-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        .add-icon::after {
+            right: 22px;
+            border-top-right-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+
+        .add-btn:hover .add-icon::before {
+            left: 15px;
+            height: 4px;
+            top: calc(50% - 2px);
+        }
+
+        .add-btn:hover .add-icon::after {
+            right: 15px;
+            height: 4px;
+            top: calc(50% - 2px);
+        }
+
+        #Submit_Actualizar,
+        #Submit_Reiniciar,
+        #ReiniciarAforo {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row Div_Aforos_Fecha mb-3">
+        <div class="col-lg-3">
+            <label for="" class="fw-bold">Fecha</label>
+            <input type="date" class="form-style mayusculas " name="" id="fecha">
+        </div>
+    </div>
+    <div class="page-content page-container text-center" id="page-content">
+        <div class="padding">
+            <div class="row d-flex justify-content-center">
+                <div class="col-xl-12">
+                    <div class="row g-3" id="div">
+                        <% if (typeof resultsCupos !="undefined" ) { resultsCupos.forEach((Tours)=>{ %>
+                            <div class="col-xl-6 col-md-12 col-xs-12">
+                                <div class="card proj-progress-card ">
+                                    <div class="card-block">
+                                        <div>
+                                            <h3>
+                                                <%= Tours.NombreTour %>
+                                            </h3>
+                                            <h4 class="m-b-30 f-w-700"><span
+                                                    id="Pasajeros<%= Tours.Id_Tour %>"></span><span> /</span><span
+                                                    class="text m-l-5" id="Cupos<%= Tours.Id_Tour %>">
+                                                    <%= Tours.CupoDia %>
+                                                </span></h4>
+                                            <input type="hidden" name="" id="Pas<%= Tours.Id_Tour %>">
+                                            <input type="hidden" name="" id="C<%= Tours.Id_Tour %>"
+                                                value="<%= Tours.CupoDia %>">
+                                            <div class="progress">
+                                                <div class="progress-bar bg-progress"
+                                                    id="bar-Progress<%= Tours.Id_Tour %>"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) } %>
+                                <% if (typeof resultsCuposH !="undefined" ) { %>
+                                    <div class="col-xl-6 col-md-12 col-xs-12">
+                                        <div class="card proj-progress-card">
+                                            <div class="card-block">
+
+                                                <div>
+                                                    <h3>
+                                                        <%= resultsCuposR.NombreTour %> Y <%= resultsCuposH.NombreTour
+                                                                %>
+                                                    </h3>
+                                                    <h4 class="m-b-30 f-w-700"><span
+                                                            id="Pasajeros<%= resultsCuposH.Id_Tour %>"></span><span>
+                                                            /</span><span class="text m-l-5"
+                                                            id="Cupos<%= resultsCuposH.Id_Tour %>">
+                                                            <%= resultsCuposH.CupoDia %>
+                                                        </span></h4>
+                                                    <input type="hidden" name="" id="Pas<%= resultsCuposH.Id_Tour %>">
+                                                    <input type="hidden" name="" id="C<%= resultsCuposH.Id_Tour %>"
+                                                        value="<%= resultsCuposH.CupoDia %>">
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-progress"
+                                                            id="bar-Progress<%= resultsCuposH.Id_Tour %>"></div>
+                                                    </div>
+                                                    <p>
+                                                        <button class="icon-btn add-btn plus" type="button"
+                                                            data-bs-toggle="collapse" data-bs-target=".multi-collapseRH"
+                                                            aria-expanded="false" aria-controls="CollapseR CollapseH">
+                                                            <div class="add-icon"></div>
+                                                            <div class="btn-txt">Ver Detalles</div>
+                                                        </button>
+
+                                                    </p>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="collapse multi-collapseRH" id="CollapseR">
+                                                                <div class="card card-body">
+                                                                    <h5>
+                                                                        <%= resultsCuposR.NombreTour %>
+                                                                    </h5>
+                                                                    <p id="PasajerosRio"></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="collapse multi-collapseRH" id="CollapseH">
+                                                                <div class="card card-body">
+                                                                    <h5>
+                                                                        <%= resultsCuposH.NombreTour %>
+                                                                    </h5>
+                                                                    <p id="PasajerosHacienda"></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
+                                        <div class="col-lg-6">
+                                            <div class="card proj-progress-card">
+                                                <div class="card-block">
+
+                                                    <div>
+                                                        <h3>
+                                                            Privados
+                                                        </h3>
+                                                        <h4 class="m-b-30 f-w-700" id="Privados"></h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="card proj-progress-card">
+                                                <div class="card-block">
+
+                                                    <div>
+                                                        <h3>
+                                                            Transfer
+                                                        </h3>
+                                                        <h4 class="m-b-30 f-w-700" id="Transfer"></h4>
+                                                        <p>
+                                                            <button class="icon-btn add-btn plus" type="button"
+                                                                data-bs-toggle="collapse"
+                                                                data-bs-target=".multi-collapseAH" aria-expanded="false"
+                                                                aria-controls="CollapseAero CollapseHotel">
+                                                                <div class="add-icon"></div>
+                                                                <div class="btn-txt">Ver Detalles</div>
+                                                            </button>
+                                                        </p>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="collapse multi-collapseAH"
+                                                                    id="CollapseAero">
+                                                                    <div class="card card-body">
+                                                                        <h5>Aeropuerto/Hotel</h5>
+                                                                        <p id="TransferAeropuerto"></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="collapse multi-collapseAH"
+                                                                    id="CollapseHotel">
+                                                                    <div class="card card-body">
+                                                                        <h5>Hotel/Aeropuerto</h5>
+                                                                        <p id="TransferHotel"></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="collapse multi-collapseAH"
+                                                                    id="CollapseHotel">
+                                                                    <div class="card card-body">
+                                                                        <h5>Otro</h5>
+                                                                        <p id="TransferOtro"></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <% if (showUpdateMessage) { %>
+        <script>
+            swal({
+                title: 'Nueva Actualización',
+                text: `<%= updateMessage.replace(/\n/g, '\\n') %>`, // Escapa los saltos de línea para JavaScript
+                icon: 'info',
+                button: 'Aceptar'
+            });
+        </script>
+        <% } %>
+
+
+            <% if(typeof alert !="undefined" ){ %>
+                <script>
+                    swal({
+                        title: '<%= alertTitle %>',
+                        text: '<%= alertMessage %>',
+                        icon: '<%= alertIcon %>',
+                        showConfirmButton: '<%= showConfirmButton %>',
+                        timer: '<%= timer %>'
+                    }).then(() => {
+                        window.location = '/<%= ruta %>'
+                    })
+                </script>
+                <% } %>
+
+                    <script>
+                        $(document).ready(function () {
+                            Tours();
+                            ToursRH();
+                        });
+
+                        $('#fecha').change(function () {
+                            Tours();
+                            ToursRH();
+                        })
+
+                        Tours = async () => {
+                            try {
+                                const response = await fetch('/Index/Tours');
+                                const responseData = await response.json();
+
+                                for (let i = 0; i < responseData.length; i++) {
+                                    const fechaInput = $('#fecha');
+                                    const Ft = new Date();
+                                    const FD = new Date(Ft.setDate(Ft.getDate() + 1));
+                                    const dia = String(FD.getDate()).padStart(2, '0');
+                                    const mes = String(Ft.getMonth() + 1).padStart(2, '0');
+                                    const año = Ft.getFullYear();
+                                    const Fecha_Mañana = año + '-' + mes + '-' + dia;
+
+                                    // Obtener la fecha actualizada del input
+                                    const Fecha = fechaInput.val() || Fecha_Mañana;
+
+                                    // Consultar la tabla 'aforos' para ver si hay cupos definidos para la fecha
+                                    const aforosResponse = await fetch(`/Reservas/Aforos?FechaReserva=${Fecha}&Id_Tour=${responseData[i].Id_Tour}`);
+                                    const resAforos = await aforosResponse.json();
+
+                                    // Verificar si hay cupos definidos para la fecha en 'aforos'
+                                    const cuposDisponibles = resAforos.length > 0 ? resAforos[0].Cupos : responseData[i].CupoBase;
+
+                                    // Actualizar la interfaz gráfica con los cupos
+                                    $(`#Cupos${responseData[i].Id_Tour}`).text(cuposDisponibles);
+                                    $(`#C${responseData[i].Id_Tour}`).val(cuposDisponibles);
+
+                                    // Llamar a la función cupos con los datos correspondientes
+                                    cupos(responseData[i].Id_Tour, Fecha);
+                                }
+                            } catch (error) {
+                                console.error('Error:', error);
+                            }
+                        };
+
+                        ToursRH = async () => {
+                            try {
+                                const response = await fetch('/Index/ToursRH');
+                                const responseData = await response.json();
+
+                                for (let i = 0; i < responseData.length; i++) {
+                                    const fechaInput = $('#fecha');
+                                    const Ft = new Date();
+                                    const FD = new Date(Ft.setDate(Ft.getDate() + 1));
+                                    const dia = String(FD.getDate()).padStart(2, '0');
+                                    const mes = String(Ft.getMonth() + 1).padStart(2, '0');
+                                    const año = Ft.getFullYear();
+                                    const Fecha_Mañana = año + '-' + mes + '-' + dia;
+
+                                    // Obtener la fecha actualizada del input
+                                    const Fecha = fechaInput.val() || Fecha_Mañana;
+                                    // Consultar la tabla 'aforos' para ver si hay cupos definidos para la fecha filtrada
+                                    const aforosResponse = await fetch(`/Reservas/Aforos?FechaReserva=${Fecha}&Id_Tour=${responseData[i].Id_Tour}`);
+                                    const resAforos = await aforosResponse.json();
+
+                                    // Verificar si hay cupos definidos para la fecha filtrada en 'aforos'
+                                    const cuposDisponibles = resAforos.length > 0 ? resAforos[0].Cupos : responseData[i].CupoBase;
+                                    // Actualizar la interfaz gráfica con los cupos
+                                    $(`#Cupos${responseData[i].Id_Tour}`).text(cuposDisponibles);
+                                    $(`#C${responseData[i].Id_Tour}`).val(cuposDisponibles);
+
+                                    // Llamar a las funciones correspondientes con los datos actualizados
+                                    cuposRH(responseData[i].Id_Tour, Fecha);
+                                    pasajerosRio(Fecha);
+                                    pasajerosHacienda(Fecha);
+                                    transfer(Fecha);
+                                    transferAeropuerto(Fecha);
+                                    transferHotel(Fecha);
+                                    transferOtro(Fecha);
+                                    privados(Fecha);
+                                }
+                            } catch (error) {
+                                console.error('Error:', error);
+                            }
+                        };
+
+                        cupos = (Id_Tour, Fecha) => {
+                            var id = Id_Tour;
+                            fetch('/Index/Cupos?Id_Tour=' + Id_Tour + '&Fecha=' + Fecha + '').then((res) => {
+                                return res.json();
+                            }).then((resData) => {
+                                var Total = resData[0].Total;
+                                if (Total == null) {
+                                    Total = 0;
+                                }
+                                $('#Pasajeros' + id + '').text(Total);
+                                $('#Pas' + id + '').val(Total);
+                            }).then(() => {
+                                NumPas = $('#Pas' + id + '').val();
+                                Cupos = $('#C' + id + '').val();
+
+                                var porcentaje = NumPas * 100 / Cupos;
+
+                                if (NumPas == Cupos) {
+                                    color = "#ff5370";
+                                } else if (NumPas >= Cupos - 10) {
+                                    color = "#fffc53";
+                                } else {
+                                    color = "#89ff53"
+                                }
+                                $('#bar-Progress' + id + '').width(porcentaje + '%')
+                                $('#bar-Progress' + id + '').css('background-color', color)
+
+                            })
+                        }
+
+                        cuposRH = (Id_Tour, Fecha) => {
+                            var id = Id_Tour;
+                            fetch('/Index/CuposRH?Fecha=' + Fecha + '').then((res) => {
+                                return res.json();
+                            }).then((resData) => {
+                                var Total = resData[0].Total;
+                                if (Total == null) {
+                                    Total = 0;
+                                }
+                                $('#Pasajeros' + id + '').text(Total);
+                                $('#Pas' + id + '').val(Total);
+                            }).then(() => {
+                                NumPas = $('#Pas' + id + '').val();
+                                Cupos = $('#C' + id + '').val();
+
+                                var porcentaje = NumPas * 100 / Cupos;
+
+                                if (NumPas == Cupos) {
+                                    color = "#ff5370";
+                                } else if (NumPas >= Cupos - 10) {
+                                    color = "#fffc53";
+                                } else {
+                                    color = "#89ff53"
+                                }
+                                $('#bar-Progress' + id + '').width(porcentaje + '%')
+                                $('#bar-Progress' + id + '').css('background-color', color)
+
+                            })
+                        }
+
+                        pasajerosRio = (Fecha) => {
+                            fetch('/Index/PasajerosRio?Fecha=' + Fecha + '').then((response) => {
+                                return response.json();
+                            }).then((Data) => {
+                                var Pasajeros = 0;
+                                if (Data[0].Pasajeros != null) {
+                                    Pasajeros = Data[0].Pasajeros;
+                                }
+                                $('#PasajerosRio').text(Pasajeros)
+                            })
+                        }
+
+                        pasajerosHacienda = (Fecha) => {
+                            fetch('/Index/PasajerosHacienda?Fecha=' + Fecha + '').then((response) => {
+                                return response.json();
+                            }).then((Data) => {
+                                var Pasajeros = 0;
+                                if (Data[0].Pasajeros != null) {
+                                    Pasajeros = Data[0].Pasajeros;
+                                }
+                                $('#PasajerosHacienda').text(Pasajeros)
+                            })
+                        }
+
+                        privados = (Fecha) => {
+                            fetch('/Index/Privados?Fecha=' + Fecha + '').then((res) => {
+                                return res.json();
+                            }).then((Data) => {
+                                var Privados = 0;
+                                if (Data[0].Privados != null) {
+                                    Privados = Data[0].Privados;
+                                }
+                                $('#Privados').text(Privados)
+                            })
+                        }
+
+                        transfer = (Fecha) => {
+                            fetch('/Index/Transfer?Fecha=' + Fecha + '').then((res) => {
+                                return res.json();
+                            }).then((Data) => {
+                                var Transfer = 0;
+                                if (Data[0].Transfer != null) {
+                                    Transfer = Data[0].Transfer;
+                                }
+                                $('#Transfer').text(Transfer)
+                            })
+                        }
+
+                        transferAeropuerto = (Fecha) => {
+                            fetch('/Index/TransferAeropuerto?Fecha=' + Fecha + '').then((response) => {
+                                return response.json();
+                            }).then((Data) => {
+                                var Transfer = 0;
+                                if (Data[0].Transfer != null) {
+                                    Transfer = Data[0].Transfer;
+                                }
+                                $('#TransferAeropuerto').text(Transfer)
+                            })
+                        }
+
+                        transferHotel = (Fecha) => {
+                            fetch('/Index/TransferHotel?Fecha=' + Fecha + '').then((response) => {
+                                return response.json();
+                            }).then((Data) => {
+                                var Transfer = 0;
+                                if (Data[0].Transfer != null) {
+                                    Transfer = Data[0].Transfer;
+                                }
+                                $('#TransferHotel').text(Transfer)
+                            })
+                        }
+
+                        transferOtro = (Fecha) => {
+                            fetch('/Index/TransferOtro?Fecha=' + Fecha + '').then((response) => {
+                                return response.json();
+                            }).then((Data) => {
+                                var Transfer = 0;
+                                if (Data[0].Transfer != null) {
+                                    Transfer = Data[0].Transfer;
+                                }
+                                $('#TransferOtro').text(Transfer)
+                            })
+                        }
+                    </script>
+
+</body>
+
+</html>

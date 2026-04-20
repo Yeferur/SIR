@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Reservas</title>
-    <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         .card {
@@ -17,307 +16,10 @@
             margin-bottom: 20px;
         }
 
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 200;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3i94_wlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 300;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 400;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7g.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 600;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 700;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 900;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3iu4nwlxdr.ttf) format('truetype');
-        }
-
-        a.button {
-            background: #0096a0;
-            border-radius: 4px;
-            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
-            color: #ffffff;
-            display: inline-block;
-            padding: 6px 30px 8px;
-            position: relative;
-            text-decoration: none;
-            transition: all 0.1s 0s ease-out;
-        }
-
-        .no-touch a.button:hover {
-            background: #00a2ad;
-            box-shadow: 0px 8px 2px 0 rgba(0, 0, 0, 0.075);
-            transform: translateY(-2px);
-            transition: all 0.25s 0s ease-out;
-        }
-
-        .no-touch a.button:active,
-        a.button:active {
-            background: #008a93;
-            box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.25);
-            transform: translate3d(0, 1px, 0);
-            transition: all 0.025s 0s ease-out;
-        }
-
-        div.cardds {
-            margin: 80px auto;
-            max-width: 960px;
-            text-align: center;
-        }
-
-        div.cardd {
-            background: #1f2029;
-            display: inline-block;
-            margin: 8px;
-            max-width: 300px;
-            perspective: 1000;
-            position: relative;
-            text-align: left;
-            transition: all 0.3s 0s ease-in;
-            width: 300px;
-            z-index: 1;
-        }
-
-        div.cardd .cardd__image-holder {
-            background: rgba(0, 0, 0, 0.1);
-            height: 0;
-            padding-bottom: 75%;
-        }
-
-        div.cardd div.cardd-title {
-            background: #1f2029;
-            padding: 6px 15px 10px;
-            position: relative;
-            z-index: 0;
-        }
-
-        div.cardd div.cardd-title a.toggle-info {
-            border-radius: 32px;
-            height: 32px;
-            padding: 0;
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            width: 32px;
-        }
-
-        div.cardd div.cardd-title a.toggle-info span {
-            background: #ffffff;
-            display: block;
-            height: 2px;
-            position: absolute;
-            top: 16px;
-            transition: all 0.15s 0s ease-out;
-            width: 12px;
-        }
-
-        div.cardd div.cardd-title a.toggle-info span.left {
-            right: 14px;
-            transform: rotate(45deg);
-        }
-
-        div.cardd div.cardd-title a.toggle-info span.right {
-            left: 14px;
-            transform: rotate(-45deg);
-        }
-
-        div.cardd div.cardd-title h2 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.05em;
-            margin: 0;
-            padding: 0;
-        }
-
-        div.cardd div.cardd-title h2 small {
-            display: block;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: -0.025em;
-        }
-
-        div.cardd div.cardd-info {
-            padding: 0 15px 10px;
-            position: relative;
-            font-size: 14px;
-        }
-
-        div.cardd div.cardd-actions {
-            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.075);
-            padding: 10px 15px 20px;
-            text-align: center;
-        }
-
-        div.cardd div.cardd-flap {
-            background: #2a2f3a;
-            position: absolute;
-            width: 100%;
-            transform-origin: top;
-            transform: rotateX(-90deg);
-        }
-
-        div.cardd div.flap1 {
-            transition: all 0.3s 0.3s ease-out;
-            z-index: -1;
-        }
-
-        div.cardd div.flap2 {
-            transition: all 0.3s 0s ease-out;
-            z-index: -2;
-        }
-
-        div.cardds.showing div.cardd {
-            cursor: pointer;
-            opacity: 0.6;
-            transform: scale(0.88);
-        }
-
-        .no-touch div.cardds.showing div.cardd:hover {
-            opacity: 0.94;
-            transform: scale(0.92);
-        }
-
-        div.cardd.show {
-            opacity: 1 !important;
-            transform: scale(1) !important;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info {
-            background: #ff6666 !important;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info span {
-            top: 15px;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info span.left {
-            right: 10px;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info span.right {
-            left: 10px;
-        }
-
-        div.cardd.show div.cardd-flap {
-            background: #1f2029;
-            transform: rotateX(0deg);
-        }
-
-        div.cardd.show div.flap1 {
-            transition: all 0.3s 0s ease-out;
-        }
-
-        div.cardd.show div.flap2 {
-            transition: all 0.3s 0.2s ease-out;
-        }
-
-
         :root {
             --bg: #f3f3f3;
             --red: rgb(250, 71, 71);
             --transition-easing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-
-        input[type=checkbox] {
-            display: none;
-        }
-
-        input[type=checkbox]:checked+label.checkbox .checkbox__inner .red__ball {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-            transition-delay: 150ms;
-        }
-
-        input[type=checkbox]:checked~.checkbox__text {
-            opacity: 1;
-        }
-
-        input[type=checkbox]:checked~.checkbox__text .checkbox__text--options span.off {
-            transform: translateY(150%);
-            opacity: 0;
-        }
-
-        input[type=checkbox]:checked~.checkbox__text .checkbox__text--options span.on {
-            transform: translateY(0%);
-            opacity: 1;
-        }
-
-        .checkbox {
-            --size: 50px;
-            display: block;
-            width: var(--size);
-            height: var(--size);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            background: var(--bg);
-            box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.12), 2px 2px 6px rgba(0, 0, 0, 0.05), 2px 2px 10px rgba(0, 0, 0, 0.025), inset -2px -2px 3px rgba(0, 0, 0, 0.05), inset -2px -2px 8px rgba(0, 0, 0, 0.02), inset 1px 3px 3px rgba(255, 255, 255, 0.45), inset 3px 8px 25px rgba(255, 255, 255, 0.35), inset 3px 2px 3px rgba(255, 255, 255, 0.35), inset 3px 2px 5px rgba(255, 255, 255, 0.2), inset 2px 3px 8px rgba(255, 255, 255, 0.085), inset 3px 2px 18px rgba(255, 255, 255, 0.05), inset 2px 3px 25px rgba(255, 255, 255, 0.025), inset 8px 8px 18px rgba(255, 255, 255, 0.1), inset 8px 8px 25px rgba(255, 255, 255, 0.05);
-            cursor: pointer;
-        }
-
-        .checkbox .checkbox__inner {
-            position: relative;
-            width: calc(var(--size) / 1.75);
-            height: calc(var(--size) / 1.75);
-            border-radius: 50%;
-            background: var(--bg);
-            box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.12), inset 2px 2px 5px rgba(0, 0, 0, 0.08), inset 3px 3px 12px rgba(0, 0, 0, 0.05), inset 4px 5px 16px rgba(0, 0, 0, 0.035), inset 0px -1px 2px rgba(255, 255, 255, 0.45), inset -1px -1px 3px rgba(255, 255, 255, 0.45), inset -1px -1px 2px rgba(255, 255, 255, 0.2), inset -1px -1px 2px rgba(255, 255, 255, 0.12), 2px 2px 2px rgba(255, 255, 255, 0.12), 2px 2px 3px rgba(255, 255, 255, 0.1), 2px 2px 5px rgba(255, 255, 255, 0.08), 6px 6px 15px rgba(0, 0, 0, 0.014), 8px 8px 18px rgba(0, 0, 0, 0.08), 12px 12px 28px rgba(0, 0, 0, 0.04);
-        }
-
-        .checkbox .checkbox__inner .red__ball {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%) scale(0.5);
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: var(--red);
-            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.12), inset -4px -5px 12px rgba(0, 0, 0, 0.12), inset -5px -6px 12px rgba(0, 0, 0, 0.08), inset 0px -6px 18px rgba(0, 0, 0, 0.06), 2px 1px 8px rgba(255, 112, 112, 0.32), 3px 2px 12px rgba(255, 112, 112, 0.15), 4px 4px 18px rgba(255, 112, 112, 0.08);
-            transition: transform 250ms var(--transition-easing), opacity 300ms var(--transition-easing);
-            transition-delay: 120ms;
-        }
-
-        .checkbox .checkbox__inner .red__ball::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 25%;
-            transform: translate(-50%, -50%);
-            background: rgb(255, 204, 204);
-            width: 35%;
-            height: 15%;
-            filter: blur(4px);
         }
 
         a.pdf {
@@ -333,7 +35,7 @@
         }
 
         a.edit {
-            background: #ffd900;
+            background: #ffae00;
             border-radius: 4px;
             box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
             color: #ffffff;
@@ -354,6 +56,248 @@
             position: relative;
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
+        }
+
+        .page-wrapper {
+            padding-top: 5%;
+            display: flex;
+            -webkit-display: flex;
+            justify-content: space-around;
+        }
+
+        .card-wrapper {
+            box-sizing: border-box;
+            background: #1f2029;
+            border-radius: 6px;
+            max-height: 100px;
+            overflow: hidden;
+            padding: 2rem;
+            width: 400px;
+            transition: max-height 500ms ease-in-out;
+        }
+
+        .card-wrapper:hover {
+            box-shadow: 0 0 8px rgba(20, 20, 20, 0.2);
+            cursor: pointer;
+            max-height: 1000px;
+        }
+
+        .card-details,
+        .reveal-details {
+            font-weight: 300;
+        }
+
+        .reveal-details {
+            margin-top: 10px;
+        }
+
+        .card-height-animate {
+            height: auto;
+        }
+
+        .pdf {
+            max-height: auto;
+        }
+
+        .custom-btn {
+            width: 130px;
+            height: 40px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            box-shadow: inset 2px 2px 2px 0px rgba(31, 31, 31, 0.5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+            outline: none;
+        }
+
+        .btn-2 {
+            background: rgb(96, 9, 240);
+            background: linear-gradient(0deg, rgb(84, 16, 192) 0%, rgb(98, 5, 180) 100%);
+            border: none;
+
+        }
+
+        .btn-2:before {
+            height: 0%;
+            width: 2px;
+        }
+
+        .btn-2:hover {
+            box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.5),
+                -4px -4px 6px 0 rgba(26, 26, 26, 0.5),
+                inset -4px -4px 6px 0 rgba(46, 46, 46, 0.2),
+                inset 4px 4px 6px 0 rgba(0, 0, 0, .4);
+        }
+
+        .custom-accordion {
+
+            border-color: #363843;
+            /* Color del borde al enfocar */
+        }
+
+        /* Estilo personalizado para el acordeón */
+        .custom-accordion .accordion-button {
+            box-shadow: none;
+            background-color: #1a1b21;
+            /* Color de fondo */
+            color: white;
+            /* Color del texto */
+        }
+
+        .bxs-lock-alt {
+            background-color: #0026ff;
+        }
+
+        .custom-accordion .accordion-button:hover {
+            background-color: #3b3c4b;
+            /* Color de fondo al pasar el mouse */
+        }
+
+        .custom-accordion .accordion-collapse {
+            background-color: #1f2029;
+            color: #ffffff;
+        }
+
+        input.sw {
+            opacity: 0;
+            position: absolute;
+            left: -9999px;
+        }
+
+        input.sw+label {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            transition: 0.2s ease;
+            display: inline-block;
+            height: 30px;
+            width: 51px;
+            position: relative;
+            box-shadow: inset 0 0 0px 2px #e4e4e4;
+            border-radius: 60px;
+            /* White toggle */
+        }
+
+        input.sw+label:before {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 30px;
+            width: 30px;
+            top: 0;
+            left: 0;
+            border-radius: 15px;
+            background: rgba(76, 217, 100, 0);
+            transition: 0.2s cubic-bezier(0.24, 0, 0.5, 1);
+        }
+
+        input.sw+label:after {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 28px;
+            width: 28px;
+            top: 50%;
+            margin-top: -14px;
+            left: 1px;
+            border-radius: 60px;
+            background: #fff;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0px 0 rgba(0, 0, 0, 0.04), 0 4px 9px rgba(0, 0, 0, 0.13), 0 3px 3px rgba(0, 0, 0, 0.05);
+            transition: 0.35s cubic-bezier(0.54, 1.6, 0.5, 1);
+        }
+
+        input.sw+label span {
+            white-space: nowrap;
+            height: 30px;
+            line-height: 30px;
+            margin-left: 51px;
+            padding-left: 16px;
+        }
+
+        input.sw:checked+label:before {
+            width: 51px;
+            background: #4cd964;
+            transition: width 0.2s cubic-bezier(0, 0, 0, 0.1) !important;
+        }
+
+        input.sw:checked+label:after {
+            left: 22px;
+        }
+
+        input.sw:checked+label {
+            box-shadow: inset 0 0 0px 25px #e4e4e4;
+            transition: box-shadow 2.5s cubic-bezier(0, 1.2, 0.94, 0.95);
+        }
+
+        #search {
+            top: 45px;
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container .search {
+            top: 45px;
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        #search::after {
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        #search::before {
+            display: block;
+            position: absolute;
+            z-index: 1 !important;
+        }
+
+        #search::after {
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        .list-group-color {
+            background: #1f2029;
+            color: #fff;
+        }
+
+        .list-group-disabled-bg {
+            background: #1f2029 !important;
+            color: #fff !important;
+        }
+
+        .list-group-create-color {
+            background: #1f2029;
+            color: #45acdf;
+        }
+
+        .list-group-create-color:hover {
+            background: #2a2f3a;
+            color: #45acdf;
+        }
+
+        .list-group-color:hover,
+        .list-group-disabled-color:hover {
+            background: #2a2f3a;
+            color: #fff;
         }
     </style>
 </head>
@@ -378,7 +322,8 @@
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="form-label">Tipo de cliente</label>
-                        <select class="form-styleSelect mayusculas Select" multiple="multiple" name="" id="CategoriaReserva">
+                        <select class="form-styleSelect Select" multiple="multiple" name=""
+                            id="CategoriaReserva">
                             <% resultsCategoria.forEach((Categoria)=>{ %>
                                 <option value="<%= Categoria.Id_Categoria %>">
                                     <%= Categoria.Categoria %>
@@ -390,7 +335,7 @@
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Tour</label>
-                        <select class="form-styleSelect mayusculas Select" name="" id="tour" multiple>
+                        <select class="form-styleSelect Select" name="" id="tour" multiple>
                             <% resultsTours.forEach((Tours)=>{ %>
                                 <option value="<%= Tours.Id_Tour %>">
                                     <%= Tours.NombreTour %>
@@ -404,40 +349,54 @@
                 <div class="col-lg-4 ">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Id de reserva</label>
-                        <input type="text" name="reserva" id="Id_Reserva" class="form-style mayusculas ">
+                        <input type="text" name="reserva" id="Id_Reserva" class="form-style mayusculas " autocomplete="off">
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">Nombres y Apellidos del pasajero</label>
-                        <input type="text" name="NombreApellido" id="NombreApellido" class="form-style mayusculas ">
+                        <input type="text" name="NombreApellido" id="NombreApellido" class="form-style mayusculas " autocomplete="off">
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-group mx-sm-3 mb-2">
                         <label for="">DNI del pasajero</label>
-                        <input type="text" name="id" id="IdPas" class="form-style mayusculas ">
+                        <input type="text" name="id" id="IdPas" class="form-style mayusculas " autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="">Punto de Encuentro</label>
+                        <input type="text" name="Punto" id="Punto" class="form-style mayusculas " autocomplete="off">
+                        <div class="search">
+                            <span id="search_result_Punto"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label class="fw-bold">Estado de la reserva</label>
+                        <select class="form-styleSelect" name="Estado" id="Estado" multiple="multiple">
+                            <option value="Activo">ACTIVO</option>
+                            <option value="Pendiente">PENDIENTE</option>
+                            <option value="Completado">COMPLETADO</option>
+                            <option value="Cancelado">CANCELADO</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-lg-2">
+                    <br>
                     <div class="mx-sm-3 mb-2">
-                        <label for="">Sin información</label>
-                        <input type="checkbox" id="empty" value="Check" class="mx-sm-3 mb-2">
-
-                        <label for="empty" class="checkbox">
-                            <div class="checkbox__inner">
-                                <div class="red__ball"></div>
-                            </div>
+                        <input type="checkbox" id="empty" name="toggle" value="Check" class="mx-sm-3 mb-2 sw"> <label
+                            for="empty"><span>Sin información</span>
                         </label>
                     </div>
-
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="form-group mx-sm-3 mb-2">
-                        <button class="btn btn-primary btn-sm " id="filtrar">Filtrar</button>
-                        <button class="btn btn-warning btn-sm " id="deshacer">Deshacer</button>
+                        <button class="custom-btn btn-2 " id="filtrar">Filtrar</button>
                     </div>
                     <br><br>
                 </div>
@@ -446,180 +405,86 @@
 
 
         <div class="card-body">
-            <div id="cardds">
-                <div class="cardds">
-                    <% resultsReservas.forEach((Reservas)=>{ %>
-                        <div class="cardd" id="<%= Reservas.Id_Reserva %>">
-
-                            <div class="cardd-title">
-                                <a class="toggle-info button"
-                                    onclick="load_Pas('<%= Reservas.Id_Reserva %>'); card('<%= Reservas.Id_Reserva %>');">
-                                    <span class="left"></span>
-                                    <span class="right"></span>
-                                </a>
-                                <h2>
-                                    <%= Reservas.Id_Reserva %>
-                                    <% if (Reservas.TipoReserva=="Privada" ){ %>
-                                        <i class='bx bxs-lock-alt'></i>
-                                        <% } %>
-                                </h2>
-
-                            </div>
-                            <div class="cardd-flap flap1" id="pdf<%= Reservas.Id_Reserva %>">
-
-                                <div class="cardd-info">
-                                    <h4>
-                                        <%= Reservas.Id_Reserva %>
-                                        <% if (Reservas.TipoReserva=="Privada" ){ %>
-                                            <i class='bx bxs-lock-alt'></i>
-                                            <% } %>
-                                    </h4>
-                                    <div class="info_Reserva">
-                                        <h5>Fecha del Tour:
-                                            <%= Reservas.FechaReserva %>
-                                        </h5>
-                                        <h5>Ruta:
-                                            <%= Reservas.Ruta %>
-                                        </h5>
-                                        <h5>Número de Pasajeros:
-                                            <%= Reservas.NumeroPasajeros %>
-                                        </h5>
-                                        <h5>Tour:
-                                            <%= Reservas.NombreTour %>
-                                        </h5>
-                                        <h5>Fecha de registro:
-                                            <%= Reservas.FechaRegistro %>
-                                        </h5>
-                                        <h5>Telefono Reserva:
-                                            <%= Reservas.TelefonoReserva %>
-                                        </h5>
-                                    </div>
-                                    <div class="pasajeros"></div>
-                                </div>
-                                <div class="cardd-flap flap2">
-                                    <div class="cardd-actions">
-                                        <a class="pdf" onclick="PDF('<%= Reservas.Id_Reserva %>');"><iconify-icon
-                                                icon="material-symbols:download" style="color: white;" width="30"
-                                                height="30"></iconify-icon></a>
-                                        <a href="../Reservas/EditarReserva/<%= Reservas.Id_Reserva %>"
-                                            class="edit"><iconify-icon icon="material-symbols:edit"
-                                                style="color: white;" width="30" height="30"></iconify-icon></a>
-                                        <a type="button" class="delete" id="delete<%= Reservas.Id_Reserva %>"><iconify-icon icon="material-symbols:delete-outline"
-                                                style="color: white;" width="30" height="30"></iconify-icon></a>
-                                    </div>
-                                    <script>
-                                        $("#delete<%= Reservas.Id_Reserva %>").click(() => {
-                                            swal({
-                                                title: "¿Seguro desea eliminar la reserva <%= Reservas.Id_Reserva %>?",
-                                                icon: "warning",
-                                                buttons: true,
-                                                dangerMode: true,
-                                            }).then((go) => {
-                                                    if (go) {
-                                                        deleteReserva('<%= Reservas.Id_Reserva %>')
-                                                    }
-                                                });
-                                        })
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-
-                        <% }) %>
-                </div>
-                <div id="NoData">
-                    <a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>
-                </div>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <!-- Aquí se insertarán los elementos del acordeón dinámicamente -->
             </div>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <div id="NoData">No hay datos disponibles</div>
         </div>
     </div>
 
-
-
-
-
-
-
-<!--     
-        <input type="date" name="" id="FechaReserva">
-<br>
-<input type="date" name="" id="FechaRegistro">
-    <select name="" id="tour" multiple>
-        <% resultsTours.forEach((Tours)=>{ %>
-        <option value="<%= Tours.Id_Tour %>"><%= Tours.NombreTour %></option>
-        <% }) %>
-    </select>
-
-    <button type="button" id="filtrar">Filtrar</button> -->
-
-
     <script>
-        $(document).ready(function () {
-            var zindex = 10;
 
-            $("#NoData").hide()
-            card = (id) => {
+        var zindex = 10;
 
-                var isShowing = false;
+        $("#NoData").hide();
 
-                if ($('#' + id + '').hasClass("show")) {
-                    isShowing = true
-                }
-
-                if ($("div.cardds").hasClass("showing")) {
-                    // a cardd is already in view
-                    $("div.cardd.show")
-                        .removeClass("show");
-
-                    if (isShowing) {
-                        // this cardd was showing - reset the grid
-                        $("div.cardds")
-                            .removeClass("showing");
-                    } else {
-                        // this cardd isn't showing - get in with it
-                        $('#' + id + '')
-                            .css({ zIndex: zindex })
-                            .addClass("show");
-
-                    }
-
-                    zindex++;
-
-                } else {
-                    // no cardds in view
-                    $("div.cardds")
-                        .addClass("showing");
-                    $('#' + id + '')
-                        .css({ zIndex: zindex })
-                        .addClass("show");
-
-                    zindex++;
-                }
-
-            };
+        const input = document.getElementById('Punto');
+        const searchResults = document.getElementById('search_result_Punto');
+        input.addEventListener("focus", () => {
+            const search = searchResults;
+            search.style.display = "block";
         });
 
+        input.addEventListener("blur", () => {
+            const search = searchResults;
+            setTimeout(() => {
+                search.style.display = "none";
+            }, 200); // Agregamos un pequeño retardo para asegurarnos de que no se borre inmediatamente el spam
+        });
 
-        load_Pas = (Id_Reserva) => {
-            fetch('/VerRervas/Pasajeros?Id_Reserva=' + Id_Reserva + '').then(function (response) {
+        input.addEventListener('keyup', () => {
+            const query = input.value.trim();
+            load_data(query);
+        });
+
+        load_data = (query = '') => {
+            fetch('/autocompletar?search_query=' + query).then(function (response) {
 
                 return response.json();
 
             }).then(function (responseData) {
 
-
-
-                var html = '<table class="table table-dark table-striped table-hover">';
-                html += '<thead>';
-                html += '<th>Nombre</th>';
-                html += '<th>Identificacion</th>';
-                html += '</thead>';
-                html += '<tbody>';
+                var html = '<ul class="list-group">';
 
                 if (responseData.length > 0) {
                     for (var count = 0; count < responseData.length; count++) {
-                        // var regular_expression = new RegExp('(' + query + ')', 'gi');
+                        var regular_expression = new RegExp('(' + query + ')', 'gi');
+
+                        html += '<a class="list-group-item list-group-item-action list-group-color" onclick="get_text(this);">' + responseData[count].NombrePunto.replace(regular_expression, '<span class="text-primary fw-bold">$1</span>') + '</a>';
+                    }
+                }
+                else {
+                    html += '<a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>';
+                }
+
+                html += '</ul>';
+
+                document.getElementById('search_result_Punto').innerHTML = html;
+
+            });
+        }
+
+        function get_text(event) {
+            var Punto_name = event.textContent;
+            document.getElementById('Punto').value = Punto_name;
+            document.getElementById('search_result_Punto').innerHTML = '';
+        }
+
+        // Función para cargar información de pasajeros al hacer clic
+        load_Pas = (Id_Reserva) => {
+            fetch('/VerRervas/Pasajeros?Id_Reserva=' + Id_Reserva + '').then(function (response) {
+                return response.json();
+            }).then(function (responseData) {
+                var html = '<h4>Pasajeros</h4>';
+                html += '<table class="table table-dark table-striped table-hover">';
+                html += '<thead>';
+                html += '<th>Nombre</th>';
+                html += '<th>Identificación</th>';
+                html += '<th>Precio</th>';
+                html += '</thead>';
+                html += '<tbody>';
+                if (responseData.length > 0) {
+                    for (var count = 0; count < responseData.length; count++) {
                         html += '<tr>';
                         html += '<td>';
                         html += responseData[count].NombrePasajero;
@@ -627,47 +492,111 @@
                         html += '<td>';
                         html += responseData[count].IdPas;
                         html += '</td>';
+                        html += '<td>';
+                        html += responseData[count].PrecioTour;
+                        html += '</td>';
                         html += '</tr>';
                     }
                 }
-                // else {
-                //     html += '<a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>';
-                //     html += '<a href="#" class="list-group-item list-group-item-action list-group-create-color">Crear nuevo punto</a>';
-                // }
-
                 html += '</tbody>';
                 html += '</table>';
-                $(".pasajeros").html(html);
+                $("#" + Id_Reserva + " .pasajeros").html(html);
             });
-        }
+        };
 
-        Filtro = (selectionTour = '', FechaReserva = '', FechaRegistro = '', CategoriaReserva = '', Id_Reserva = '', IdPas = '', Empty = '', NombreApellido = '') => {
-            fetch('/VerReservas/FiltroVerReservas?selectionTour=' + selectionTour + '&FechaReserva=' + FechaReserva + '&FechaRegistro=' + FechaRegistro + '&CategoriaReserva=' + CategoriaReserva + '&Id_Reserva=' + Id_Reserva + '&IdPas=' + IdPas + '&Empty=' + Empty + '&NombreApellido=' + NombreApellido + '').then(function (response) {
-
+        Filtro = (selectionTour = '', FechaReserva = '', FechaRegistro = '', CategoriaReserva = '', Id_Reserva = '', IdPas = '', Empty = '', NombreApellido = '', Punto = '', Estado = '') => {
+            fetch('/VerReservas/FiltroVerReservas?selectionTour=' + selectionTour + '&FechaReserva=' + FechaReserva + '&FechaRegistro=' + FechaRegistro + '&CategoriaReserva=' + CategoriaReserva + '&Id_Reserva=' + Id_Reserva + '&IdPas=' + IdPas + '&Empty=' + Empty + '&NombreApellido=' + NombreApellido + '&Punto=' + Punto + '&Estado=' + Estado + '').then(function (response) {
                 return response.json();
-
             }).then(function (responseData) {
+                var accordionContainer = document.getElementById("accordionFlushExample");
 
-                // var html = '<div class="cardds">';
+                // Limpiar contenido existente en el contenedor
+                accordionContainer.innerHTML = '';
 
                 if (responseData.length > 0) {
-                    $(".cardd").hide();
                     $("#NoData").hide();
-                    for (var count = 0; count < responseData.length; count++) {
-                        console.log(responseData[count].Id_Reserva);
-                        var Id_Reserva = responseData[count].Id_Reserva
 
-                        if ((selectionTour != '') || (FechaReserva != '') || (FechaRegistro != '') || (CategoriaReserva != '') || (Id_Reserva != '') || (IdPas != '')) {
-                            $("#" + Id_Reserva + "").show();
-                        }
-                    }
-                }
-                else {
-                    $(".cardd").hide();
+                    responseData.forEach(function (Reserva, index) {
+                        var collapseId = "flush-collapse" + index;
+                        var cardHTML = `
+                                <div class="accordion-item custom-accordion">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}" onclick="load_Pas('${Reserva.Id_Reserva}')">
+                                            Reserva ${Reserva.Id_Reserva} ${(Reserva.TipoReserva == "Privada") ? '<i class="bx bxs-lock-alt"></i>' : ''}
+                                        </button>
+                                    </h2>
+                                    <div id="${collapseId}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body" id="${Reserva.Id_Reserva}">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="col-md-12 mb-3">
+                                                            <img src="/img/LogoMaxitoursPNG.png" alt="Logo" width="200" id="img${Reserva.Id_Reserva}">
+                                                        </div>    
+                                                        <div class="col-12">
+                                                            <h1>${Reserva.Id_Reserva}</h1>
+                                                        </div>   
+                                                        <div class="col-12">
+                                                            <h3>Estado: ${Reserva.Estado}</h3>
+                                                        </div>                    
+                                                    </div>       
+                                                    <div class="col-md-8">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <p>Fecha del Tour: ${Reserva.FechaReserva}</p>
+                                                            </div>
+                                                            <div class="col-sm-6" id="IdiomaReserva${Reserva.Id_Reserva}">
+                                                                <p id="IdiomaReserva${Reserva.Id_Reserva}">Idioma: ${Reserva.IdiomaReserva}</p>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <p>Tour: ${Reserva.NombreTour}</p>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <p id="HoraSalida${Reserva.Id_Reserva}">Hora de Recogida: ${Reserva.HoraSalida}</p>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <p id="PuntoEncuentro${Reserva.Id_Reserva}">Punto de Encuentro: ${Reserva.PuntoEncuentro}</p>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <p>Número de Pasajeros: ${Reserva.NumeroPasajeros}</p>
+                                                            </div>
+                                                            <div class="col-sm-6" id="FechaRegistro${Reserva.Id_Reserva}">
+                                                                <p>Fecha de registro: ${Reserva.FechaRegistro}</p>
+                                                            </div>
+                                                            <div class="col-sm-6" id="TelefonoReserva${Reserva.Id_Reserva}">
+                                                                <p>Teléfono Reserva: ${Reserva.TelefonoReserva}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="pasajeros"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 d-flex justify-content-end">
+                                                        <div class="cardd-actions">
+                                                            <a class="pdf" onclick="downloadPDF('${collapseId}','${Reserva.Id_Reserva}');">
+                                                                <iconify-icon icon="material-symbols:download" style="color: white;" width="30" height="30"></iconify-icon>
+                                                            </a>
+                                                            <a href="../Reservas/EditarReserva/${Reserva.Id_Reserva}" class="edit">
+                                                                <iconify-icon icon="material-symbols:edit" style="color: white;" width="30" height="30"></iconify-icon>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+`;
+
+                        accordionContainer.innerHTML += cardHTML;
+                    });
+                } else {
                     $("#NoData").show();
                 }
-
-                ;
             });
         }
 
@@ -680,70 +609,69 @@
             var IdPas = $('#IdPas').val();
             var NombreApellido = $('#NombreApellido').val();
             var Empty = '';
+            var Punto = $("#Punto").val();
+            var Estado = $("#Estado").val();
             $("#empty").each(function () {
                 if ($(this).is(":checked")) {
                     Empty = $(this).val();
                 }
             })
-            if ((tour != '') || (FechaReserva != '') || (FechaRegistro != '') || (CategoriaReserva != '') || (Id_Reserva != '') || (IdPas != '') || (Empty != '') || (NombreApellido != '')) {
-                Filtro(tour, FechaReserva, FechaRegistro, CategoriaReserva, Id_Reserva, IdPas, Empty, NombreApellido);
+            if ((tour != '') || (FechaReserva != '') || (FechaRegistro != '') || (CategoriaReserva != '') || (Id_Reserva != '') || (IdPas != '') || (Empty != '') || (NombreApellido != '') || (Punto != '') || (Estado != '')) {
+                Filtro(tour, FechaReserva, FechaRegistro, CategoriaReserva, Id_Reserva, IdPas, Empty, NombreApellido, Punto, Estado);
             }
         });
-        $("#deshacer").click(function () {
-            $(".cardd").show();
-            $("#NoData").hide();
-        });
 
-        function PDF(Id_Reserva) {
-            var HTML_Width = $("#pdf" + Id_Reserva + "").width();
-            var HTML_Height = $("#pdf" + Id_Reserva + "").height();
-            var top_left_margin = 15;
-            var PDF_Width = HTML_Width + (top_left_margin * 2);
-            var PDF_Height = (PDF_Width * 2) + (top_left_margin * 2);
-            var canvas_image_width = HTML_Width;
-            var canvas_image_height = HTML_Height;
+        function downloadPDF(collapseId, Id_Reserva) {
+            // Ocultar los elementos de acciones antes de iniciar la generación del PDF
+            $('.cardd-actions').hide();
+            $('#Ruta' + Id_Reserva).hide();
+            $('#FechaRegistro' + Id_Reserva).hide();
+            $('#TelefonoReserva' + Id_Reserva).hide();
 
-            var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById(collapseId);
 
-            html2canvas($("#pdf" + Id_Reserva + "")[0]).then(function (canvas) {
-                var imgData = canvas.toDataURL("image/jpeg", 1.0);
-                var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
-                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
-                for (var i = 1; i <= totalPDFPages; i++) {
-                    pdf.addPage(PDF_Width, PDF_Height);
-                    pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 4), canvas_image_width, canvas_image_height);
-                }
-                pdf.save("" + Id_Reserva + ".pdf");
+            // Obtener dimensiones de la ventana del navegador
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            // Decide la orientación del PDF en función del tamaño de la pantalla
+            let orientation = 'portrait';
+            if (screenWidth > screenHeight) {
+                orientation = 'landscape';
+            }
+
+            html2canvas(element).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+
+                // Configura el tamaño de página de jsPDF igual al tamaño de la imagen capturada
+                const pdf = new jsPDF(orientation, 'pt', [imgWidth, imgHeight]);
+
+                // Agrega la imagen al PDF
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+                // Guarda el PDF con un nombre personalizado
+                pdf.save(Id_Reserva + ".pdf");
+
+                // Mostrar los elementos de acciones después de completar la generación del PDF
+                $('.cardd-actions').show();
+                $('#Ruta' + Id_Reserva).show();
+                $('#FechaRegistro' + Id_Reserva).show();
+                $('#TelefonoReserva' + Id_Reserva).show();
 
             });
         }
 
-        deleteReserva = (Id_Reserva) => {
-        fetch('/Reservas/DeleteReserva?Id_Reserva=' + Id_Reserva + '').then(response => {
-            response.json();
-        }).then((res) => {
-            if (res == 'error') {
-                swal({
-                    title: "Ocurrió un error",
-                    text: "No fue posible eliminar la reserva, Si el error continúa, comuníquese con soporte técnico.",
-                    icon: "error",
-                    buttons: true,
-                    dangerMode: true,
-                })
-            } else {
-                swal({
-                    text: "La reserva se ha eliminado correctamente.",
-                    icon: "success",
-                    buttons: true,
-                    dangerMode: true,
-                }).then(()=>{
-                    $('#' + Id_Reserva + '').remove();
-                    $("div.cardds").addClass("showing");
-                })
-                
+        $(document).on('keydown', function (event) {
+            if (event.key === "Enter") {
+                $("#filtrar").click();
             }
-        })
-    }
+        });
+
+
+
     </script>
 
 

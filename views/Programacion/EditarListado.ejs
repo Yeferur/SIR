@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado</title>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="../../resources/css/layout.css">
+    <link rel="shortcut icon" href="../../public/img/SIR.png" />
+    <style>
+        .btn-flotante {
+            font-size: 16px;
+            /* Cambiar el tamaño de la tipografia */
+            text-transform: uppercase;
+            /* Texto en mayusculas */
+            font-weight: bold;
+            /* Fuente en negrita o bold */
+            color: #ffffff;
+            /* Color del texto */
+            border-radius: 5px;
+            /* Borde del boton */
+            letter-spacing: 2px;
+            /* Espacio entre letras */
+            background-color: #be1919;
+            /* Color de fondo */
+            padding: 18px 30px;
+            /* Relleno del boton */
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            transition: all 300ms ease 0ms;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            z-index: 99;
+        }
+
+        .btn-flotante:hover {
+            background-color: #2c2fa5;
+            /* Color de fondo al pasar el cursor */
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-7px);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .btn-flotante {
+                font-size: 14px;
+                padding: 12px 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="content">
+        <% if (typeof placaBus !="undefined" || fecha !="undefined" || tour !="undefined" || idBus !="undefined"
+        ) { %>
+        <div class="container container-fluid ">
+            <div class="card">
+                <div class="card-header">
+                    <div class="input-group">
+                        <h3 class="mb-0"><strong>Editar Listado de programación</strong></h3>
+                    </div>
+                    <div class="col d-flex justify-content-end">
+                        <a type="button" class="delete" id="delete" onclick="eliminarListado();">
+                            <iconify-icon icon="material-symbols:delete-outline" style="color: white;"
+                                width="30" height="30"></iconify-icon>
+                        </a>
+                    </div>
+                </div>
+    
+                    <input type="hidden" name="placaBus" id="placaBus" value="<%= placaBus %>">
+                    <input type="hidden" name="fechaTour" id="fechaTour" value="<%= fecha %>">
+                    <input type="hidden" name="tour" id="tour" value="<%= tour %>">
+                    <input type="hidden" name="idBus" id="idBus" value="<%= idBus %>">
+                    <!-- <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <label for="">Fecha del tour</label>
+                                    <input type="date" name="fecha" id="fecha" class="form-style mayusculas ">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mx-sm-3 mb-6">
+                                    <label for="form-label">Tour</label>
+                                    <select name="" class="form-style mayusculas Select" id="select">
+                                        <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{
+                                            %>
+                                            <option value="<%= Tours.Id_Tour %>">
+                                                <%= Tours.NombreTour %>
+                                            </option>
+                                            <% }) } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mx-sm-3 mb-6">
+                                    <label for="form-label">Ruta</label>
+                                    <select name="ruta[]" class="form-style mayusculas Select" id="ruta">
+                                        <option value="" selected>
+                                            Seleccionar
+                                        </option>
+                                        <% if (typeof resultRutas !="undefined" ){ resultRutas.forEach((Rutas)=>{
+                                            %>
+                                            <option value="<%= Rutas.Ruta %>">
+                                                <%= Rutas.Ruta %>
+                                            </option>
+                                            <% }) } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <label for="capacidad-autobus">Nombre Guia</label>
+                                    <input type="text" id="guia" class="form-style mayusculas">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <label for="capacidad-autobus">Placa del bus</label>
+                                    <input type="text" id="placaBus" class="form-style mayusculas">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <label for="capacidad-autobus">Capacidad del bus</label>
+                                    <select class="form-style mayusculas Select" id="capacidad">
+                                        <option value="38">38 asientos</option>
+                                        <option value="30">30 asientos</option>
+                                        <!-- Agrega más opciones según la capacidad de los autobuses disponibles -->
+                    <!-- </select>
+                                </div>
+                            </div> -->
+
+                    <div class="row" id="div_Table">
+                        <div class="d-flex align-items-center justify-content-center" id="div_Text">
+                            <p>Listado vacío</p>
+                        </div>
+                    </div>
+
+            </div>
+            <br>
+            <!-- <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <button type="button" class="btn btn-primary btn-sm " id="filtrar">Filtrar</button>
+                                </div>
+                                <br><br>
+                            </div>
+                        </div> -->
+            <br>
+
+
+
+            <button class="btn-flotante" type="button" data-bs-toggle="offcanvas" data-bs-target="#restoDeReservasMenu"
+                aria-controls="restoDeReservasMenu" id="restoDeReservasBtn">Reservas</button>
+
+
+            <!-- Dentro del cuerpo del documento HTML -->
+            <div class="offcanvas offcanvas-end text-bg-dark" data-bs-scroll="true" data-bs-backdrop="false"
+                tabindex="-1" id="restoDeReservasMenu" aria-labelledby="restoDeReservasMenuLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="restoDeReservasMenuLabel">Resto de Reservas</h5>
+                    <button type="button" class="btn-close text-reset btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div id="restoDeReservasContent">
+                        <!-- Aquí se mostrarán las reservas -->
+                    </div>
+                </div>
+            </div>
+
+
+            
+            <br><br><br><br>
+
+        </div>
+        <% } %>
+            </div>
+
+            <!-- <div class="row" id="div_Table"></div>
+            <input type="button" name="Exportar" value="Exportar" class="btn-flotante"
+                onclick="exportTableToExcel('Listado', 'Listado.xls')" id="save-btn"> -->
+            </div>
+
+
+            <div class="modal fade" id="modalBusesDisponibles" tabindex="-1"
+                aria-labelledby="modalBusesDisponiblesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalBusesDisponiblesLabel">Buses Disponibles</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="selectBus"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
+    <% if(typeof alert !="undefined" ){ %>
+        <script>
+            swal({
+                title: '<%= alertTitle %>',
+                text: '<%= alertMessage %>',
+                icon: '<%= alertIcon %>',
+                showConfirmButton: '<%= showConfirmButton %>',
+                timer: '<%= timer %>'
+            }).then(() => {
+                window.location = '/<%= ruta %>'
+            })
+        </script>
+        <% } %>
+
+
+            <script>
+                let capacidadAutobus;
+                let fecha;
+                let tour;
+                let placaBus;
+                let idBus;
+                $(document).ready(function () {
+                    $("form").keypress(function (e) {
+                        if (e.which == 13) {
+                            return false;
+                        }
+                    });
+                    $("#restoDeReservasBtn").hide()
+
+
+                    // Obtenemos los datos necesarios para el listado principal
+                    placaBus = $("#placaBus").val();
+                    fecha = $("#fechaTour").val();
+                    tour = $("#tour").val();
+                    idBus = $("#idBus").val();
+
+                    obtenerYMostrarListado(fecha, placaBus);
+                    obtenerYMostrarRestoReservas(fecha, tour, placaBus);
+                });
+
+
+                function organizarReservas(reservas) {
+                    let grupos = {};
+                    reservas.forEach(reserva => {
+                        const pasajeros = reserva.NumeroPasajeros;
+                        if (!grupos[pasajeros]) {
+                            grupos[pasajeros] = [];
+                        }
+                        grupos[pasajeros].push(reserva);
+                    });
+                    return grupos;
+                }
+
+                let asientosDisponibles;
+                let autobus = [];
+                let restoDeReservas = [];
+                // Función para asignar grupos de reservas a un solo autobús y devolver el resto de las reservas
+                function asignarAutobusYRestoDeReservas(reservas, capacidadAutobus) {
+                    autobus = [];
+                    restoDeReservas = [];
+                    asientosDisponibles = capacidadAutobus;
+
+                    reservas.forEach(reserva => {
+                        const numPasajeros = parseInt(reserva.NumeroPasajeros);
+                        if (numPasajeros <= asientosDisponibles) {
+                            autobus.push(reserva);
+                            asientosDisponibles -= reserva.NumeroPasajeros;
+                        } else {
+                            restoDeReservas.push(reserva);
+                        }
+                    });
+
+                    return { autobus, restoDeReservas };
+                }
+
+
+                // Función para obtener y mostrar el listado de reservas y el resto de las reservas según el filtro
+                function obtenerYMostrarListado(Fecha, BusAsignado) {
+                    fetch(`/Listado/EditarListado/TablaReservas?Fecha=${Fecha}&BusAsignado=${BusAsignado}`)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (responseData) {
+                            const reservasArray = Object.values(responseData).flat();
+                            const autobusListado = reservasArray;
+                            const reservas = autobusListado ? autobusListado : []; // Si hay autobús, obtenemos sus reservas, de lo contrario, mostramos un array vacío
+                            if (reservasArray.length > 0) {
+                                mostrarListado(reservas);
+                            } else {
+                                $('#div_Table').html('<p>Listado vacío</p>');
+                                // Si no hay reservas, eliminar la tabla existente
+                                swal({
+                                    title: "¡El listado esta vacío!",
+                                    text: "¿Desea eliminar el listado?",
+                                    icon: "error",
+                                    buttons: true,
+                                    dangerMode: true,
+                                })
+                                    .then((go) => {
+                                        if (go) {
+                                            eliminarListado();
+                                        }
+                                    });
+                            }
+
+
+                        })
+                        .catch(function (error) {
+                            console.error('Error al obtener el listado de reservas:', error);
+                            // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+                        });
+                }
+
+
+                // Función para obtener y mostrar el listado de reservas y el resto de las reservas según el filtro
+                function obtenerYMostrarRestoReservas(Fecha, Tour, BusAsignado) {
+                    fetch(`/Listado/EditarListado/ObtenerListadoOtrosBuses?Fecha=${Fecha}&Tour=${Tour}&BusAsignado=${BusAsignado}`)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (responseData) {
+                            const reservasArray = Object.values(responseData).flat();
+                            const reservasPorBus = agruparReservasPorBus(reservasArray);
+                            if (reservasArray.length > 0) {
+                                Object.keys(reservasPorBus).forEach(placaBus => {
+                                    mostrarListadoOtroBus(reservasPorBus[placaBus], placaBus);
+                                });
+                                $("#restoDeReservasBtn").show();
+                            } else {
+                                // Si no hay reservas, eliminar la tabla existente
+                                $("#restoDeReservasContent").empty();
+                                $("#restoDeReservasBtn").hide();
+                            }
+
+
+
+                        })
+                        .catch(function (error) {
+                            console.error('Error al obtener el listado de reservas:', error);
+                            // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+                        });
+                }
+
+
+                // Función para mostrar el listado de reservas
+                function mostrarListado(reservas) {
+                    var dis = $('#div_Table');
+                    var tabla = '';
+
+                    // tabla += `<h2>Bus con capacidad de ${capacidadAutobus} asientos</h2>`; // Título del autobús
+                    tabla += '<div class="col-lg-12 table-responsive">';
+                    tabla += '<table class="table table-striped table-hover table-bordered table-dark" id="Listado">';
+                    tabla += '<thead>';
+                    tabla += '<th>Id_Reserva</th>';
+                    // tabla += '<th>NOMBRE DEL PASAJERO</th>';
+                    // tabla += '<th>DNI/PASAPORTE</th>';
+                    // tabla += '<th>TELEFONO</th>';
+                    // tabla += '<th>PRECIO</th>';
+                    tabla += '<th>NÚMERO DE PASAJEROS</th>';
+                    tabla += '<th>PUNTO DE ENCUENTRO</th>';
+                    // tabla += '<th>REPORTA</th>';
+                    tabla += '<th>RUTA</th>';
+                    tabla += '<th>FECHA DE RESERVA</th>';
+                    tabla += '<th>IDIOMA</th>';
+                    // tabla += '<th>ACCIONES</th>'; // Agregamos una columna para acciones
+                    tabla += '</thead>';
+                    tabla += '<tbody>';
+
+                    reservas.forEach(fila => {
+                        // const NombrePasajero = fila.NombrePasajero.split(', ');
+                        // const IdPas = fila.IdPas.split(', ');
+                        // const TelefonoPasajero = fila.TelefonoPasajero.split(', ');
+                        // const PrecioTour = fila.PrecioTour.split(', ');
+                        // let filasNombrePasajeros = '';
+                        // let filasIdPas = '';
+                        // let filasTelefonoPasajero = '';
+                        // let filasPrecioTour = '';
+                        // for (let i = 0; i < NombrePasajero.length; i++) {
+                        //     filasNombrePasajeros += `<tr><td>${NombrePasajero[i]}</td></tr>`;
+                        //     filasIdPas += `<tr><td>${IdPas[i]}</td></tr>`;
+                        //     filasTelefonoPasajero += `<tr><td>${TelefonoPasajero[i]}</td></tr>`;
+                        //     filasPrecioTour += `<tr><td>${PrecioTour[i]}</td></tr>`;
+                        // }
+                        // <td><table>${filasNombrePasajeros}</table></td>
+                        // <td><table>${filasIdPas}</table></td>
+                        // <td><table>${filasTelefonoPasajero}</table></td>
+                        // <td><table>${filasPrecioTour}</table></td>
+                        // <td>${fila.NombreReporta}</td>
+                        // <td><button class="eliminar-reserva-btn" onclick="eliminarReserva('${fila.Id_Reserva}')">Eliminar</button></td>
+
+
+                        tabla += `<tr onclick="eliminarReserva('${fila.Id_Reserva}', ${fila.NumeroPasajeros})">
+                                <td>${fila.Id_Reserva}</td>
+                                <td>${fila.NumeroPasajeros}</td>
+                                <td>${fila.PuntoEncuentro}</td>
+                                <td>${fila.Ruta}</td>
+                                <td>${fila.FechaReserva}</td>
+                                <td>${fila.IdiomaReserva}</td>
+                                
+                                </tr>`;
+                    });
+
+                    tabla += '</tbody>';
+                    tabla += '</table>';
+                    tabla += '<br>';
+                    tabla += '</div>';
+
+                    $(dis).html(tabla);
+                }
+
+
+                function mostrarListadoOtroBus(reservas, placaBus) {
+                    let titulo = placaBus === 'null' ? 'Reservas sin bus asignado' : `Listado para bus con placa ${placaBus}`;
+                    const tabla = construirTabla(reservas, titulo);
+                    // Verificar si hay reservas para mostrar
+                    $("#restoDeReservasContent").empty().append(tabla);
+                }
+
+
+                function construirTabla(reservas, titulo) {
+                    let tabla = `
+                        <h3>${titulo}</h3>
+                        <table class="table table-striped table-hover table-bordered table-dark">
+                            <thead>
+                                <tr>
+                                    <th>Id_Reserva</th>
+                                    <th>Numero Pasajeros</th>
+                                    <th>Punto Encuentro</th>
+                                    <th>Ruta</th>
+                                    <th>Fecha Reserva</th>
+                                    <th>Idioma</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    reservas.forEach(reserva => {
+                        tabla += `
+                            <tr onclick="agregarReserva('${reserva.Id_Reserva}',${reserva.NumeroPasajeros},${reserva.id})">
+                                <td>${reserva.Id_Reserva}</td>
+                                <td>${reserva.NumeroPasajeros}</td>
+                                <td>${reserva.PuntoEncuentro}</td>
+                                <td>${reserva.Ruta}</td>
+                                <td>${reserva.FechaReserva}</td>
+                                <td>${reserva.IdiomaReserva}</td>
+                            </tr>
+                        `;
+                    });
+
+                    tabla += `
+                            </tbody>
+                        </table>
+                    `;
+
+                    return tabla;
+                }
+
+                function agruparReservasPorBus(reservasArray) {
+                    const reservasPorBus = {};
+
+                    reservasArray.forEach(reserva => {
+                        const placaBus = reserva.BusAsignado;
+
+                        if (!reservasPorBus[placaBus]) {
+                            reservasPorBus[placaBus] = [];
+                        }
+
+                        reservasPorBus[placaBus].push(reserva);
+                    });
+
+                    return reservasPorBus;
+                }
+
+                // Función para agregar una reserva al autobús
+                function agregarReserva(idReserva, numeroPasajeros, idBus2 = "") {
+                    // // Buscar la reserva en el resto de reservas
+                    // const reserva = restoDeReservas.find(reserva => reserva.Id_Reserva === idReserva);
+                    // if (reserva) {
+                    //     // Verificar si hay espacio en el autobús
+                    //     const numPasajeros = parseInt(reserva.NumeroPasajeros);
+                    //     if (numPasajeros <= asientosDisponibles) {
+                    //         // Agregar la reserva al autobús
+                    //         autobus.push(reserva);
+                    //         asientosDisponibles -= parseInt(reserva.NumeroPasajeros);
+                    //         // Eliminar la reserva del resto de reservas
+                    //         restoDeReservas = restoDeReservas.filter(reserva => reserva.Id_Reserva !== idReserva);
+                    //         // Actualizar la visualización
+                    //         mostrarListado(autobus, capacidadAutobus);
+                    //         mostrarRestoDeReservas(restoDeReservas);
+                    //     } else {
+                    //         swal({
+                    //             title: "¡Error!",
+                    //             text: "El bus se encuentra en su maxima capacidad",
+                    //             icon: "error",
+                    //         })
+                    //     }
+                    // }
+
+                    fetch(`/Listado/EditarListado/agregarReserva?Id_Reserva=${idReserva}&numeroPasajeros=${numeroPasajeros}&placaBus=${placaBus}&idBus1=${idBus}&idBus2=${idBus2}`)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (busesDisponibles) {
+                            // Mostrar modal o popup con la lista de buses disponibles
+                            obtenerYMostrarListado(fecha, placaBus);
+                            obtenerYMostrarRestoReservas(fecha, tour, placaBus);
+                        })
+                        .catch(function (error) {
+                            console.error('Error al obtener la lista de buses disponibles:', error);
+                            // Manejar el error
+                        });
+
+
+                }
+
+                // Función para eliminar una reserva del autobús
+                function eliminarReserva(idReserva, numeroPasajeros) {
+                    // // Buscar la reserva en el autobús
+                    // const reservaIndex = autobus.findIndex(reserva => reserva.Id_Reserva === idReserva);
+                    // const reserva = autobus.find(reserva => reserva.Id_Reserva === idReserva);
+                    // if (reservaIndex !== -1) {
+                    //     // Eliminar la reserva del autobús
+                    //     const reservaEliminada = autobus.splice(reservaIndex, 1)[0];
+                    //     asientosDisponibles += parseInt(reserva.NumeroPasajeros);
+                    //     // Agregar la reserva de vuelta al resto de reservas
+                    //     restoDeReservas.push(reservaEliminada);
+                    //     // Actualizar la visualización
+                    //     mostrarListado(autobus, capacidadAutobus);
+                    //     mostrarRestoDeReservas(restoDeReservas);
+                    // }
+
+                    fetch(`/Listado/EditarListado/obtenerBuses?fecha=${fecha}&tour=${tour}&placaBus=${placaBus}`)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (busesDisponibles) {
+                            // Mostrar modal o popup con la lista de buses disponibles
+                            mostrarListaBuses(busesDisponibles, idReserva, numeroPasajeros);
+                        })
+                        .catch(function (error) {
+                            console.error('Error al obtener la lista de buses disponibles:', error);
+                            // Manejar el error
+                        });
+
+                    $('#modalBusesDisponibles').modal('show');
+                }
+
+                function mostrarListaBuses(busesDisponibles, idReserva, numeroPasajeros) {
+                    let contenidoModal = '';
+
+                    if (busesDisponibles.length > 0) {
+                        let tabla = `
+                        <h3>Buses Disponibles</h3>
+                        <table class="table table-striped table-hover table-bordered table-dark">
+                            <thead>
+                                <tr>
+                                    <th>Placa</th>
+                                    <th>Guía</th>
+                                    <th>Capacidad</th>
+                                    <th>Asientos Disponibles</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                        busesDisponibles.forEach(bus => {
+                            tabla += `
+                            <tr>
+                                <td>${bus.PlacaBus}</td>
+                                <td>${bus.Guia}</td>
+                                <td>${bus.CapacidadBus}</td>
+                                <td>${bus.AsientosDisponibles}</td>
+                                <td><button class="btn btn-primary" onclick="asignarReservaABus('${idReserva}',${numeroPasajeros},'${bus.PlacaBus}')">Asignar</button></td>
+                            </tr>
+                        `;
+                        });
+
+                        tabla += `
+                            </tbody>
+                        </table>
+                    `;
+                        contenidoModal = tabla
+
+                    } else {
+                        const mensaje = `
+                            <div class="alert alert-warning" role="alert">
+                                No se encontraron más buses asignados para esta fecha y tour.
+                            </div>
+                        `;
+                        contenidoModal = mensaje;
+                    }
+                    contenidoModal += `
+                         <button class="btn btn-danger" onclick="desasignarReserva('${idReserva}',${numeroPasajeros})">Desasignar Reserva</button>
+                    `;
+                    // Insertar el contenido en el modal
+                    $('#selectBus').html(contenidoModal);
+
+                }
+
+
+                function desasignarReserva(idReserva, numeroPasajeros) {
+                    // Lógica para desasignar la reserva del bus
+                    fetch(`/Listado/EditarListado/desasignarReserva?Id_Reserva=${idReserva}&numeroPasajeros=${numeroPasajeros}&idBus=${idBus}`)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
+                            // Manejar la respuesta del backend
+                            if (data.success) {
+                                // Actualizar las tablas y la interfaz de usuario según sea necesario
+                                obtenerYMostrarListado(fecha, placaBus);
+                                obtenerYMostrarRestoReservas(fecha, tour, placaBus);
+                                $('#modalBusesDisponibles').modal('hide');
+                            } else {
+                                alert("Error al desasignar la reserva");
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error('Error al desasignar la reserva del bus:', error);
+                        });
+                }
+
+
+                function eliminarListado() {
+                    fetch(`/Listado/EditarListado/eliminarListado?fecha=${fecha}&placaBus=${placaBus}&idBus=${idBus}`)
+                        .then(function (response) {
+                            return response.json();
+                        }).then(function (data) {
+                            // Manejar la respuesta del backend
+                            if (data.success) {
+                                
+                                swal({
+                                    title: "¡Exito!",
+                                    text: "Se ha eliminado el listado correctamente.",
+                                    icon: "success",
+                                    timer: 3000,
+                                    buttons: true,
+                                }).then(
+                                         window.location = "/Programacion/VerListados"
+                                    );
+                            } else {
+                                alert("Error al eliminar el listado");
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error('Error al desasignar la reserva del bus:', error);
+                        });
+                }
+
+
+                function guardarAsignacionBus(placaBus, Guia) {
+                    const Id_Reservas = autobus.map(item => item.Id_Reserva);
+                    fetch('/Listado/AsignarBus', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ Id_Reservas: Id_Reservas, Tour: Tour, Fecha: Fecha, placaBus: placaBus, Guia: Guia, capacidadBus: capacidadAutobus, asientosDisponibles: asientosDisponibles })
+                    })
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then(function (data) {
+                            if (data.success) {
+                                swal({
+                                    title: "¡Exito!",
+                                    text: "La asignación del autobús se guardó correctamente.",
+                                    icon: "success",
+                                })
+                            } else {
+                                swal({
+                                    title: "¡Error!",
+                                    Text: "Hubo un error al guardar la asignación del autobús.",
+                                    icon: "error",
+                                })
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error('Error al guardar la asignación del autobús:', error);
+                            swal({
+                                title: "¡Error!",
+                                Text: "Hubo un error al guardar la asignación del autobús.",
+                                icon: "error",
+                            })
+
+                        });
+                }
+
+
+            </script>
+</body>
+
+</html>

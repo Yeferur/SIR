@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio</title>
+  <style>
+    .tours-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+
+    .tour-card {
+      background-color: #2a2f3a;
+      border: 1px solid #1c2024;
+      border-radius: 8px;
+      padding: 15px;
+      min-height: 170px;
+      width: calc(33% - 20px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      box-sizing: border-box;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .tour-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .tour-name { font-size: 1.2em; margin-bottom: 10px; color: #ffffff; }
+    .passenger-info, .max-seats-info { font-size: 1em; color: #cccccc; }
+    .private-count {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #ffa500;
+      background-color: #2e2e2e;
+      border-radius: 4px;
+      padding: 5px 10px;
+      display: inline-block;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .private-count.highlighted { color: #2fff00; }
+
+    .progress-bar-container {
+      background-color: #40454f;
+      border-radius: 4px;
+      height: 10px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      transition: width 0.3s, background-color 0.3s;
+    }
+
+    .privados-table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+    }
+    .privados-table th,
+    .privados-table td {
+      padding: 6px 10px;
+      border: 1px solid #444;
+    }
+    .privados-table th {
+      background: #333945;
+      font-weight: 600;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 4fr 2fr;
+      gap: 20px;
+    }
+    .dashboard-grid.solo-tours { grid-template-columns: 1fr !important; }
+    .dashboard-grid.con-privados { grid-template-columns: 4fr 2fr !important; }
+
+    .tours-privados .tour-card { width: calc(50% - 20px); }
+    @media (max-width: 768px) {
+      .tour-card, .tours-privados .tour-card { width: 100%; }
+      .dashboard-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="content">
+    <div class="container-fluid p-0">
+      <div class="container">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-6 col-lg-4">
+                <h3>CUPOS PARA LA FECHA:</h3>
+              </div>
+              <div class="col-md-5 col-lg-3">
+                <input class="form-style" type="date" id="fechaFiltro" value="<%= fechaElegida %>" onchange="updateCards();">
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="dashboard-grid" id="dashboardGrid">
+              <div class="tours-container">
+                <% tours.forEach(tour=> { %>
+                  <% if(tour.Id_Tour === 2 || tour.Id_Tour === 3 || tour.Id_Tour === 8) { %>
+                    <div class="tour-card" id="tour-<%= tour.Id_Tour %>">
+                      <h3 class="tour-name"><%= tour.NombreTour %></h3>
+                      <div class="row">
+                        <div class="col-12" id="passenger-section">
+                          <p class="passenger-info">PASAJEROS: <span class="passenger-count">0</span></p>
+                        </div>
+                        <div class="col-6" id="seats-section">
+                          <p class="max-seats-info">CUPOS: <span class="max-seats">0</span></p>
+                        </div>
+                      </div>
+                      <div class="progress-bar-container" id="progress-bar">
+                        <div class="progress-bar" style="width: 0%; background-color: green;"></div>
+                      </div>
+                    </div>
+                  <% } %>
+                <% }) %>
+              </div>
+              <div class="privados-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    $(document).ready(function () {
+      updateCards = () => {
+        const Fecha = $('#fechaFiltro').val();
+
+        fetch(`/tours-dataTG_CTG?fecha=${Fecha}`)
+          .then(res => res.json())
+          .then(data => {
+            let hayPrivados = false;
+
+            data.forEach(tour => {
+              const card = $('#tour-' + tour.Id_Tour);
+              const porcentaje = tour.cupos > 0 ? (tour.NumeroPasajeros / tour.cupos) * 100 : 0;
+              const color = porcentaje <= 50 ? 'green' : porcentaje <= 80 ? 'yellow' : 'red';
+
+              card.find('.passenger-count').text(tour.NumeroPasajeros);
+              card.find('.max-seats').text(tour.cupos);
+              card.find('.progress-bar').css({ width: porcentaje + '%', backgroundColor: color });
+
+            });
+
+            // Construir tabla de privados
+            const privadosContainer = $('.privados-container');
+            privadosContainer.empty();
+
+            data.forEach(tour => {
+              if (tour.privados.length > 0) {
+                const table = $('<table class="privados-table mb-4"></table>');
+                const thead = $(`
+                  <thead>
+                    <tr>
+                      <th>PRIVADOS ${tour.NombreTour}</th>
+                      <th># Pasajeros</th>
+                    </tr>
+                  </thead>`);
+                const tbody = $('<tbody></tbody>');
+
+                tour.privados.forEach(p => {
+                  tbody.append(`<tr><td>${p.Id_Reserva}</td><td>${p.NumeroPasajeros}</td></tr>`);
+                });
+
+                table.append(thead).append(tbody);
+                privadosContainer.append(table);
+              }
+            });
+
+            const toursContainer = document.querySelector('.tours-container');
+            const dashboardGrid = document.getElementById('dashboardGrid');
+
+            if (hayPrivados) {
+              toursContainer.classList.add('tours-privados');
+              dashboardGrid.classList.remove('solo-tours');
+              dashboardGrid.classList.add('con-privados');
+            } else {
+              toursContainer.classList.remove('tours-privados');
+              dashboardGrid.classList.remove('con-privados');
+              dashboardGrid.classList.add('solo-tours');
+            }
+          })
+          .catch(err => console.error('Error al actualizar los datos:', err));
+      };
+
+      updateCards();
+    });
+  </script>
+</body>
+</html>

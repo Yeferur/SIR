@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        .card {
+            background: #2a2f3a;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        :root {
+            --bg: #f3f3f3;
+            --red: rgb(250, 71, 71);
+            --transition-easing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        a.pdf {
+            background: #0063a0;
+            border-radius: 4px;
+            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+            padding: 3px 10px 4px;
+            display: inline-block;
+            position: relative;
+            text-decoration: none;
+            transition: all 0.1s 0s ease-out;
+        }
+
+        a.edit {
+            background: #ffae00;
+            border-radius: 4px;
+            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+            padding: 3px 10px 4px;
+            display: inline-block;
+            position: relative;
+            text-decoration: none;
+            transition: all 0.1s 0s ease-out;
+        }
+
+        a.delete {
+            background: #c10303;
+            border-radius: 4px;
+            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
+            color: #ffffff;
+            padding: 3px 10px 4px;
+            display: inline-block;
+            position: relative;
+            text-decoration: none;
+            transition: all 0.1s 0s ease-out;
+        }
+
+        .page-wrapper {
+            padding-top: 5%;
+            display: flex;
+            -webkit-display: flex;
+            justify-content: space-around;
+        }
+
+        .card-wrapper {
+            box-sizing: border-box;
+            background: #1f2029;
+            border-radius: 6px;
+            max-height: 100px;
+            overflow: hidden;
+            padding: 2rem;
+            width: 400px;
+            transition: max-height 500ms ease-in-out;
+        }
+
+        .card-wrapper:hover {
+            box-shadow: 0 0 8px rgba(20, 20, 20, 0.2);
+            cursor: pointer;
+            max-height: 1000px;
+        }
+
+        .card-details,
+        .reveal-details {
+            font-weight: 300;
+        }
+
+        .reveal-details {
+            margin-top: 10px;
+        }
+
+        .card-height-animate {
+            height: auto;
+        }
+
+        .pdf {
+            max-height: auto;
+        }
+
+        .custom-btn {
+            width: 130px;
+            height: 40px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            box-shadow: inset 2px 2px 2px 0px rgba(31, 31, 31, 0.5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+            outline: none;
+        }
+
+        .btn-2 {
+            background: rgb(96, 9, 240);
+            background: linear-gradient(0deg, rgb(84, 16, 192) 0%, rgb(98, 5, 180) 100%);
+            border: none;
+
+        }
+
+        .btn-2:before {
+            height: 0%;
+            width: 2px;
+        }
+
+        .btn-2:hover {
+            box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.5),
+                -4px -4px 6px 0 rgba(26, 26, 26, 0.5),
+                inset -4px -4px 6px 0 rgba(46, 46, 46, 0.2),
+                inset 4px 4px 6px 0 rgba(0, 0, 0, .4);
+        }
+
+        .custom-accordion {
+
+            border-color: #363843;
+            /* Color del borde al enfocar */
+        }
+
+        /* Estilo personalizado para el acordeón */
+        .custom-accordion .accordion-button {
+            box-shadow: none;
+            background-color: #1a1b21;
+            /* Color de fondo */
+            color: white;
+            /* Color del texto */
+        }
+
+        .bxs-lock-alt {
+            background-color: #0026ff;
+        }
+
+        .custom-accordion .accordion-button:hover {
+            background-color: #3b3c4b;
+            /* Color de fondo al pasar el mouse */
+        }
+
+        .custom-accordion .accordion-collapse {
+            background-color: #1f2029;
+            color: #ffffff;
+        }
+
+        input.sw {
+            opacity: 0;
+            position: absolute;
+            left: -9999px;
+        }
+
+        input.sw+label {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            transition: 0.2s ease;
+            display: inline-block;
+            height: 30px;
+            width: 51px;
+            position: relative;
+            box-shadow: inset 0 0 0px 2px #e4e4e4;
+            border-radius: 60px;
+            /* White toggle */
+        }
+
+        input.sw+label:before {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 30px;
+            width: 30px;
+            top: 0;
+            left: 0;
+            border-radius: 15px;
+            background: rgba(76, 217, 100, 0);
+            transition: 0.2s cubic-bezier(0.24, 0, 0.5, 1);
+        }
+
+        input.sw+label:after {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 28px;
+            width: 28px;
+            top: 50%;
+            margin-top: -14px;
+            left: 1px;
+            border-radius: 60px;
+            background: #fff;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0px 0 rgba(0, 0, 0, 0.04), 0 4px 9px rgba(0, 0, 0, 0.13), 0 3px 3px rgba(0, 0, 0, 0.05);
+            transition: 0.35s cubic-bezier(0.54, 1.6, 0.5, 1);
+        }
+
+        input.sw+label span {
+            white-space: nowrap;
+            height: 30px;
+            line-height: 30px;
+            margin-left: 51px;
+            padding-left: 16px;
+        }
+
+        input.sw:checked+label:before {
+            width: 51px;
+            background: #4cd964;
+            transition: width 0.2s cubic-bezier(0, 0, 0, 0.1) !important;
+        }
+
+        input.sw:checked+label:after {
+            left: 22px;
+        }
+
+        input.sw:checked+label {
+            box-shadow: inset 0 0 0px 25px #e4e4e4;
+            transition: box-shadow 2.5s cubic-bezier(0, 1.2, 0.94, 0.95);
+        }
+
+        #search {
+            top: 45px;
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container .search {
+            top: 45px;
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        #search::after {
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        #search::before {
+            display: block;
+            position: absolute;
+            z-index: 1 !important;
+        }
+
+        #search::after {
+            display: block;
+            position: absolute;
+            z-index: 2 !important;
+        }
+
+        .list-group-color {
+            background: #1f2029;
+            color: #fff;
+        }
+
+        .list-group-disabled-bg {
+            background: #1f2029 !important;
+            color: #fff !important;
+        }
+
+        .list-group-create-color {
+            background: #1f2029;
+            color: #45acdf;
+        }
+
+        .list-group-create-color:hover {
+            background: #2a2f3a;
+            color: #45acdf;
+        }
+
+        .list-group-color:hover,
+        .list-group-disabled-color:hover {
+            background: #2a2f3a;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="input-group">
+                <h3 class="mb-0"><strong>Historial</strong> &nbsp;</h3>
+            </div><br>
+            <div class="row">
+                <div class="col-lg-4 ">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="">Id de reserva</label>
+                        <input type="text" name="reserva" id="Id_Reserva" class="form-style mayusculas "
+                            autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <button class="custom-btn btn-2 " id="filtrar">Filtrar</button>
+                    </div>
+                    <br><br>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-body">
+            <div class="" id="table">
+                <!-- Aquí se insertarán los elementos de la tabla dinámicamente -->
+            </div>
+            <div id="NoData">No hay datos disponibles</div>
+        </div>
+    </div>
+
+    <script>
+
+        var zindex = 10;
+
+        $("#NoData").hide();
+
+        // Función para cargar información de pasajeros al hacer clic
+        Filtro = (Id_Reserva = '') => {
+            fetch('/History/Filtro?Id_Reserva=' + Id_Reserva).then(function (response) {
+                return response.json();
+            }).then(function (responseData) {
+                var table = document.getElementById("table");
+                var tabla = '';
+
+
+                if (responseData.length > 0) {
+                    $("#NoData").hide();
+                    tabla += `<table class="table table-hover table-striped table-bordered table-dark">`;
+                    tabla += `<thead class="thead-dark">`;
+                    tabla += `<tr>`;
+                    tabla += `<th scope="col">Id</th>`;
+                    tabla += `<th scope="col">Tipo</th>`;
+                    tabla += `<th scope="col">Acción</th>`;
+                    tabla += `<th scope="col">Usuario</th>`;
+                    tabla += `<th scope="col">Fecha de registro</th>`;
+                    tabla += `<th scope="col">Hora de registro</th>`;
+                    tabla += `</tr>`;
+                    tabla += `</thead>`;
+                    tabla += `<tbody>`;
+                    responseData.forEach(element => {
+                        const nombreUsuario = element.name || element.id_user;
+                        const horaRegistro = element.HoraRegistro ? element.HoraRegistro : 'No especificada';
+                        tabla += `<tr>`;
+                        tabla += `<th scope="row">${element.Id_}</th>`;
+                        tabla += `<td>${element.Tipo}</td>`;
+                        tabla += `<td>${element.Accion}</td>`;
+                        tabla += `<td>${nombreUsuario}</td>`;
+                        tabla += `<td>${element.FechaRegistro}</td>`;
+                        tabla += `<td>${horaRegistro}</td>`;
+                        tabla += `</tr>`;
+                    });
+                    tabla += `</tbody>`;
+                    tabla += `</table>`;
+                    table.innerHTML = tabla;
+                } else {
+                    $("#NoData").show();
+                }
+            });
+        }
+
+        $("#filtrar").click(function () {
+            var Id_Reserva = $('#Id_Reserva').val();
+            if (Id_Reserva != '') {
+                Filtro(Id_Reserva);
+            }
+
+        });
+
+        $(document).on('keydown', function (event) {
+            if (event.key === "Enter") {
+                $("#filtrar").click();
+            }
+        });
+
+
+
+    </script>
+
+
+</body>
+
+</html>

@@ -13,7 +13,7 @@
                         <div class="input-group">
                             <h3 class="mb-0"><strong>Nuevo punto de encuentro:</strong></h3>
                         </div>
-                        <input type="hidden" name="Id_Punto" id="Id_Punto">
+                        <!-- <input type="hidden" name="Id_Punto" id="Id_Punto"> -->
                         <span style="font-size:12px">Los campos con <span class="text-danger">*</span> son
                             obligatorios.</span>
                     </div>
@@ -27,11 +27,13 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="Sector" class="FormNewTour">Sector</label>
-                                <input type="text" name="Sector" id="Sector" placeholder="Sector" class="form-style mayusculas ">
+                                <input type="text" name="Sector" id="Sector" placeholder="Sector"
+                                    class="form-style mayusculas ">
                             </div>
                             <div class="col-md-3">
                                 <label for="Ruta" class="FormNewTour">Ruta</label>
-                                <input type="text" name="Ruta" id="Ruta" placeholder="Ruta" class="form-style mayusculas ">
+                                <input type="text" name="Ruta" id="Ruta" placeholder="Ruta"
+                                    class="form-style mayusculas ">
                             </div>
                         </div>
                         <br><br>
@@ -42,7 +44,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <label for="Ruta" class="FormNewTour">Latitud</label>
-                                <input type="text" name="Latitud" id="Latitud" placeholder="Latitud" class="form-style mayusculas ">
+                                <input type="text" name="Latitud" id="Latitud" placeholder="Latitud"
+                                    class="form-style mayusculas ">
                             </div>
                             <div class="col-md-3">
                                 <label for="Ruta" class="FormNewTour">Longitud</label>
@@ -68,12 +71,12 @@
                                             aria-label="Salida" name="HoraSalida[]">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <!-- <div class="col-md-3">
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-style mayusculas " placeholder="Hora de Llegada"
                                             aria-label="Llegada" name="HoraLlegada[]">
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <% }) } %>
                                 <hr>
@@ -82,6 +85,7 @@
                                     <button type="button" class="btn btn-primary btn-lg" id="save-btn">Guardar</button>
                                 </div>
                                 <input type="submit" value="" id="Submit">
+                    </div>
                 </form>
             </div>
         </div>
@@ -119,15 +123,15 @@
                     });
             })
 
-            $(document).ready(() => {
-                fetch('/Puntos/Id_Punto').then((response) => {
-                    return response.json();
-                }).then((Id) => {
-                    if (Id != null) {
-                        $("#Id_Punto").val(Id);
-                    }
-                })
-            })
+            // $(document).ready(() => {
+            //     fetch('/Puntos/Id_Punto').then((response) => {
+            //         return response.json();
+            //     }).then((Id) => {
+            //         if (Id != null) {
+            //             $("#Id_Punto").val(Id);
+            //         }
+            //     })
+            // })
 
             $(document).ready(function () {
                 $("form").keypress(function (e) {

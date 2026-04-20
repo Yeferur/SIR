@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <style>
+        /* Estilo general para el contenedor de tours */
+        .tours-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        /* Estilo para cada card de tour */
+        .tour-card {
+            background-color: #2a2f3a;
+            border: 1px solid #1c2024;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 170px;
+            width: calc(50% - 20px);
+            /* Por defecto, mostrar 3 cards por fila */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Estilo para el nombre del tour */
+        .tour-name {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        /* Estilo para la información de pasajeros */
+        .passenger-info {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #cccccc;
+        }
+
+        .private-count {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #ffa500;
+        }
+
+        /* Estilo para la información de cupos máximos */
+        .max-seats-info {
+            margin-bottom: 15px;
+            font-size: 1em;
+            color: #cccccc;
+        }
+
+        /* Contenedor de la barra de progreso */
+        .progress-bar-container {
+            background-color: #40454f;
+            border-radius: 4px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Barra de progreso */
+        .progress-bar {
+            height: 100%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        /* Estilo para la card combinada con efecto flip */
+        #tour-1-5 {
+            position: relative;
+            width: calc(50% - 20px);
+            perspective: 1000px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        #tour-1-5:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #2a2f3a;
+            color: #cccccc;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Destacar la información de privados */
+        .private-count {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffa500;
+            background-color: #2e2e2e;
+            border-radius: 4px;
+            padding: 5px 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mejorar la apariencia de la card de detalles */
+        .card-back .private-section {
+            background-color: #333945;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .card-back .private-section h4 {
+            font-size: 1.2em;
+            color: #ffa500;
+            margin-bottom: 10px;
+        }
+
+        .card-back .private-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .card-back .private-section ul li {
+            font-size: 1em;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .private-info {
+            font-size: 1em;
+            color: #ffa500;
+            background-color: #333945;
+            padding: 5px;
+            border-radius: 4px;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .private-count.highlighted {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2fff00;
+            /* Naranja */
+            background-color: #2e2e2e;
+            /* Fondo oscuro */
+            border-radius: 4px;
+            padding: 5px 10px;
+            display: inline-block;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .privados-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #fff;
+        }
+
+        .privados-table th,
+        .privados-table td {
+            padding: 6px 10px;
+            border: 1px solid #444;
+        }
+
+        .privados-table th {
+            background: #333945;
+            font-weight: 600;
+        }
+
+        /* ── GRID PRINCIPAL ───────────────────────────────────────────── */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 4fr 2fr;
+            /* 2 + 2 + 1 = 5 fracciones */
+            gap: 20px;
+        }
+
+        /* Cards: mantienen flex-wrap dentro de su zona */
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Diseño normal: 3 cards por fila */
+        .tour-card,
+        #tour-1-5 {
+            width: calc(33.333% - 20px);
+        }
+
+        /* Si hay privados, cambiamos a 2 o 1 cards */
+        .tours-privados .tour-card,
+        .tours-privados #tour-1-5 {
+            width: calc(50% - 20px);
+        }
+
+        /* Responsivo: solo 1 por fila en pantallas pequeñas */
+        @media (max-width: 768px) {
+
+            .tours-privados .tour-card,
+            .tours-privados #tour-1-5 {
+                width: 100%;
+            }
+        }
+
+
+        /* Ajuste responsivo: dos columnas medianas */
+        @media (max-width: 1199px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+                /* cards 1fr, tablas 1fr  (fila nueva) */
+            }
+
+            .privados-container {
+                grid-column: span 2;
+                /* ocupa toda la fila */
+            }
+        }
+
+        /* Apilado en móvil */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                /* una sola columna */
+            }
+        }
+
+
+        /* Media query para pantallas medianas */
+        @media (max-width: 1024px) and (min-width: 769px) {
+
+            .tour-card,
+            #tour-1-5 {
+                width: calc(50% - 20px);
+                /* Ajusta el ancho de las cards a 50% en pantallas medianas */
+            }
+        }
+
+        /* Media query para pantallas pequeñas */
+        @media (max-width: 768px) {
+
+            .tour-card,
+            #tour-1-5 {
+                width: calc(100% - 20px);
+                /* Ajusta el ancho de las cards a 100% en pantallas pequeñas */
+            }
+        }
+
+        /* MODO SOLO TOURS (cuando NO hay privados) */
+        .dashboard-grid.solo-tours {
+            grid-template-columns: 1fr !important;
+        }
+
+        /* MODO CON PRIVADOS (cuando SÍ hay privados) */
+        .dashboard-grid.con-privados {
+            grid-template-columns: 4fr 2fr !important;
+        }
+
+        /* Regla por defecto: SOLO si no tiene clases condicionales */
+        .dashboard-grid {
+            grid-template-columns: 4fr 2fr;
+        }
+
+
+        .privados-container:empty {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="content">
+        <div class="container-fluid p-0">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4">
+                                <h3>CUPOS PARA LA FECHA: </h3>
+                            </div>
+                            <div class="col-md-5 col-lg-3">
+                                <input class="form-style" type="date" id="fechaFiltro" value="<%= fechaElegida %>"
+                                    onchange="updateCards();">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="dashboard-grid" id="dashboardGrid">
+
+
+                            <div class="tours-container">
+                                <% tours.forEach(tour=> { %>
+                                    <div class="tour-card" id="tour-<%= tour.Id_Tour %>">
+                                        <h3 class="tour-name">
+                                            <%= tour.NombreTour %>
+                                        </h3>
+                                        <div class="row">
+                                            <div class="col-12" id="passenger-section">
+                                                <p class="passenger-info">PASAJEROS: <span
+                                                        class="passenger-count">0</span>
+                                                </p>
+                                            </div>
+                                            <div class="col-6" id="seats-section">
+                                                <p class="max-seats-info">CUPOS: <span class="max-seats">0</span></p>
+                                            </div>
+                                            <!-- <div class="col-6 d-flex justify-content-end" id="private-section">
+                                                <p class="private-count">PRIVADOS: 0</p>
+                                            </div> -->
+
+                                        </div>
+                                        <div class="progress-bar-container" id="progress-bar">
+                                            <div class="progress-bar" style="width: 0%; background-color: green;"></div>
+                                        </div>
+                                        <% if (tour.Id_Tour==='1-5' ) { %>
+                                            <div class="back">
+                                                <h3 class="tour-name">Detalles</h3>
+                                                <p id="tour-1"></p>
+                                                <p id="tour-5"></p>
+                                            </div>
+                                            <% } %>
+                                    </div>
+                                    <% }) %>
+
+                                    <% if (typeof rol === 'undefined' || (rol !== 'Cliente')) { %>
+                                        <div class="tour-card" id="transfer-card">
+                                            <h3 class="tour-name">TRANSFER</h3>
+                                            <p class="passenger-info">TOTAL TRANSFERS: <span
+                                                    class="total-transfers">0</span>
+                                            </p>
+                                            <div class="card-inner">
+                                                <p class="passenger-info" id="service-1"></p>
+                                                <p class="passenger-info" id="service-2"></p>
+                                                <p class="passenger-info" id="service-3"></p>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                            </div>
+                            <div class="privados-container">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+
+
+    <% if (showUpdateMessage) { %>
+        <script>
+            swal({
+                title: 'Nueva Actualización',
+                text: `<%- updateMessage %>`,
+                icon: 'info',
+            });
+        </script>
+        <% } %>
+
+
+
+            <script>
+                $(document).ready(function () {
+                    const combinedCard = document.getElementById('tour-1-5');
+
+                    if (combinedCard) {
+                        const cardInner = document.createElement('div');
+                        cardInner.className = 'card-inner';
+
+                        const cardFront = document.createElement('div');
+                        cardFront.className = 'card-front';
+
+                        const cardbody = document.createElement('div');
+                        cardbody.className = 'row';
+
+                        const cardprogress = document.createElement('div');
+                        cardprogress.className = 'progress-bar-container';
+                        const cardBack = document.createElement('div');
+                        cardBack.className = 'card-back';
+
+                        cardFront.appendChild(combinedCard.querySelector('.tour-name').cloneNode(true));
+
+                        cardbody.appendChild(combinedCard.querySelector('#passenger-section').cloneNode(true));
+                        cardbody.appendChild(combinedCard.querySelector('#seats-section').cloneNode(true));
+                        // cardbody.appendChild(combinedCard.querySelector('#private-section').cloneNode(true));
+                        cardprogress.appendChild(combinedCard.querySelector('.progress-bar').cloneNode(true));
+
+
+
+                        const backContent = combinedCard.querySelector('.back');
+                        if (backContent) {
+                            cardBack.appendChild(backContent.cloneNode(true));
+                        }
+
+                        cardInner.appendChild(cardFront);
+                        cardFront.appendChild(cardbody);
+                        cardFront.appendChild(cardprogress);
+                        cardInner.appendChild(cardBack);
+
+                        combinedCard.innerHTML = '';
+                        combinedCard.appendChild(cardInner);
+
+                    }
+
+                    updateCards = () => {
+                        var Fecha = $('#fechaFiltro').val();
+                        var rol = '<%= typeof rol !== "undefined" ? rol : "" %>';
+
+                        fetch(`/tours-data?fecha=${Fecha}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                let totalPassengerCount = 0;
+                                let maxSeats = 0;
+                                let tourName1 = '';
+                                let tourName5 = '';
+                                let passengerCount1 = 0;
+                                let passengerCount5 = 0;
+                                let privateCount1 = 0;
+                                let privateCount5 = 0;
+
+                                let totalTransfers = 0;
+                                let service1 = 0;
+                                let service2 = 0;
+                                let service3 = 0;
+                                let nameService1 = '';
+                                let nameService2 = '';
+                                let nameService3 = '';
+
+                                data.tours.forEach(tour => {
+                                    if (tour.Id_Tour === 1) {
+                                        passengerCount1 = tour.NumeroPasajeros;
+                                        privateCount1 = rol === 'Cliente' ? 0 : tour.totalPrivados;
+                                        totalPassengerCount += passengerCount1;
+                                        tourName1 = tour.NombreTour;
+                                    }
+                                    if (tour.Id_Tour === 5) {
+                                        passengerCount5 = tour.NumeroPasajeros;
+                                        privateCount5 = rol === 'Cliente' ? 0 : tour.totalPrivados;
+                                        totalPassengerCount += passengerCount5;
+                                        maxSeats = tour.cupos;
+                                        tourName5 = tour.NombreTour;
+                                    }
+                                });
+
+                                if (rol !== 'Cliente') {
+                                    data.transfers.forEach(transfer => {
+                                        totalTransfers += transfer.totalTransfers;
+                                        if (transfer.id === 1) {
+                                            service1 = transfer.totalTransfers;
+                                            nameService1 = transfer.Servicio;
+                                        } else if (transfer.id === 2) {
+                                            service2 = transfer.totalTransfers;
+                                            nameService2 = transfer.Servicio;
+                                        } else if (transfer.id === 5) {
+                                            service3 = transfer.totalTransfers;
+                                            nameService3 = transfer.Servicio;
+                                        }
+                                    });
+                                }
+
+                                var combinedCard = $('#tour-1-5');
+                                var percentage = maxSeats > 0 ? (totalPassengerCount / maxSeats) * 100 : 0;
+
+                                var color;
+                                if (percentage <= 50) {
+                                    color = 'green';
+                                } else if (percentage <= 80) {
+                                    color = 'yellow';
+                                } else {
+                                    color = 'red';
+                                }
+
+
+
+                                combinedCard.find('.passenger-count').text(totalPassengerCount);
+                                combinedCard.find('.max-seats').text(maxSeats);
+                                combinedCard.find('.progress-bar').css({
+                                    'width': percentage + '%',
+                                    'background-color': color
+                                });
+
+                                combinedCard.find('#tour-1').html(`${tourName1}: ${passengerCount1} <span style="color: #ffa500;">(PRIVADOS: ${privateCount1})</span>`);
+                                combinedCard.find('#tour-5').html(`${tourName5}: ${passengerCount5} <span style="color: #ffa500;">(PRIVADOS: ${privateCount5})</span>`);
+                                combinedCard.find('.private-count').html(`PRIVADOS: ${privateCount1 + privateCount5}`);
+                                if (privateCount1 > 0 || privateCount5 > 0) {
+                                    combinedCard.find('.private-count').addClass('highlighted');
+                                } else {
+                                    combinedCard.find('.private-count').removeClass('highlighted');
+                                }
+                                
+                                if (rol !== 'Cliente') {
+                                    var transferCard = $('#transfer-card');
+                                    if (transferCard.length) {
+                                        transferCard.find('.total-transfers').text(totalTransfers);
+                                        transferCard.find('#service-1').text(`${nameService1} : ${service1}`);
+                                        transferCard.find('#service-2').text(`${nameService2} : ${service2}`);
+                                        transferCard.find('#service-3').text(`${nameService3} : ${service3}`);
+                                    }
+                                }
+
+
+                                data.tours.forEach(tour => {
+                                    if (tour.Id_Tour !== 1 && tour.Id_Tour !== 5) {
+                                        var card = $('#tour-' + tour.Id_Tour);
+                                        var percentage = tour.cupos > 0 ? (tour.NumeroPasajeros / tour.cupos) * 100 : 0;
+                                        var color;
+                                        if (percentage <= 50) {
+                                            color = 'green';
+                                        } else if (percentage <= 80) {
+                                            color = 'yellow';
+                                        } else {
+                                            color = 'red';
+                                        }
+
+                                        card.find('.passenger-count').text(tour.NumeroPasajeros);
+                                        card.find('.max-seats').text(tour.cupos);
+                                        card.find('.progress-bar').css({
+                                            'width': percentage + '%',
+                                            'background-color': color
+                                        });
+
+                                        card.find('.private-count').text(`Privados: ${tour.totalPrivados}`);
+                                        var privateCount = card.find('.private-count');
+                                        // Agregar o quitar la clase 'highlighted' según la cantidad de privados
+                                        if (tour.totalPrivados > 0) {
+                                            privateCount.addClass('highlighted');
+                                        } else {
+                                            privateCount.removeClass('highlighted');
+                                        }
+                                    }
+                                });
+
+                                /* ── tablas de privados ─────────────────────────────────────────────── */
+                                const privadosContainer = $('.privados-container');
+                                privadosContainer.empty();
+
+                                let hayPrivados = false;
+
+                                // Para Cliente, no mostrar privados en el contenedor (solo los propios en la edición de reservas)
+                                if (rol !== 'Cliente') {
+                                    data.tours.forEach(tour => {
+                                        if (tour.privados.length) hayPrivados = true;
+
+                                        if (tour.privados.length) {
+                                            const table = $('<table class="privados-table mb-4"></table>');
+                                            const thead = $(`
+            <thead>
+                <tr>
+                    <th>PRIVADOS ${tour.NombreTour}</th>
+                    <th># Pasajeros</th>
+                </tr>
+            </thead>`);
+                                            const tbody = $('<tbody></tbody>');
+
+                                            tour.privados.forEach(p => {
+                                                tbody.append(`<tr><td>${p.Id_Reserva}</td><td>${p.NumeroPasajeros}</td></tr>`);
+                                            });
+
+                                            table.append(thead).append(tbody);
+                                            privadosContainer.append(table);
+                                        }
+                                    });
+                                }
+
+                                const toursContainer = document.querySelector('.tours-container');
+                                const dashboardGrid = document.getElementById('dashboardGrid');
+
+                                if (hayPrivados) {
+                                    toursContainer.classList.add('tours-privados');
+                                    dashboardGrid.classList.remove('solo-tours');
+                                    dashboardGrid.classList.add('con-privados');
+                                } else {
+                                    toursContainer.classList.remove('tours-privados');
+                                    dashboardGrid.classList.remove('con-privados');
+                                    dashboardGrid.classList.add('solo-tours');
+                                }
+
+
+                            })
+                            .catch(error => console.error('Error al actualizar los datos:', error));
+                    };
+
+                    updateCards();
+
+                });
+            </script>
+</body>
+
+</html>

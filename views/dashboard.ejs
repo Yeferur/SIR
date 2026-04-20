@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráfico de Pasajeros</title>
+  <style>
+    canvas {
+      max-width: 600px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gráfico de Pasajeros</h1>
+
+  <div>
+    <label for="fechaInicio">Fecha de inicio:</label>
+    <input type="date" id="fechaInicio" name="fechaInicio">
+
+    <label for="fechaFin">Fecha de fin:</label>
+    <input type="date" id="fechaFin" name="fechaFin">
+
+    <label for="tipoGrafico">Tipo de gráfico:</label>
+    <select id="tipoGrafico" name="tipoGrafico">
+      <option value="bar">Barra</option>
+      <option value="pie">Pastel</option>
+      <!-- Agrega más tipos de gráficos según tus necesidades -->
+    </select>
+
+    <button onclick="actualizarGrafico()">Actualizar</button>
+    <a href="/exportar" download>Exportar a Excel</a>
+  </div>
+
+  <div>
+    <canvas id="graficoPasajeros"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Función para obtener y actualizar datos desde el servidor
+      function obtenerDatos() {
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFin = document.getElementById('fechaFin').value;
+        const tipoGrafico = document.getElementById('tipoGrafico').value;
+
+        // Realizar petición AJAX al servidor
+        fetch(`/datos?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}&tipoGrafico=${tipoGrafico}`)
+          .then(response => response.json())
+          .then(data => {
+            // Actualizar el gráfico
+            const ctx = document.getElementById('graficoPasajeros').getContext('2d');
+            const newChart = new Chart(ctx, {
+              type: tipoGrafico,
+              data: data,
+              options: {
+                responsive: true,
+              },
+            });
+          })
+          .catch(error => console.error('Error al obtener datos:', error));
+      }
+
+      // Inicializar el gráfico
+      obtenerDatos();
+
+      // Función para actualizar el gráfico
+      function actualizarGrafico() {
+        obtenerDatos();
+      }
+
+      // Configurar intervalo para actualizar automáticamente cada cierto tiempo (ej. cada 5 minutos)
+      setInterval(obtenerDatos, 300000); // 300000 ms = 5 minutos
+    });
+  </script>
+</body>
+</html>

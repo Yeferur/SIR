@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Aforos</title>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header">
+            <h3>Crear Aforo</h3>
+        </div>
+        <div class="card-body">
+            <form action="/Aforo" method="post">
+                <% if (typeof user !="undefined" ){ %>
+                    <input type="hidden" name="id_user" id="" value="<%=user.id_user %>">
+                    <% } %>
+                        <div>
+                            <label class="fw-bold">Elige el tour</label>
+                            <select class="form-style mayusculas " name="SelectTour" id="SelectTour" required>
+                                <option selected disabled>Seleccionar</option>
+                                <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{ %>
+                                    <option value="<%= Tours.Id_Tour %>">
+                                        <%= Tours.NombreTour %>
+                                    </option>
+                                    <% }) } %>
+                            </select>
+                        </div>
+
+                        <div>
+
+                            <label for="NuevoCupo">Nuevo Cupo:</label>
+                            <input type="number" id="NuevoCupo" name="NuevoCupo" class="form-style" required>
+                        </div>
+
+                        <div>
+                            <label for="Fecha">Fecha:</label>
+                            <input type="date" id="Fecha" name="Fecha" class="form-style" required>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex align-items-center justify-content-end">
+                                <button type="button" class="btn btn-primary btn-lg" id="save-btn">Crear Aforo</button>
+                            </div>
+                            <input type="submit" value="" id="Submit">
+                        </div>
+            </form>
+        </div>
+
+    </div>
+
+    <% if(typeof alert !="undefined" ){ %>
+        <script>
+            swal({
+                title: '<%= alertTitle %>',
+                text: '<%= alertMessage %>',
+                icon: '<%= alertIcon %>',
+                showConfirmButton: '<%= showConfirmButton %>',
+                timer: '<%= timer %>'
+            }).then(() => {
+                window.location = '/<%= ruta %>'
+            })
+        </script>
+        <% } %>
+
+
+            <script>
+                $("#save-btn").click(() => {
+
+                    var select = $("#SelectTour").val();
+                    var cupo = $("#NuevoCupo").val();
+                    var fecha = $("#Fecha").val();
+
+                    var url = `/Index/Cupos?Id_Tour=${select}&Fecha=${fecha}`;
+
+                    if (select == 5) {
+                        url = `/Index/CuposRH?Fecha=${fecha}`;
+                    }
+                    console.log(url);
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            var numeroPasajeros = data[0].Total;
+                            if (cupo < numeroPasajeros) {
+                                swal({
+                                    title: "Error",
+                                    text: "El número de pasajeros es mayor al aforo que desea crear.\n Número de pasajeros para el tour: " + numeroPasajeros,
+                                    icon: "error",
+                                    showConfirmButton: true,
+                                })
+                            } else {
+                                swal({
+                                    title: "¿Todo Listo?",
+                                    icon: "warning",
+                                    buttons: true,
+                                    dangerMode: true,
+                                })
+                                .then((go) => {
+                                    if (go) {
+                                        $("#Submit").click()
+                                    }
+                                });
+                            }
+                        })
+                })
+
+            </script>
+</body>
+
+</html>

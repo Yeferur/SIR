@@ -455,8 +455,7 @@
                                                         </option>
                                                         <% }) } %>
                                                 </select>
-                                                <input type="hidden" id="OriginalTour"
-                                                    value="<%=Reserva.TourReserva %>">
+                                                <input type="hidden" id="OriginalTour" value="<%=Reserva.TourReserva %>">
                                             </div>
                                             <div class="col-lg-3" id="punto">
                                                 <label class="fw-bold">Puntos de encuentro<span
@@ -476,8 +475,7 @@
                                                 <input type="date" class="form-style mayusculas " name="FechaReserva"
                                                     value="<%=Reserva.FechaReserva %>" id="FechaReserva"
                                                     onchange="callCupos()" required />
-                                                <input type="hidden" name="" id="OriginalFecha"
-                                                    value="<%=Reserva.FechaReserva %>">
+                                                    <input type="hidden" name="" id="OriginalFecha" value="<%=Reserva.FechaReserva %>">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -582,8 +580,8 @@
                                             </div>
                                             <br>
                                             <div class="">
-                                                <button type="button" class="icon-btn add-btn plus" onclick=""
-                                                    id="Agregar_Infantes">
+                                                <button type="button" class="icon-btn add-btn plus"
+                                                    onclick="" id="Agregar_Infantes">
                                                     <div class="add-icon"></div>
                                                     <div class="btn-txt">Agregar</div>
                                                 </button>
@@ -1314,7 +1312,7 @@
                         const input_numpas = parseInt($('#input_numpas').val() || 0, 10);
                         const totalPasajerosResponse = await fetch(`/TotalPasajeros?Id_Tour=${Id_Tour}&FechaReserva=${FechaReserva}`);
                         const TotalPasajeros = await totalPasajerosResponse.json();
-
+                        
                         const Pasajeros = TotalPasajeros[0].Total || 0;
                         const TotalPas = Pasajeros + (input_numpas - NumeroPasajeros);
 
@@ -1483,40 +1481,42 @@
                                                     IdiomaReserva,
                                                     Categoria,
                                                     NombreReporta,
-                                                    Estado,
+                                                    Estado: Estado,
                                                     NomPas: nomPasJSON,
                                                     TipoPasajero: tipoPasajeroJSON,
                                                     IdPas: idPasJSON,
                                                     Telefono: telefonoJSON,
-                                                    id_user
+                                                    id_user: id_user
                                                 })
                                             })
-                                                .then(response => response.json())
-                                                .then(result => {
-                                                    if (result?.error) {
-                                                        // Mostrar alerta específica de error con el mensaje devuelto
-                                                        swal({
-                                                            title: "Cupo insuficiente",
-                                                            text: result.error,
-                                                            icon: "warning",
-                                                            showConfirmButton: true,
-                                                        });
-                                                        return;
-                                                    }
-
-                                                    // Reserva duplicada correctamente
-                                                    swal({
-                                                        title: "Éxito",
-                                                        text: `La reserva ${Id_ReservaDuplicar} se ha creado correctamente. Será dirigido a la reserva para que complete los datos.`,
-                                                        icon: "success",
-                                                        timer: 2500,
-                                                    }).then(() => {
-                                                        window.location.replace(`/Reservas/ReservaDuplicada/${Id_ReservaDuplicar}`);
-                                                    });
+                                                .then((response) => {
+                                                    return response.json();
                                                 })
-                                                .catch(error => {
-                                                    console.error(error);
+                                                .then((result) => {
+                                                    if (result != null) {
+                                                        swal({
+                                                            alert: true,
+                                                            title: "¡Ocurrió un error!",
+                                                            text: "No fue posible duplicar la reserva. Si el error continúa, comuníquese con soporte técnico.",
+                                                            icon: "error",
+                                                            showConfirmButton: false,
+                                                            timer: 3500,
+                                                        });
+                                                    } else {
+                                                        swal({
+                                                            alert: true,
+                                                            title: "Exito",
+                                                            text: "La reserva " + Id_ReservaDuplicar + " se ha creado correctamente. Será dirigido a la reserva para que complete los datos",
+                                                            icon: "success",
+                                                            timer: 2500,
+                                                        }).then(() => {
+                                                            window.location.replace("/Reservas/ReservaDuplicada/" + Id_ReservaDuplicar);
+                                                        });
+                                                    }
+                                                })
+                                                .catch((error) => {
                                                     swal({
+                                                        alert: true,
                                                         title: "¡Ocurrió un error!",
                                                         text: "No fue posible duplicar la reserva. Si el error continúa, comuníquese con soporte técnico.",
                                                         icon: "error",
@@ -1524,7 +1524,6 @@
                                                         timer: 3500,
                                                     });
                                                 });
-
                                             $("#save-btn").removeAttr("disabled");
                                         }
                                     });
@@ -1608,7 +1607,7 @@
                     load_Precios(Id_Tour);
                     callCupos()
                 };
-
+                
                 call_Load_Comision = () => {
                     var Id_Tour = Select.value;
                     var Categoria = Select_Categoria.value;
@@ -1622,7 +1621,7 @@
                         }
                         if (Categoria == 2) {
                             $("#div_PagoAgencia").show();
-                        } else {
+                        }else{
                             $("#div_PagoAgencia").hide();
                             $("#PagoAgencia").val("0");
                         }

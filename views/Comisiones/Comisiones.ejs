@@ -71,7 +71,8 @@
                         <div class="col-md-4">
                             <div class="form-group mx-sm-3 mb-2">
                                 <label for="">Tour</label>
-                                <select name="tour[]" multiple="multiple" class="form-styleSelect mayusculas " id="select">
+                                <select name="tour[]" multiple="multiple" class="form-styleSelect mayusculas "
+                                    id="select">
                                     <% if (typeof resultsTours !="undefined" ){ resultsTours.forEach((Tours)=>{ %>
                                         <option value="<%= Tours.Id_Tour %>">
                                             <%= Tours.NombreTour %>
@@ -95,8 +96,7 @@
                         </div>
                     </div>
                     <br><br><br><br>
-                    <input type="button" name="Exportar" value="Exportar" class="btn-flotante"
-                        onclick="exportTableToExcel('Comisiones', 'Comisiones.xls')" id="save-btn">
+                    <input type="button" name="Exportar" value="Exportar" class="btn-flotante" id="save-btn">
                 </div>
 
             </div>
@@ -132,11 +132,14 @@
                     tabla += '<table class="table table-striped table-bordered table-dark" id="Comisiones">'
                     tabla += '<thead>'
                     tabla += '<tr>'
+                    tabla += '<th>Id_Reserva</th>'
+                    tabla += '<th>Tour</th>'
                     tabla += '<th>Nombre del Pasajero</th>'
                     tabla += '<th>DNI/Pasaporte</th>'
-                    tabla += '<th>Nombre reporta</th>'
-                    tabla += '<th>Comisión</th>'
-                    tabla += '<th>Fecha de viaje</th>'
+                    tabla += '<th>Hotel</th>'
+                    tabla += '<th>Precio</th>'
+                    tabla += '<th>Reporta</th>'
+                    tabla += '<th>Comision</th>'
                     tabla += '</tr>'
                     tabla += '</thead>'
                     tabla += '<tbody>'
@@ -147,19 +150,28 @@
                         tabla += '<tr>'
                         tabla += '<input type="hidden" name="id[]" value="<?id ?>">'
                         tabla += '<td>'
+                        tabla += responseData[i].Id_Reserva
+                        tabla += '</td>'
+                        tabla += '<td>'
+                        tabla += responseData[i].NombreTour
+                        tabla += '</td>'
+                        tabla += '<td>'
                         tabla += responseData[i].NombrePasajero
                         tabla += '</td>'
                         tabla += '<td>'
                         tabla += responseData[i].IdPas
                         tabla += '</td>'
                         tabla += '<td>'
+                        tabla += responseData[i].PuntoEncuentro
+                        tabla += '</td>'
+                        tabla += '<td>'
+                        tabla += responseData[i].PrecioTour
+                        tabla += '</td>'
+                        tabla += '<td>'
                         tabla += responseData[i].NombreReporta
                         tabla += '</td>'
                         tabla += '<td>'
                         tabla += responseData[i].Comision
-                        tabla += '</td>'
-                        tabla += '<td>'
-                        tabla += responseData[i].FechaReserva
                         tabla += '</td>'
                         tabla += '</tr>'
                     }
@@ -176,48 +188,87 @@
             });
         }
 
-        function exportTableToExcel(tableID, filename = '') {
-            const downloadLink = document.createElement('a');
-            const dataType = 'application/vnd.ms-excel';
-            const tableSelect = document.getElementById(tableID);
+        // function exportTableToExcel(tableID, filename = '') {
+        //     const downloadLink = document.createElement('a');
+        //     const dataType = 'application/vnd.ms-excel';
+        //     const tableSelect = document.getElementById(tableID);
 
-            // Añade estilos CSS para los bordes de la tabla
-            const css = `
-                    table {
-                    border-collapse: collapse;
-                    }
-                    table, th, td {
-                    border: 1px solid black;
-                    padding: 5px;
-                    }
-                `;
-            const style = document.createElement('style');
-            style.type = 'text/css';
-            style.appendChild(document.createTextNode(css));
+        //     // Añade estilos CSS para los bordes de la tabla
+        //     const css = `
+        //             table {
+        //             border-collapse: collapse;
+        //             }
+        //             table, th, td {
+        //             border: 1px solid black;
+        //             padding: 5px;
+        //             }
+        //         `;
+        //     const style = document.createElement('style');
+        //     style.type = 'text/css';
+        //     style.appendChild(document.createTextNode(css));
 
-            const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-            filename = filename || 'excel_data.xls';
+        //     const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        //     filename = filename || 'excel_data.xls';
 
-            downloadLink.href = `data:${dataType}, ${tableHTML}`;
-            downloadLink.download = filename;
+        //     downloadLink.href = `data:${dataType}, ${tableHTML}`;
+        //     downloadLink.download = filename;
 
-            // Agrega los estilos CSS al inicio del archivo Excel
-            const excelFile = document.createElement('div');
-            excelFile.appendChild(style);
-            excelFile.appendChild(tableSelect.cloneNode(true));
+        //     // Agrega los estilos CSS al inicio del archivo Excel
+        //     const excelFile = document.createElement('div');
+        //     excelFile.appendChild(style);
+        //     excelFile.appendChild(tableSelect.cloneNode(true));
 
-            downloadLink.href = URL.createObjectURL(new Blob([excelFile.innerHTML], { type: dataType }));
-            downloadLink.download = filename;
+        //     downloadLink.href = URL.createObjectURL(new Blob([excelFile.innerHTML], { type: dataType }));
+        //     downloadLink.download = filename;
 
-            downloadLink.click();
-        }
-        $(document).ready(function() {
-        $("form").keypress(function(e) {
-            if (e.which == 13) {
-                return false;
-            }
+        //     downloadLink.click();
+        // }
+
+        $("#save-btn").click(function () {
+            // Obtener los valores de los campos
+            var Tour = $('#select').val();
+            var Fecha = $('#Fecha').val();
+
+
+            // Construir la URL con los parámetros de consulta
+            const url = `/Comision/Exportar?Id_Tour=${encodeURIComponent(Tour)}&Fecha=${encodeURIComponent(Fecha)}`;
+
+            fetch(url, {
+                method: 'GET', // Método GET para obtener datos
+            })
+                .then(response => {
+                    // Obtener el nombre del archivo desde los encabezados de la respuesta
+                    const contentDisposition = response.headers.get('Content-Disposition');
+                    const fileNameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
+                    const fileName = fileNameMatch ? fileNameMatch[1] : 'Comision.xlsx';
+                    return response.blob().then(blob => ({ blob, fileName }));
+                })
+                .then(({ blob, fileName }) => {
+                    // Crear una URL local para el blob
+                    const blobUrl = window.URL.createObjectURL(new Blob([blob]));
+
+                    // Crear un enlace invisible y simular el clic para descargar
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = blobUrl;
+                    a.download = fileName; // Nombre del archivo a descargar
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Limpiar la URL del objeto para liberar memoria
+                    window.URL.revokeObjectURL(blobUrl);
+                })
+                .catch(err => console.error('Error al exportar el archivo Excel:', err));
         });
-    });
+
+
+        $(document).ready(function () {
+            $("form").keypress(function (e) {
+                if (e.which == 13) {
+                    return false;
+                }
+            });
+        });
     </script>
 </body>
 

@@ -1,0 +1,370 @@
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+
+CREATE TABLE `aforos` (
+  `id` int(11) NOT NULL,
+  `NombreTour` varchar(100) DEFAULT NULL,
+  `CupoBase` varchar(100) DEFAULT NULL,
+  `CupoDia` varchar(50) DEFAULT NULL,
+  `FechaRegistro` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categoriacliente`
+--
+
+CREATE TABLE `categoriacliente` (
+  `Id_Categoria` int(11) NOT NULL,
+  `Categoria` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `history`
+--
+
+CREATE TABLE `history` (
+  `id` int(11) NOT NULL,
+  `Id_Reserva` varchar(50) DEFAULT NULL,
+  `Tipo` varchar(50) DEFAULT NULL,
+  `Accion` varchar(50) DEFAULT NULL,
+  `id_user` varchar(50) DEFAULT NULL,
+  `FechaRegistro` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `horarios`
+--
+
+CREATE TABLE `horarios` (
+  `id` int(11) NOT NULL,
+  `Id_Punto` int(11) DEFAULT NULL,
+  `Id_Tour` int(11) DEFAULT NULL,
+  `HoraSalida` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `HoraLlegada` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Ruta` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pasajeros`
+--
+
+CREATE TABLE `pasajeros` (
+  `id` int(11) NOT NULL,
+  `Id_Reserva` varchar(11) DEFAULT NULL,
+  `NombrePasajero` varchar(100) DEFAULT NULL,
+  `TipoPasajero` varchar(50) DEFAULT NULL,
+  `IdPas` varchar(50) DEFAULT NULL,
+  `TelefonoPasajero` varchar(50) DEFAULT NULL,
+  `PrecioTour` varchar(50) DEFAULT NULL,
+  `Comision` varchar(50) DEFAULT NULL,
+  `Fecha` varchar(50) DEFAULT NULL,
+  `Confirmacion` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pasajerostransfer`
+--
+
+CREATE TABLE `pasajerostransfer` (
+  `id` int(11) DEFAULT NULL,
+  `Id_Transfer` varchar(11) DEFAULT NULL,
+  `NombrePasajero` varchar(100) DEFAULT NULL,
+  `IdPas` varchar(50) DEFAULT NULL,
+  `TelefonoPasajero` varchar(50) DEFAULT NULL,
+  `Fecha` varchar(50) DEFAULT NULL,
+  `Confirmacion` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `puntos`
+--
+
+CREATE TABLE `puntos` (
+  `Id_Punto` int(11) NOT NULL,
+  `NombrePunto` varchar(100) DEFAULT NULL,
+  `Sector` varchar(100) DEFAULT NULL,
+  `Latitud` varchar(100) NOT NULL,
+  `Longitud` varchar(100) NOT NULL,
+  `Posicion` int(11) DEFAULT NULL,
+  `Nuevo` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reservas`
+--
+
+CREATE TABLE `reservas` (
+  `Id_Reserva` varchar(11) NOT NULL,
+  `TipoReserva` varchar(50) NOT NULL,
+  `NumeroPasajeros` varchar(10) DEFAULT NULL,
+  `TotalPasajeros` int(11) DEFAULT NULL,
+  `TourReserva` int(11) DEFAULT NULL,
+  `PuntoEncuentro` varchar(200) DEFAULT NULL,
+  `FechaReserva` varchar(50) DEFAULT NULL,
+  `IdiomaReserva` varchar(10) DEFAULT NULL,
+  `TelefonoReserva` varchar(50) DEFAULT NULL,
+  `CategoriaReserva` int(11) DEFAULT NULL,
+  `NombreReporta` varchar(50) DEFAULT NULL,
+  `HoraSalida` varchar(50) DEFAULT NULL,
+  `Ruta` varchar(2) DEFAULT NULL,
+  `Observaciones` varchar(2000) DEFAULT NULL,
+  `FechaRegistro` varchar(50) DEFAULT NULL,
+  `Culminada` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `serviciotransfer`
+--
+
+CREATE TABLE `serviciotransfer` (
+  `id` int(11) NOT NULL,
+  `Servicio` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tours`
+--
+
+CREATE TABLE `tours` (
+  `Id_Tour` int(11) NOT NULL,
+  `NombreTour` varchar(100) DEFAULT NULL,
+  `Abreviacion` varchar(10) DEFAULT NULL,
+  `PrecioAdulto` varchar(50) DEFAULT NULL,
+  `PrecioNiño` varchar(50) DEFAULT NULL,
+  `PrecioInfante` varchar(50) DEFAULT NULL,
+  `Comision` varchar(50) DEFAULT NULL,
+  `CupoBase` int(11) DEFAULT NULL,
+  `CupoDia` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transfer`
+--
+
+CREATE TABLE `transfer` (
+  `Id_Transfer` varchar(11) NOT NULL,
+  `NumeroPasajeros` int(11) DEFAULT NULL,
+  `Servicio` varchar(60) DEFAULT NULL,
+  `Salida` varchar(300) DEFAULT NULL,
+  `Llegada` varchar(300) DEFAULT NULL,
+  `FechaTransfer` varchar(50) DEFAULT NULL,
+  `NombreReporta` varchar(100) DEFAULT NULL,
+  `HoraRecogida` varchar(30) DEFAULT NULL,
+  `Vuelo` varchar(20) DEFAULT NULL,
+  `TelefonoTransfer` varchar(50) DEFAULT NULL,
+  `ValorServicio` varchar(50) DEFAULT NULL,
+  `Observaciones` varchar(2000) DEFAULT NULL,
+  `FechaRegistro` varchar(50) DEFAULT NULL,
+  `Culminada` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `apellidos` varchar(100) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `username` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `email` varchar(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `password` varchar(260) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `rol` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `id_user`, `name`, `apellidos`, `phone`, `username`, `email`, `password`, `rol`) VALUES
+(2, 1018372157, 'Yeferson', 'Urrego Henao', '3025783379', 'yefer123', 'urregoyeferson2@gmail.com', '$2a$08$C82CMdYjEvE35idQ0xEER.c3jB/2wQYcvQA.fiFbaZI9lziPdRtTm', 'Administrador'),
+(4, 1020426193, 'Jhonathan', 'Castro López', '3244091934', 'JhonathanC', 'jhonathancastrolopez@gmail.com', '$2a$08$jtZZDXIu8HohZku0tgfL.ua9AOa.n/JjAFAlx8iwSwzX5ucXVG7D6', 'Administrador'),
+(5, 71676626, 'Carlos ', 'Castro Jaramillo', '3117885599', '71676626', 'gerencia@viajesmaxitours.com', '$2a$08$CwPIZIUs.2qme3bdo11AIuTwD.4oRkTsekoizwr/ZHrlYjs4i4wAq', 'Administrador'),
+(6, 1001250661, 'Stefany ', 'Sánchez Urrego', '3104718199', '1001250661', 'stefasn1929@gmail.com', '$2a$08$9jZH9AvIEI1GTRyRRO3J1uRgn1wm8hbsUuE7cMco2OI7/03xbKJyq', 'Asesor'),
+(7, 1036648398, 'Jeferson Andrés', 'Restrepo Moreno', '3195429639', '1036648398', 'jeferson.restrepo@gmail.com', '$2a$08$XWNVGs8NsjIvAByEqII0..J2d/utoFBE6fSR/fMta3bcWW2Vo83tC', 'Asesor'),
+(8, 1000896834, 'Karen Yuliana', 'López Múñoz', '3007379266', 'karenmaxitour@gmail.com', 'karenmaxitour@gmail.com', '$2a$08$IlwerhxR2nm5B9cfukwE0O/41pYN1C1hIhbD6FxXW3.HJtmkf6Hd.', 'Asesor'),
+(9, 1000557096, 'Luisa María', 'Quintana Pérez', '3207026694', 'Luisamaxitours@gmail.com', 'Luisamaxitours@gmail.com', '$2a$08$SqXKtQTwnk.IzB80kehAeuyZ87TdSVe8v90gp6T4JRqiWVpQGD7L6', 'Asesor'),
+(10, 1022145000, 'Karen Paulina', 'Usuga Isaza', '3175517945', 'Paulinamaxitours@gmail.com', 'Paulinamaxitours@gmail.com', '$2a$08$Q2qDJKQvqLMLdODtbm5VZOWkcXPkejLotPN4lOSEreHBLXKX/xg/m', 'Asesor'),
+(11, 1000660680, 'María Isabel', 'Palacio Tobón', '3225809663', 'Isabelmaxitours@gmail.com', 'Isabelmaxitours@gmail.com', '$2a$08$hDVceP7Khe0XsUR46gSjjed5pU0/VF0bCXXvcn1EfQjpFm75afYtu', 'Asesor'),
+(12, 1006209620, 'Laura Sofía ', 'Galvis Pérez', '3022664504', 'lauragalvis777@gmail.com', 'lauragalvis777@gmail.com', '$2a$08$WCSMf1lzTgaJa/yhYwecGeSUnt4RLILzsqLsIJ28L7fVPFAKjFZTa', 'Asesor'),
+(13, 1037948093, 'Daniel ', 'Grisales Herrera', '3208280985', 'dagdj1593@gmail.com', 'dagdj1593@gmail.com', '$2a$08$zMWkyhceumTI2rTh3jb3uesxTXJee47cqIH0r.JhiQ3MHe4ZHCViK', 'Administrador');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `aforos`
+--
+ALTER TABLE `aforos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `categoriacliente`
+--
+ALTER TABLE `categoriacliente`
+  ADD PRIMARY KEY (`Id_Categoria`);
+
+--
+-- Indexes for table `history`
+--
+ALTER TABLE `history`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `horarios`
+--
+ALTER TABLE `horarios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Id_Punto` (`Id_Punto`),
+  ADD KEY `Id_Tour` (`Id_Tour`);
+
+--
+-- Indexes for table `pasajeros`
+--
+ALTER TABLE `pasajeros`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Id_Reserva` (`Id_Reserva`);
+
+--
+-- Indexes for table `pasajerostransfer`
+--
+ALTER TABLE `pasajerostransfer`
+  ADD KEY `Id_Transfer` (`Id_Transfer`);
+
+--
+-- Indexes for table `puntos`
+--
+ALTER TABLE `puntos`
+  ADD PRIMARY KEY (`Id_Punto`);
+
+--
+-- Indexes for table `reservas`
+--
+ALTER TABLE `reservas`
+  ADD PRIMARY KEY (`Id_Reserva`),
+  ADD KEY `TourReserva` (`TourReserva`),
+  ADD KEY `CategoriaReserva` (`CategoriaReserva`);
+
+--
+-- Indexes for table `serviciotransfer`
+--
+ALTER TABLE `serviciotransfer`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tours`
+--
+ALTER TABLE `tours`
+  ADD PRIMARY KEY (`Id_Tour`);
+
+--
+-- Indexes for table `transfer`
+--
+ALTER TABLE `transfer`
+  ADD PRIMARY KEY (`Id_Transfer`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `aforos`
+--
+ALTER TABLE `aforos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `history`
+--
+ALTER TABLE `history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `horarios`
+--
+ALTER TABLE `horarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pasajeros`
+--
+ALTER TABLE `pasajeros`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `serviciotransfer`
+--
+ALTER TABLE `serviciotransfer`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `horarios`
+--
+ALTER TABLE `horarios`
+  ADD CONSTRAINT `horarios_ibfk_1` FOREIGN KEY (`Id_Punto`) REFERENCES `puntos` (`Id_Punto`),
+  ADD CONSTRAINT `horarios_ibfk_2` FOREIGN KEY (`Id_Tour`) REFERENCES `tours` (`Id_Tour`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `pasajeros`
+--
+ALTER TABLE `pasajeros`
+  ADD CONSTRAINT `pasajeros_ibfk_1` FOREIGN KEY (`Id_Reserva`) REFERENCES `reservas` (`Id_Reserva`);
+
+--
+-- Constraints for table `pasajerostransfer`
+--
+ALTER TABLE `pasajerostransfer`
+  ADD CONSTRAINT `pasajerostransfer_ibfk_1` FOREIGN KEY (`Id_Transfer`) REFERENCES `transfer` (`Id_Transfer`);
+
+--
+-- Constraints for table `reservas`
+--
+ALTER TABLE `reservas`
+  ADD CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`TourReserva`) REFERENCES `tours` (`Id_Tour`) ON DELETE SET NULL,
+  ADD CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`CategoriaReserva`) REFERENCES `categoriacliente` (`Id_Categoria`);
+COMMIT;

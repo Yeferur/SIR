@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Tours</title>
+    <style>
+        /* Estilo general para el contenedor de tours */
+        .tours-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Estilo para cada card de tour */
+        .tour-card {
+            background-color: #2a2f3a;
+            border: 1px solid #1c2024;
+            /* Color ligeramente más oscuro para el borde */
+            border-radius: 8px;
+            padding: 15px;
+            width: calc(33% - 20px);
+            /* Ajusta el tamaño de la card, aquí se colocan 3 cards por fila con espacio entre ellas */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            /* Sombra más pronunciada */
+            box-sizing: border-box;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            /* Sombra más pronunciada al pasar el ratón */
+        }
+
+        /* Estilo para el nombre del tour */
+        .tour-name {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #ffffff;
+            /* Color de texto blanco para contraste */
+        }
+
+        /* Estilo para la información de pasajeros */
+        .passenger-info {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #cccccc;
+            /* Color de texto claro para mejor legibilidad */
+        }
+
+        /* Estilo para la información de cupos máximos */
+        .max-seats-info {
+            margin-bottom: 15px;
+            font-size: 1em;
+            color: #cccccc;
+            /* Color de texto claro para mejor legibilidad */
+        }
+
+        /* Contenedor de la barra de progreso */
+        .progress-bar-container {
+            background-color: #40454f;
+            /* Color oscuro para el contenedor de la barra */
+            border-radius: 4px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Barra de progreso */
+        .progress-bar {
+            height: 100%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Tours disponibles para <input class="form-style" type="date" id="fechaFiltro" value="<%= fechaElegida %>"
+            onchange="tours()"></h1>
+    <div class="tours-container">
+        <% tours.forEach(tour=> { %>
+            <div class="tour-card" id="tour-<%= tour.Id_Tour %>">
+                <h3 class="tour-name">
+                    <%= tour.NombreTour %>
+                </h3>
+                <p class="passenger-info">Pasajeros: <span class="passenger-count">0</span></p>
+                <p class="max-seats-info">Cupos: <span class="max-seats">0</span></p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 0%; background-color: green;"></div>
+                </div>
+                <% if (tour.Id_Tour==='1-5' ) { %>
+                    <div class="back">
+                        <h3 class="tour-name">Detalles Combinados</h3>
+                        <p></p>
+                        <p>Pasajeros Tour 1: <span class="passenger-count1">0</span></p>
+                        <p></p>
+                        <p>Pasajeros Tour 5: <span class="passenger-count5">0</span></p>
+                    </div>
+                <% } %>
+
+            </div>
+                
+            <% }) %>
+    </div>
+
+    <script>
+               $(document).ready(function () {
+            tours = () => {
+                var Fecha = $('#fechaFiltro').val();
+
+                fetch(`/tours-data?fecha=${Fecha}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Inicializar variables para combinar tours
+                        let totalPassengerCount = 0;
+                        let maxSeats = 0;
+                        let tourName1 = '';
+                        let tourName5 = '';
+                        let passengerCount1 = 0;
+                        let passengerCount5 = 0;
+
+                        // Buscar datos de tours 1 y 5
+                        data.forEach(tour => {
+                            if (tour.Id_Tour === 1) {
+                                tourName1 = tour.NombreTour;
+                                passengerCount1 = tour.NumeroPasajeros;
+                                totalPassengerCount += passengerCount1;
+                            }
+                            if (tour.Id_Tour === 5) {
+                                tourName5 = tour.NombreTour;
+                                passengerCount5 = tour.NumeroPasajeros;
+                                totalPassengerCount += passengerCount5;
+                                maxSeats = tour.cupos;
+                            }
+                        });
+
+                        // Actualizar card combinada
+                        var combinedCard = $('#tour-1-5');
+                        var percentage = maxSeats > 0 ? (totalPassengerCount / maxSeats) * 100 : 0;
+
+                        var color;
+                        if (percentage <= 50) {
+                            color = 'green';
+                        } else if (percentage <= 80) {
+                            color = 'yellow';
+                        } else {
+                            color = 'red';
+                        }
+
+                        combinedCard.find('.passenger-count').text(totalPassengerCount);
+                        combinedCard.find('.max-seats').text(maxSeats);
+                        combinedCard.find('.progress-bar').css({
+                            'width': percentage + '%',
+                            'background-color': color
+                        });
+
+                        // Actualizar card combinada en la parte posterior
+                        combinedCard.find('.passenger-count1').text(passengerCount1);
+                        combinedCard.find('.passenger-count5').text(passengerCount5);
+
+                        // Actualizar cards individuales
+                        data.forEach(tour => {
+                            if (tour.Id_Tour !== 1 && tour.Id_Tour !== 5) {
+                                var card = $('#tour-' + tour.Id_Tour);
+                                var percentage = tour.cupos > 0 ? (tour.NumeroPasajeros / tour.cupos) * 100 : 0;
+                                var color;
+                                if (percentage <= 50) {
+                                    color = 'green';
+                                } else if (percentage <= 80) {
+                                    color = 'yellow';
+                                } else {
+                                    color = 'red';
+                                }
+
+                                card.find('.passenger-count').text(tour.NumeroPasajeros);
+                                card.find('.max-seats').text(tour.cupos);
+                                card.find('.progress-bar').css({
+                                    'width': percentage + '%',
+                                    'background-color': color
+                                });
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error al actualizar los datos:', error));
+            };
+
+            tours(); // Llama a la función al cargar la página
+        });
+
+    </script>
+</body>
+
+</html>

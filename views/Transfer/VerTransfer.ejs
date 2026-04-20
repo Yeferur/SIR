@@ -9,233 +9,12 @@
     <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
-
+    <script src="https://unpkg.com/html2pdf.js"></script>
     <style>
         .card {
             background: #2a2f3a;
             margin-top: 20px;
             margin-bottom: 20px;
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 200;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3i94_wlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 300;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 400;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7g.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 600;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 700;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdr.ttf) format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Source Sans Pro';
-            font-style: normal;
-            font-weight: 900;
-            src: url(https://fonts.gstatic.com/s/sourcesanspro/v21/6xKydSBYKcSV-LCoeQqfX1RYOo3iu4nwlxdr.ttf) format('truetype');
-        }
-
-        a.button {
-            background: #0096a0;
-            border-radius: 4px;
-            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.25);
-            color: #ffffff;
-            display: inline-block;
-            padding: 6px 30px 8px;
-            position: relative;
-            text-decoration: none;
-            transition: all 0.1s 0s ease-out;
-        }
-
-        .no-touch a.button:hover {
-            background: #00a2ad;
-            box-shadow: 0px 8px 2px 0 rgba(0, 0, 0, 0.075);
-            transform: translateY(-2px);
-            transition: all 0.25s 0s ease-out;
-        }
-
-        .no-touch a.button:active,
-        a.button:active {
-            background: #008a93;
-            box-shadow: 0 1px 0px 0 rgba(255, 255, 255, 0.25);
-            transform: translate3d(0, 1px, 0);
-            transition: all 0.025s 0s ease-out;
-        }
-
-        div.cardds {
-            margin: 80px auto;
-            max-width: 960px;
-            text-align: center;
-        }
-
-        div.cardd {
-            background: #1f2029;
-            display: inline-block;
-            margin: 8px;
-            max-width: 300px;
-            perspective: 1000;
-            position: relative;
-            text-align: left;
-            transition: all 0.3s 0s ease-in;
-            width: 300px;
-            z-index: 1;
-        }
-
-        div.cardd .cardd__image-holder {
-            background: rgba(0, 0, 0, 0.1);
-            height: 0;
-            padding-bottom: 75%;
-        }
-
-        div.cardd div.cardd-title {
-            background: #1f2029;
-            padding: 6px 15px 10px;
-            position: relative;
-            z-index: 0;
-        }
-
-        div.cardd div.cardd-title a.toggle-info {
-            border-radius: 32px;
-            height: 32px;
-            padding: 0;
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            width: 32px;
-        }
-
-        div.cardd div.cardd-title a.toggle-info span {
-            background: #ffffff;
-            display: block;
-            height: 2px;
-            position: absolute;
-            top: 16px;
-            transition: all 0.15s 0s ease-out;
-            width: 12px;
-        }
-
-        div.cardd div.cardd-title a.toggle-info span.left {
-            right: 14px;
-            transform: rotate(45deg);
-        }
-
-        div.cardd div.cardd-title a.toggle-info span.right {
-            left: 14px;
-            transform: rotate(-45deg);
-        }
-
-        div.cardd div.cardd-title h2 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.05em;
-            margin: 0;
-            padding: 0;
-        }
-
-        div.cardd div.cardd-title h2 small {
-            display: block;
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: -0.025em;
-        }
-
-        div.cardd div.cardd-info {
-            padding: 0 15px 10px;
-            position: relative;
-            font-size: 14px;
-        }
-
-        div.cardd div.cardd-actions {
-            box-shadow: 0 2px 0px 0 rgba(0, 0, 0, 0.075);
-            padding: 10px 15px 20px;
-            text-align: center;
-        }
-
-        div.cardd div.cardd-flap {
-            background: #2a2f3a;
-            position: absolute;
-            width: 100%;
-            transform-origin: top;
-            transform: rotateX(-90deg);
-        }
-
-        div.cardd div.flap1 {
-            transition: all 0.3s 0.3s ease-out;
-            z-index: -1;
-        }
-
-        div.cardd div.flap2 {
-            transition: all 0.3s 0s ease-out;
-            z-index: -2;
-        }
-
-        div.cardds.showing div.cardd {
-            cursor: pointer;
-            opacity: 0.6;
-            transform: scale(0.88);
-        }
-
-        .no-touch div.cardds.showing div.cardd:hover {
-            opacity: 0.94;
-            transform: scale(0.92);
-        }
-
-        div.cardd.show {
-            opacity: 1 !important;
-            transform: scale(1) !important;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info {
-            background: #ff6666 !important;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info span {
-            top: 15px;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info span.left {
-            right: 10px;
-        }
-
-        div.cardd.show div.cardd-title a.toggle-info span.right {
-            left: 10px;
-        }
-
-        div.cardd.show div.cardd-flap {
-            background: #1f2029;
-            transform: rotateX(0deg);
-        }
-
-        div.cardd.show div.flap1 {
-            transition: all 0.3s 0s ease-out;
-        }
-
-        div.cardd.show div.flap2 {
-            transition: all 0.3s 0.2s ease-out;
         }
 
         .form-style {
@@ -389,6 +168,161 @@
             text-decoration: none;
             transition: all 0.1s 0s ease-out;
         }
+
+        .page-wrapper {
+            padding-top: 5%;
+            display: flex;
+            -webkit-display: flex;
+            justify-content: space-around;
+        }
+
+        .card-wrapper {
+            box-sizing: border-box;
+            background: #1f2029;
+            border-radius: 6px;
+            max-height: 100px;
+            overflow: hidden;
+            padding: 2rem;
+            width: 400px;
+            transition: max-height 500ms ease-in-out;
+        }
+
+        .card-wrapper:hover {
+            box-shadow: 0 0 8px rgba(20, 20, 20, 0.2);
+            cursor: pointer;
+            max-height: 1000px;
+        }
+
+        .card-details,
+        .reveal-details {
+            font-weight: 300;
+        }
+
+        .reveal-details {
+            margin-top: 10px;
+        }
+
+        .card-height-animate {
+            height: 1000px;
+        }
+
+        .pdf {
+            max-height: 1000px;
+        }
+
+        button {
+            margin: 20px;
+        }
+
+        .custom-btn {
+            width: 130px;
+            height: 40px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            box-shadow: inset 2px 2px 2px 0px rgba(31, 31, 31, 0.5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+            outline: none;
+        }
+
+        .btn-2 {
+            background: rgb(96, 9, 240);
+            background: linear-gradient(0deg, rgb(84, 16, 192) 0%, rgb(98, 5, 180) 100%);
+            border: none;
+
+        }
+
+        .btn-2:before {
+            height: 0%;
+            width: 2px;
+        }
+
+        .btn-2:hover {
+            box-shadow: 4px 4px 6px 0 rgba(0, 0, 0, 0.5),
+                -4px -4px 6px 0 rgba(26, 26, 26, 0.5),
+                inset -4px -4px 6px 0 rgba(46, 46, 46, 0.2),
+                inset 4px 4px 6px 0 rgba(0, 0, 0, .4);
+        }
+
+        input.sw {
+            opacity: 0;
+            position: absolute;
+            left: -9999px;
+        }
+
+        input.sw+label {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            transition: 0.2s ease;
+            display: inline-block;
+            height: 30px;
+            width: 51px;
+            position: relative;
+            box-shadow: inset 0 0 0px 2px #e4e4e4;
+            border-radius: 60px;
+            /* White toggle */
+        }
+
+        input.sw+label:before {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 30px;
+            width: 30px;
+            top: 0;
+            left: 0;
+            border-radius: 15px;
+            background: rgba(76, 217, 100, 0);
+            transition: 0.2s cubic-bezier(0.24, 0, 0.5, 1);
+        }
+
+        input.sw+label:after {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 28px;
+            width: 28px;
+            top: 50%;
+            margin-top: -14px;
+            left: 1px;
+            border-radius: 60px;
+            background: #fff;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0px 0 rgba(0, 0, 0, 0.04), 0 4px 9px rgba(0, 0, 0, 0.13), 0 3px 3px rgba(0, 0, 0, 0.05);
+            transition: 0.35s cubic-bezier(0.54, 1.6, 0.5, 1);
+        }
+
+        input.sw+label span {
+            white-space: nowrap;
+            height: 30px;
+            line-height: 30px;
+            margin-left: 51px;
+            padding-left: 16px;
+        }
+
+        input.sw:checked+label:before {
+            width: 51px;
+            background: #4cd964;
+            transition: width 0.2s cubic-bezier(0, 0, 0, 0.1) !important;
+        }
+
+        input.sw:checked+label:after {
+            left: 22px;
+        }
+
+        input.sw:checked+label {
+            box-shadow: inset 0 0 0px 25px #e4e4e4;
+            transition: box-shadow 2.5s cubic-bezier(0, 1.2, 0.94, 0.95);
+        }
     </style>
 </head>
 
@@ -429,25 +363,28 @@
                         <input type="text" name="Transfer" id="Id_Transfer" class="form-style mayusculas ">
                     </div>
                     <div class="form-group mx-sm-3 mb-2">
-                        <label for="">Nombres y Apellidos del pasajero</label>
+                        <label for="">Nombres y Apellidos del Titular</label>
                         <input type="text" name="NombreApellido" id="NombreApellido" class="form-style mayusculas ">
-                    </div>
-                    <div class="form-group mx-sm-3 mb-2">
-                        <label for="">DNI del pasajero</label>
-                        <input type="text" name="id" id="IdPas" class="form-style mayusculas ">
                     </div>
                 </div>
             </div>
             <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label class="fw-bold">Estado de la reserva</label>
+                        <select class="form-styleSelect" name="Estado" id="Estado" multiple="multiple">
+                            <option value="Activo">ACTIVO</option>
+                            <option value="Pendiente">PENDIENTE</option>
+                            <option value="Completado">COMPLETADO</option>
+                            <option value="Cancelado">CANCELADO</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-lg-2">
+                    <br>
                     <div class="mx-sm-3 mb-2">
-                        <label for="">Sin información</label>
-                        <input type="checkbox" id="empty" value="Check" class="mx-sm-3 mb-2">
-
-                        <label for="empty" class="checkbox">
-                            <div class="checkbox__inner">
-                                <div class="red__ball"></div>
-                            </div>
+                        <input type="checkbox" id="empty" name="toggle" value="Check" class="mx-sm-3 mb-2 sw"> <label
+                            for="empty"><span>Sin información</span>
                         </label>
                     </div>
 
@@ -456,8 +393,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="form-group mx-sm-3 mb-2">
-                        <button class="btn btn-primary btn-sm " id="filtrar">Filtrar</button>
-                        <button class="btn btn-warning btn-sm " id="deshacer">Deshacer</button>
+                        <button class="custom-btn btn-2 " id="filtrar">Filtrar</button>
                     </div>
                     <br><br>
                 </div>
@@ -468,63 +404,7 @@
         <div class="card-body">
             <div id="cardds">
                 <div class="cardds">
-                    <% resultsTransfer.forEach((Transfer)=>{ %>
-                        <div class="cardd" id="<%= Transfer.Id_Transfer %>">
-
-                            <div class="cardd-title">
-                                <a class="toggle-info button"
-                                    onclick="load_Pas('<%= Transfer.Id_Transfer %>'); card('<%= Transfer.Id_Transfer %>');">
-                                    <span class="left"></span>
-                                    <span class="right"></span>
-                                </a>
-                                <h2>
-                                    <%= Transfer.Id_Transfer %>
-                                </h2>
-                            </div>
-                            <div class="cardd-flap flap1" id="pdf<%= Transfer.Id_Transfer %>">
-
-                                <div class="cardd-info">
-                                    <h3>
-                                        <%= Transfer.Id_Transfer %>
-                                    </h3>
-                                    <div class="info_Transfer">
-                                        <h5>Fecha:
-                                            <%= Transfer.FechaTransfer %>
-                                        </h5>
-                                        <h5># Vuelo:
-                                            <%= Transfer.Vuelo %>
-                                        </h5>
-                                        <h5>Numero de Pasjeros:
-                                            <%= Transfer.NumeroPasajeros %>
-                                        </h5>
-                                        <h5>Servicio:
-                                            <%= Transfer.Servicio %>
-                                        </h5>
-                                        <h5>Fecha de registro:
-                                            <%= Transfer.FechaRegistro %>
-                                        </h5>
-                                        <h5>Telefono Transfer:
-                                            <%= Transfer.TelefonoTransfer %>
-                                        </h5>
-                                    </div>
-                                    <div class="pasajeros"></div>
-                                </div>
-                                <div class="cardd-flap flap2">
-                                    <div class="cardd-actions">
-                                        <a class="pdf" onclick="PDF('<%= Transfer.Id_Transfer %>');"><iconify-icon
-                                                icon="material-symbols:download" style="color: white;" width="30"
-                                                height="30"></iconify-icon></a>
-                                        <a href="../Transfer/EditarTransfer/<%= Transfer.Id_Transfer %>"
-                                            class="edit"><iconify-icon icon="material-symbols:edit"
-                                                style="color: white;" width="30" height="30"></iconify-icon></a>
-                                        <a class="delete"><iconify-icon icon="material-symbols:delete-outline"
-                                                style="color: white;" width="30" height="30"></iconify-icon></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <% }) %>
+                    <div id="cardContainer" class="page-wrapper row"></div>
                 </div>
                 <div id="NoData">
                     <a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>
@@ -580,92 +460,76 @@
             };
         });
 
-
-        load_Pas = (Id_Transfer) => {
-            fetch('/VerTransfer/Pasajeros?Id_Transfer=' + Id_Transfer + '').then(function (response) {
-
+        Filtro = (Servicio = '', FechaTransfer = '', FechaRegistro = '', Id_Transfer = '', Empty = '', NombreApellido = '', Estado) => {
+            fetch('/VerTransfer/FiltroVerTransfer?Servicio=' + Servicio + '&FechaTransfer=' + FechaTransfer + '&FechaRegistro=' + FechaRegistro + '&Id_Transfer=' + Id_Transfer + '&Empty=' + Empty + '&NombreApellido=' + NombreApellido + '&Estado=' + Estado + '').then(function (response) {
                 return response.json();
-
             }).then(function (responseData) {
+                var cardContainer = document.getElementById("cardContainer");
 
-
-
-                var html = '<table class="table table-dark table-striped table-hover">';
-                html += '<thead>';
-                html += '<th>Nombre</th>';
-                html += '<th>Identificacion</th>';
-                html += '</thead>';
-                html += '<tbody>';
+                // Limpiar contenido existente en el contenedor
+                cardContainer.innerHTML = '';
 
                 if (responseData.length > 0) {
-                    for (var count = 0; count < responseData.length; count++) {
-                        // var regular_expression = new RegExp('(' + query + ')', 'gi');
-                        html += '<tr>';
-                        html += '<td>';
-                        html += responseData[count].NombrePasajero;
-                        html += '</td>';
-                        html += '<td>';
-                        html += responseData[count].IdPas;
-                        html += '</td>';
-                        html += '</tr>';
-                    }
-                }
-                // else {
-                //     html += '<a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>';
-                //     html += '<a href="#" class="list-group-item list-group-item-action list-group-create-color">Crear nuevo punto</a>';
-                // }
-
-                html += '</tbody>';
-                html += '</table>';
-                $(".pasajeros").html(html);
-            });
-        }
-
-        Filtro = (Servicio = '', FechaTransfer = '', FechaRegistro = '', Id_Transfer = '', IdPas = '', Empty = '', NombreApellido = '') => {
-            fetch('/VerTransfer/FiltroVerTransfer?Servicio=' + Servicio + '&FechaTransfer=' + FechaTransfer + '&FechaRegistro=' + FechaRegistro + '&Id_Transfer=' + Id_Transfer + '&IdPas=' + IdPas + '&Empty=' + Empty + '&NombreApellido=' + NombreApellido + '').then(function (response) {
-
-                return response.json();
-
-            }).then(function (responseData) {
-
-                // var html = '<div class="cardds">';
-
-                if (responseData.length > 0) {
-                    $(".cardd").hide();
                     $("#NoData").hide();
-                    for (var count = 0; count < responseData.length; count++) {
-                        console.log(responseData[count].Id_Transfer);
-                        var Id_Transfer = responseData[count].Id_Transfer
 
-                        if ((Servicio != '') || (FechaTransfer != '') || (FechaRegistro != '') || (Id_Transfer != '') || (IdPas != '') || (Empty != '')) {
-                            $("#" + Id_Transfer + "").show();
-                        }
-                    }
-                }
-                else {
-                    $(".cardd").hide();
+                    responseData.forEach(function (Transfer) {
+                        var cardHTML = `
+                    <div class="card-wrapper col-12 mb-3" id="${Transfer.Id_Transfer}">
+                        <div class="card-details">
+                            <h3 class="card-title">${Transfer.Id_Transfer}</h3>
+                        </div><!-- end card-details -->
+                        <br>
+                        <div class="reveal-details">
+                            <h3>Estado: ${Transfer.Estado}</h3>
+                            <br>
+                            <p>Titular: ${Transfer.Titular}</p>
+                            <p>Teléfono: ${Transfer.Tel_Contacto}</p>
+                            <p>Fecha Transfer: ${Transfer.FechaTransfer}</p>
+                            <p># Vuelo: ${Transfer.Vuelo}</p>
+                            <p>Número de Pasajeros: ${Transfer.NumeroPasajeros}</p>
+                            <p>Servicio: ${Transfer.Servicio}</p>
+                            <p>Punto de Salida: ${Transfer.Salida}</p>
+                            <p>Punto de Llegada: ${Transfer.Llegada}</p>
+                            <p>Valor de Servicio: ${Transfer.ValorServicio}</p>
+                            <p>Hora de Recogida: ${Transfer.HoraRecogida}</p> 
+                            <p id="FechaRegistro${Transfer.Id_Transfer}">Fecha de Registro: ${Transfer.FechaRegistro}</p>
+                        </div><!-- end reveal-details -->
+                        <div class="cardd-flap flap2">
+                            <div class="cardd-actions">
+                                <a class="pdf" onclick="PDF('${Transfer.Id_Transfer}');">
+                                    <iconify-icon icon="material-symbols:download" style="color: white;" width="30" height="30"></iconify-icon>
+                                </a>
+                                <a href="../Transfer/EditarTransfer/${Transfer.Id_Transfer}" class="edit">
+                                    <iconify-icon icon="material-symbols:edit" style="color: white;" width="30" height="30"></iconify-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </div><!-- end card-wrapper -->`;
+
+                        cardContainer.innerHTML += cardHTML;
+                    });
+                } else {
                     $("#NoData").show();
                 }
-
-                ;
             });
         }
+
 
         $("#filtrar").click(function () {
             var Servicio = $('#Servicio').val();
             var FechaTransfer = $('#FechaTransfer').val();
             var FechaRegistro = $('#FechaRegistro').val();
             var Id_Transfer = $('#Id_Transfer').val();
-            var IdPas = $('#IdPas').val();
             var NombreApellido = $('#NombreApellido').val();
+            var Estado = $("#Estado").val();
             var Empty = '';
             $("#empty").each(function () {
                 if ($(this).is(":checked")) {
                     Empty = $(this).val();
                 }
             })
-            if ((Servicio != '') || (FechaTransfer != '') || (FechaRegistro != '') || (Id_Transfer != '') || (IdPas != '') || (Empty != '') || (NombreApellido != '')) {
-                Filtro(Servicio, FechaTransfer, FechaRegistro, Id_Transfer, IdPas, Empty, NombreApellido);
+            if ((Servicio != '') || (FechaTransfer != '') || (FechaRegistro != '') || (Id_Transfer != '') || (Empty != '') || (NombreApellido != '') || (Estado != '')) {
+                Filtro(Servicio, FechaTransfer, FechaRegistro, Id_Transfer, Empty, NombreApellido, Estado);
             }
         });
         $("#deshacer").click(function () {
@@ -673,29 +537,25 @@
             $("#NoData").hide();
         });
 
-        function PDF(Id_Transfer) {
-            var HTML_Width = $("#pdf" + Id_Transfer + "").width();
-            var HTML_Height = $("#pdf" + Id_Transfer + "").height();
-            var top_left_margin = 15;
-            var PDF_Width = HTML_Width + (top_left_margin * 2);
-            var PDF_Height = (PDF_Width * 2) + (top_left_margin * 2);
-            var canvas_image_width = HTML_Width;
-            var canvas_image_height = HTML_Height;
+        function PDF(Id_Reserva) {
+            var cardElement = document.getElementById(Id_Reserva);
 
-            var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
-
-            html2canvas($("#pdf" + Id_Transfer + "")[0]).then(function (canvas) {
-                var imgData = canvas.toDataURL("image/jpeg", 1.0);
-                var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
-                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
-                for (var i = 1; i <= totalPDFPages; i++) {
-                    pdf.addPage(PDF_Width, PDF_Height);
-                    pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 4), canvas_image_width, canvas_image_height);
-                }
-                pdf.save("" + Id_Transfer + ".pdf");
-
+            // Ajusta el tamaño de la tarjeta para que abarque toda la pantalla
+            cardElement.classList.add('pdf');
+            $('.cardd-actions').hide();
+            $('#FechaRegistro' + Id_Reserva).hide();
+            $('#TelefonoTransfer' + Id_Reserva).hide();
+            // Genera el PDF con html2pdf y establece el nombre del archivo
+            html2pdf(cardElement, {
+                filename: Id_Reserva,  // Cambia 'nombre_del_archivo' por el nombre deseado
+            }).then(() => {
+                cardElement.classList.remove('pdf');
+                $('.cardd-actions').show();
+                $('#FechaRegistro' + Id_Reserva).show();
+                $('#TelefonoTransfer' + Id_Reserva).show();
             });
         }
+
     </script>
 
 

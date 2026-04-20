@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Copiar Horarios de Tours</title>
+</head>
+
+<body>
+    <main class="content">
+        <div class="container-fluid p-0">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                    <h1>Copiar Horarios de un Tour a Otro</h1>
+                    </div>
+                    <div class="card-body">
+                    <form id="copiarForm">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="sourceTour">Selecciona el tour origen:</label>
+                                <select class="form-style" name="sourceTour" id="sourceTour" required>
+                                    <option value="" selected disabled>SELECCIONAR</option>
+                                    <% if (typeof resultsTours !=="undefined" ) { %>
+                                        <% resultsTours.forEach((Tours)=> { %>
+                                            <option value="<%= Tours.Id_Tour %>">
+                                                <%= Tours.NombreTour %>
+                                            </option>
+                                            <% }); %>
+                                                <% } %>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="targetTour">Selecciona el tour destino:</label>
+                                <select class="form-style" name="targetTour" id="targetTour" required>
+                                    <option value="" selected disabled>SELECCIONAR</option>
+                                    <% if (typeof resultsTours !=="undefined" ) { %>
+                                        <% resultsTours.forEach((Tours)=> { %>
+                                            <option value="<%= Tours.Id_Tour %>">
+                                                <%= Tours.NombreTour %>
+                                            </option>
+                                            <% }); %>
+                                                <% } %>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="horaEspecifica">Hora específica (opcional):</label>
+                                <input class="form-style" type="time" id="horaEspecifica" name="horaEspecifica">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-9 mt-3 d-flex justify-content-end">
+                                <button class="btn btn-primary" type="button" id="guardarHorarios">Guardar
+                                    horarios</button>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function convertTo12HourFormat(time) {
+            const [hour, minute] = time.split(':');
+            let period = 'AM';
+            let hour12 = parseInt(hour, 10);
+
+            if (hour12 >= 12) {
+                period = 'PM';
+                if (hour12 > 12) {
+                    hour12 -= 12;
+                }
+            }
+
+            if (hour12 === 0) {
+                hour12 = 12;
+            }
+
+            return `${hour12}:${minute} ${period}`;
+        }
+
+        document.getElementById('guardarHorarios').addEventListener('click', function () {
+            const sourceTour = document.getElementById('sourceTour').value;
+            const targetTour = document.getElementById('targetTour').value;
+            let horaEspecifica = document.getElementById('horaEspecifica').value;
+
+            if (horaEspecifica) {
+                horaEspecifica = convertTo12HourFormat(horaEspecifica);
+            }
+
+            swal({
+                title: "¿Estás seguro?",
+                text: "¡Estas a seguro(a) de copiar los horarios del tour seleccionado al tour destino!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then(async (willCopy) => {
+                if (willCopy) {
+                    try {
+                        const response = await fetch('/copiar-horarios', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                sourceTour: sourceTour,
+                                targetTour: targetTour,
+                                horaEspecifica: horaEspecifica
+                            })
+                        });
+
+                        if (response.ok) {
+                            const result = await response.text(); // Usar .text() ya que la respuesta es un texto
+                            swal('Éxito', result, 'success');
+                        } else {
+                            const errorData = await response.text(); // Usar .text() ya que la respuesta es un texto
+                            console.error('Error:', errorData);
+                            swal('Error al copiar los horarios', errorData, 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        swal('Error al copiar los horarios', error.message, 'error');
+                    }
+                } else {
+                    swal("Operación cancelada");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

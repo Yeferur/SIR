@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfico de pasajeros</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+</head>
+<div class="content">
+    <div class="card mb-3">
+        <div class="card-header">
+            <h1>Informes</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-10 col-sm-12 mb-5 grafico-container">
+                    <div class="col-md-4 col-sm-12">
+                        <label for="filtro-Categoria">Filtro:</label>
+                        <select id="filtro-Categoria" class="form-style">
+                            <option value="rango-fechas">Rango de Fechas</option>
+                            <option value="rango-meses" selected>Rango de Meses</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="col-md-4 col-sm-12">
+                        <label for="tour-Categoria">Tour:</label>
+                        <select id="tour-Categoria" class="form-style">
+                            <option value="">Todos</option>
+                            <% if (typeof resultsTours !="undefined" ){
+                                resultsTours.forEach((Tours)=>{ %>
+                                <option value="<%= Tours.Id_Tour %>">
+                                    <%= Tours.NombreTour %>
+                                </option>
+                                <% }) } %>
+                        </select>
+                    </div>
+
+                    <div id="divRangoFechasCategoria" class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="fecha-inicioCategoria">Fecha de inicio:</label>
+                            <input id="fecha-inicioCategoria" class="form-style" type="month">
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="fecha-finCategoria">Fecha de fin:</label>
+                            <input id="fecha-finCategoria" class="form-style" type="month">
+                        </div>
+                    </div>
+
+                    <br>
+                    <p id="mensajeMesActual" class="text-info"></p> <!-- Mensaje para el usuario -->
+                    <br>
+                    <canvas id="chart-container-Categoria"></canvas>
+                    <!-- <div>
+                        <a href="/informes/exportarCategoria" download id="exportarCategoria">Exportar a Excel</a>
+                    </div> -->
+                </div>
+
+
+                <div class="col-md-10 col-sm-12 mb-5 grafico-container">
+                    <div class="col-md-4 col-sm-12">
+                        <label for="filtro-pasajeros">Filtro:</label>
+                        <select id="filtro-pasajeros" class="form-style">
+                            <option value="dia">Día</option>
+                            <option value="semana" selected>Semana</option>
+                            <option value="mes">Mes</option>
+                            <option value="ano">Año</option>
+                            <option value="rango">Rango de fechas</option>
+                            <option value="fecha-especifica">Fecha específica</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div id="divRangoFechasPasajeros" class="row" style="display: none;">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="fecha-inicioPasajeros">Fecha de inicio:</label>
+                            <input type="date" id="fecha-inicioPasajeros" class="form-style"
+                                onchange="actualizarFiltroDatos();">
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="fecha-finPasajeros">Fecha de fin:</label>
+                            <input type="date" id="fecha-finPasajeros" class="form-style"
+                                onchange="actualizarFiltroDatos();">
+                        </div>
+                    </div>
+
+                    <div id="divFechaEspecificaPasajeros" class="col-md-6 col-sm-12" style="display: none;">
+                        <label for="fecha-especificaPasajeros">Fecha específica:</label>
+                        <input type="date" id="fecha-especificaPasajeros" class="form-style"
+                            onchange="actualizarFiltroDatos();">
+                    </div>
+                    <br>
+                    <canvas id="chart-container"></canvas>
+                    <div>
+                        <a href="/informes/exportarDatos" download id="exportarDatos">Exportar a Excel</a>
+                    </div>
+                </div>
+                <div class="col-md-10 col-sm-12 mb-5 grafico-container">
+                    <div class="col-md-4 col-sm-12">
+                        <label for="filtro-ingresos">Filtro:</label>
+                        <select id="filtro-ingresos" class="form-style">
+                            <option value="dia">Día</option>
+                            <option value="semana" selected>Semana</option>
+                            <option value="mes">Mes</option>
+                            <option value="ano">Año</option>
+                            <option value="rango">Rango de fechas</option>
+                            <option value="fecha-especifica">Fecha específica</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div id="divRangoFechas" class="row" style="display: none;">
+                        <div class="col-md-6 col-sm-12">
+                            <label for="fecha-inicio">Fecha de inicio:</label>
+                            <input type="date" id="fecha-inicio" class="form-style"
+                                onchange="actualizarFiltroIngresos();">
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <label for="fecha-fin">Fecha de fin:</label>
+                            <input type="date" id="fecha-fin" class="form-style" onchange="actualizarFiltroIngresos();">
+                        </div>
+                    </div>
+
+                    <div id="divFechaEspecifica" class="col-md-6 col-sm-12" style="display: none;">
+                        <label for="fecha-especifica">Fecha específica:</label>
+                        <input type="date" id="fecha-especifica" class="form-style"
+                            onchange="actualizarFiltroIngresos();">
+                    </div>
+                    <br>
+                    <canvas id="chart-container-ingresos"></canvas>
+                    <div>
+                        <a href="/informes/exportarIngresos" download id="exportarIngresos">Exportar a Excel</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    Chart.defaults.color = '#fff';
+    Chart.defaults.borderColor = '#4b505b';
+    var colorTitulo = "#fff";
+    var colorEjeX = "#fff";
+    var colorEjeY = "#fff";
+    var colorLeyendas = "#fff";
+
+    // Utiliza la URL correcta para tus datos
+    const UrlDatos = '/informes/datos';
+    const UrlDatosExport = '/informes/exportarDatos';
+    let chart = null; // Variable para almacenar la instancia del gráfico
+
+    // Función para obtener los datos del servidor según el filtro seleccionado
+    function obtenerDatos(filtro, fechaInicio, fechaFin, fechaEspecifica) {
+        // Construye la URL con el parámetro de filtro
+        const exportButton = document.getElementById('exportarDatos');
+        let url = `${UrlDatos}?filtro=${filtro}`;
+        let urlExport = `${UrlDatosExport}?filtro=${filtro}`;
+        if (filtro === 'rango') {
+            url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            urlExport += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        } else if (filtro === 'fecha-especifica') {
+            url += `&fechaEspecifica=${fechaEspecifica}`;
+            urlExport += `&fechaEspecifica=${fechaEspecifica}`;
+        }
+        exportButton.setAttribute('href', urlExport);
+        // Utiliza fetch para obtener los datos de la API
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('chart-container').getContext('2d');
+
+                // Función para actualizar el gráfico con los datos obtenidos
+                function actualizarGrafico() {
+                    if (chart !== null) {
+                        chart.destroy();
+                    }
+
+                    const labels = data.map(d => d.Fecha);
+                    const totalPasajeros = data.map(d => d.total_pasajeros);
+                    const pasajerosViajaron = data.map(d => d.pasajeros_viajaron);
+                    const porcentajeNegativo = data.map(d => d.porcentaje_negativo);
+
+                    // Crea el nuevo gráfico con los datos obtenidos
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels,
+                            datasets: [
+                                {
+                                    label: 'Total de pasajeros',
+                                    data: totalPasajeros,
+                                    borderColor: '#333',
+                                    backgroundColor: '#ccc'
+                                },
+                                {
+                                    label: 'Pasajeros que viajaron',
+                                    data: pasajerosViajaron,
+                                    borderColor: '#0077ff',
+                                    backgroundColor: '#0077ff40'
+                                },
+                                {
+                                    label: 'Porcentaje negativo',
+                                    data: porcentajeNegativo,
+                                    type: 'line',
+                                    borderColor: '#ff0000',
+                                    backgroundColor: '#ff000040'
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Cantidad'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Fecha'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Llama a la función para actualizar el gráfico con los datos obtenidos
+                actualizarGrafico();
+            })
+            .catch(error => console.error('Error al obtener los datos:', error));
+    }
+
+    function actualizarFiltroDatos() {
+        const filtroSeleccionado = document.getElementById('filtro-pasajeros').value;
+        const divRangoFechas = document.getElementById('divRangoFechasPasajeros');
+        const divFechaEspecifica = document.getElementById('divFechaEspecificaPasajeros');
+        const fechaInicio = document.getElementById('fecha-inicioPasajeros').value;
+        const fechaFin = document.getElementById('fecha-finPasajeros').value;
+        const fechaEspecifica = document.getElementById('fecha-especificaPasajeros').value;
+
+        // Oculta todos los divs de filtros de fecha
+        divRangoFechas.style.display = 'none';
+        divFechaEspecifica.style.display = 'none';
+
+        // Muestra el div correspondiente al filtro seleccionado
+        if (filtroSeleccionado === 'rango') {
+            divRangoFechas.style.display = 'block';
+        } else if (filtroSeleccionado === 'fecha-especifica') {
+            divFechaEspecifica.style.display = 'block';
+        } else {
+            // Oculta los divs si se selecciona otro tipo de filtro
+            divRangoFechas.style.display = 'none';
+            divFechaEspecifica.style.display = 'none';
+        }
+
+        obtenerDatos(filtroSeleccionado, fechaInicio, fechaFin, fechaEspecifica);
+    }
+
+    // Escucha el evento de cambio en el elemento de selección
+    document.getElementById('filtro-pasajeros').addEventListener('change', function () {
+        actualizarFiltroDatos();
+    });
+
+    // Al cargar la página, obtén los datos con el filtro por defecto (día)
+    obtenerDatos('semana');
+
+    let chartIngresos; // Variable para almacenar la instancia del gráfico de ingresos
+
+    const UrlIngresos = '/informes/ingresos';
+    const UrlIngresosExportar = '/informes/exportarIngresos';
+    // Función para obtener los datos de ingresos por reserva del servidor según el filtro seleccionado
+    function obtenerDatosIngresos(filtro, fechaInicio, fechaFin, fechaEspecifica) {
+
+        const exportButton = document.getElementById('exportarIngresos');
+        let url = `${UrlIngresos}?filtro=${filtro}`;
+        let urlExport = `${UrlIngresosExportar}?filtro=${filtro}`;
+        if (filtro === 'rango') {
+            url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+            urlExport += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        } else if (filtro === 'fecha-especifica') {
+            url += `&fechaEspecifica=${fechaEspecifica}`;
+            urlExport += `&fechaEspecifica=${fechaEspecifica}`;
+        }
+        exportButton.setAttribute('href', urlExport);
+        // Utiliza fetch para obtener los datos de ingresos de la API
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const ctxIngresos = document.getElementById('chart-container-ingresos').getContext('2d');
+
+                // Función para actualizar el gráfico de ingresos con los datos obtenidos
+                function actualizarGraficoIngresos() {
+                    if (chartIngresos) {
+                        chartIngresos.destroy();
+                    }
+
+                    const labels = data.map(d => d.FechaReserva);
+                    const ingresos = data.map(d => d.TotalIngresos);
+
+                    chartIngresos = new Chart(ctxIngresos, {
+                        type: 'line',
+                        data: {
+                            labels,
+                            datasets: [{
+                                label: 'Ingresos por reservas',
+                                data: ingresos,
+                                borderColor: '#0077ff',
+                                backgroundColor: '#0077ff40'
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Ingresos'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Fecha de reserva'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                actualizarGraficoIngresos();
+            })
+            .catch(error => console.error('Error al obtener los datos de ingresos:', error));
+    }
+
+    // Escucha el evento de cambio en el elemento de selección del filtro
+
+    function actualizarFiltroIngresos() {
+        const filtroSeleccionado = document.getElementById('filtro-ingresos').value;
+        const divRangoFechas = document.getElementById('divRangoFechas');
+        const divFechaEspecifica = document.getElementById('divFechaEspecifica');
+        const fechaInicio = document.getElementById('fecha-inicio').value;
+        const fechaFin = document.getElementById('fecha-fin').value;
+        const fechaEspecifica = document.getElementById('fecha-especifica').value;
+
+        // Oculta todos los divs de filtros de fecha
+        divRangoFechas.style.display = 'none';
+        divFechaEspecifica.style.display = 'none';
+
+        // Muestra el div correspondiente al filtro seleccionado
+        if (filtroSeleccionado === 'rango') {
+            divRangoFechas.style.display = 'block';
+        } else if (filtroSeleccionado === 'fecha-especifica') {
+            divFechaEspecifica.style.display = 'block';
+        } else {
+            // Oculta los divs si se selecciona otro tipo de filtro
+            divRangoFechas.style.display = 'none';
+            divFechaEspecifica.style.display = 'none';
+        }
+
+        obtenerDatosIngresos(filtroSeleccionado, fechaInicio, fechaFin, fechaEspecifica);
+    }
+    // Escucha el evento de cambio en el elemento de selección del filtro de ingresos
+    document.getElementById('filtro-ingresos').addEventListener('change', function () {
+        actualizarFiltroIngresos();
+    });
+
+    // Al cargar la página, obtén los datos de ingresos con el filtro por defecto (día)
+    obtenerDatosIngresos('semana');
+
+    let chartCategoria;
+    let chartType = 'bar'; // Tipo de gráfico por defecto
+
+    const UrlCategoria = '/informes/Categoria';
+    const UrlCategoriaExportar = '/informes/exportarCategoria';
+
+    // Obtener el mes y año actual en formato YYYY-MM
+    const fechaActual = new Date();
+    const mesActual = fechaActual.toISOString().slice(0, 7); // Formato: YYYY-MM
+    document.getElementById('fecha-inicioCategoria').value = mesActual;
+    document.getElementById('fecha-finCategoria').value = mesActual;
+
+    // Mostrar mensaje al usuario indicando que los datos son del mes actual
+    const mensajeMesActual = document.getElementById('mensajeMesActual');
+    mensajeMesActual.innerText = `Mostrando datos del mes actual: ${mesActual}`;
+
+    function obtenerDatosCategoria(filtro, fechaInicio, fechaFin) {
+    const exportButton = document.getElementById('exportarCategoria');
+    const idTour = document.getElementById('tour-Categoria').value; // Obtener ID del tour seleccionado
+    
+    let url = `${UrlCategoria}?filtro=${filtro}`;
+    let urlExport = `${UrlCategoriaExportar}?filtro=${filtro}`;
+
+    if (filtro === 'rango-fechas') {
+        url += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        urlExport += `&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+    } else if (filtro === 'rango-meses') {
+        url += `&mesInicio=${fechaInicio}&mesFin=${fechaFin}`;
+        urlExport += `&mesInicio=${fechaInicio}&mesFin=${fechaFin}`;
+    }
+
+    if (idTour) {
+        url += `&idTour=${idTour}`;
+        urlExport += `&idTour=${idTour}`;
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.length) {
+                console.error("No hay datos disponibles.");
+                mensajeMesActual.innerText = "No hay datos disponibles para la selección.";
+                return;
+            }
+
+            if (chartCategoria) {
+                chartCategoria.destroy();
+            }
+
+            const ctxCategoria = document.getElementById('chart-container-Categoria').getContext('2d');
+
+            const etiquetasTiempo = [...new Set(data.map(d => d.FechaReserva))];
+            const categoriasUnicas = [...new Set(data.map(d => d.Categoria))];
+
+            const totalPorFecha = {};
+            etiquetasTiempo.forEach(fecha => {
+                totalPorFecha[fecha] = data
+                    .filter(d => d.FechaReserva === fecha)
+                    .reduce((acc, curr) => acc + curr.TotalPasajeros, 0);
+            });
+
+            const colores = generarColoresUnicos(categoriasUnicas.length);
+
+            const datasets = categoriasUnicas.map((categoria, index) => ({
+                label: categoria,
+                data: etiquetasTiempo.map(fecha => {
+                    const item = data.find(d => d.FechaReserva === fecha && d.Categoria === categoria);
+                    return item ? item.TotalPasajeros : 0;
+                }),
+                borderColor: colores[index],
+                backgroundColor: colores[index] + "80",
+                tension: 0.3,
+                fill: false
+            }));
+
+            chartCategoria = new Chart(ctxCategoria, {
+                type: chartType,
+                data: {
+                    labels: etiquetasTiempo,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    const fecha = tooltipItem.label;
+                                    const categoria = tooltipItem.dataset.label;
+                                    const valor = tooltipItem.raw;
+                                    const totalDia = totalPorFecha[fecha];
+                                    const porcentaje = totalDia ? ((valor / totalDia) * 100).toFixed(2) : 0;
+                                    return `${categoria}: ${valor} pasajeros (${porcentaje}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Total de Pasajeros'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: filtro === 'rango-meses' ? 'Mes-Año' : 'Fecha de reserva'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error al obtener los datos de Categoría:', error));
+}
+
+
+    // Función para generar colores únicos y bien diferenciados
+    function generarColoresUnicos(cantidad) {
+        const coloresBase = [
+            "#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#A833FF",
+            "#FF8C33", "#33FFF5", "#F5FF33", "#A8FF33"
+        ];
+
+        // Si hay más categorías que colores base, generar más colores únicos
+        while (coloresBase.length < cantidad) {
+            coloresBase.push(`hsl(${Math.random() * 360}, 70%, 50%)`);
+        }
+
+        return coloresBase.slice(0, cantidad);
+    }
+
+    // Actualizar los filtros según el tipo de selección
+    function actualizarFiltroCategoria() {
+        mensajeMesActual.innerText = ""; // Eliminar el mensaje del mes actual
+
+        const filtroSeleccionado = document.getElementById('filtro-Categoria').value;
+        const fechaInicio = document.getElementById('fecha-inicioCategoria').value;
+        const fechaFin = document.getElementById('fecha-finCategoria').value;
+
+        if (fechaInicio && fechaFin) {
+            obtenerDatosCategoria(filtroSeleccionado, fechaInicio, fechaFin);
+        }
+    }
+
+    // Cambiar los inputs cuando el usuario selecciona "Rango de Meses" o "Rango de Fechas"
+    document.getElementById('filtro-Categoria').addEventListener('change', function () {
+        const filtroSeleccionado = this.value;
+        const fechaInicio = document.getElementById('fecha-inicioCategoria');
+        const fechaFin = document.getElementById('fecha-finCategoria');
+
+        if (filtroSeleccionado === 'rango-meses') {
+            fechaInicio.setAttribute('type', 'month');
+            fechaFin.setAttribute('type', 'month');
+        } else {
+            fechaInicio.setAttribute('type', 'date');
+            fechaFin.setAttribute('type', 'date');
+        }
+
+        if (fechaInicio.value && fechaFin.value) {
+            obtenerDatosCategoria(filtroSeleccionado, fechaInicio.value, fechaFin.value);
+        }
+    });
+
+    // Escuchar cambios en los inputs para actualizar el gráfico automáticamente
+    document.getElementById('tour-Categoria').addEventListener('change', actualizarFiltroCategoria);
+
+    document.getElementById('fecha-inicioCategoria').addEventListener('change', actualizarFiltroCategoria);
+    document.getElementById('fecha-finCategoria').addEventListener('change', actualizarFiltroCategoria);
+
+    // Al cargar la página, obtener datos del mes actual
+    obtenerDatosCategoria('rango-meses', mesActual, mesActual);
+
+</script>
+</body>
+
+</html>

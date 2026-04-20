@@ -35,6 +35,7 @@ transparent;
     font-weight: 300;
     padding-top: 30px;
     transition: opacity .5s ease, transform .5s ease;
+    
 }
 
 .form-short {

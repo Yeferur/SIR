@@ -125,8 +125,12 @@
                                     <div class="form-con">
                                         <label for="rol">Rol:</label>
                                         <select id="rol" name="rol" class="form-style">
+                                            <option value="">Seleccione una opción</option>
                                             <option value="Administrador">Administrador</option>
+                                            <option value="SuperAdministrador">Super Administrador</option>
                                             <option value="Asesor">Asesor</option>
+                                            <option value="SuperAsesor">Super Asesor</option>
+                                            <option value="Cliente">Cliente</option>
                                         </select>
                                         <div class="error-message"></div>
                                     </div>
@@ -548,23 +552,25 @@
                     togglePasswordButton.querySelector('i').classList.toggle('fa-eye-slash');
                 });
 
-                $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
-                $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
-                $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
-                $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
-                $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
-                $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
-                $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
-                $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
-                $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
-                $("#Layout_Listado").attr("href", "../../Programacion/Listado");
-                $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
-                $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
-                $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
-                $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
-                $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
-                $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
-                $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+                // $("#Layout_Aforos").attr("href", "../../Aforos");
+                // $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+                // $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+                // $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+                // $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+                // $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+                // $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+                // $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+                // $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+                // $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+                // $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+                // $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+                // $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+                // $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+                // $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+                // $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+                // $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
+                // $("#Layout_Img").attr("src", "../../resources/img/LogoMaxitoursPNG.png")
+
 
 
             </script>

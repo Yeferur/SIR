@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="es	">
+<html lang="es">
 
 <head>
     <title>Nueva Reserva</title>
-    <link rel="shortcut icon" href="../img/icons/icon.png" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -278,7 +277,7 @@
         }
 
         .search-container .search {
-            top: 45px;
+            top: 70px;
             display: block;
             position: absolute;
             z-index: 2 !important;
@@ -346,7 +345,6 @@
             margin: 15% auto;
             padding: 20px;
             border: none;
-            width: 40%;
         }
 
         .modal-header h2 {
@@ -375,6 +373,94 @@
         .modal-footer button:hover {
             background-color: #45a049;
         }
+
+        input.sw {
+            opacity: 0;
+            position: absolute;
+            left: -9999px;
+        }
+
+        input.sw+label {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            transition: 0.2s ease;
+            display: inline-block;
+            height: 22px;
+            /* Tamaño reducido */
+            width: 40px;
+            /* Tamaño reducido */
+            position: relative;
+            box-shadow: inset 0 0 0px 2px #e4e4e4;
+            border-radius: 30px;
+            /* Radio reducido */
+            /* White toggle */
+        }
+
+        input.sw+label:before {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 22px;
+            /* Tamaño reducido */
+            width: 22px;
+            /* Tamaño reducido */
+            top: 0;
+            left: 0;
+            border-radius: 11px;
+            /* Radio reducido */
+            background: rgba(76, 217, 100, 0);
+            transition: 0.2s cubic-bezier(0.24, 0, 0.5, 1);
+        }
+
+        input.sw+label:after {
+            content: "";
+            position: absolute;
+            display: block;
+            height: 20px;
+            /* Tamaño reducido */
+            width: 20px;
+            /* Tamaño reducido */
+            top: 50%;
+            margin-top: -10px;
+            /* Ajustado para centrar */
+            left: 1px;
+            border-radius: 50%;
+            /* Radio reducido */
+            background: #fff;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0px 0 rgba(0, 0, 0, 0.04), 0 4px 9px rgba(0, 0, 0, 0.13), 0 3px 3px rgba(0, 0, 0, 0.05);
+            transition: 0.35s cubic-bezier(0.54, 1.6, 0.5, 1);
+        }
+
+        input.sw+label span {
+            white-space: nowrap;
+            height: 22px;
+            /* Tamaño reducido */
+            line-height: 22px;
+            /* Ajustado para el nuevo tamaño */
+            margin-left: 40px;
+            /* Tamaño reducido */
+            padding-left: 12px;
+            /* Ajustado para el nuevo tamaño */
+        }
+
+        input.sw:checked+label:before {
+            width: 40px;
+            /* Tamaño reducido */
+            background: #4cd964;
+            transition: width 0.2s cubic-bezier(0, 0, 0, 0.1) !important;
+        }
+
+        input.sw:checked+label:after {
+            left: 18px;
+            /* Ajustado para el nuevo tamaño */
+        }
+
+        input.sw:checked+label {
+            box-shadow: inset 0 0 0px 25px #e4e4e4;
+            transition: box-shadow 2.5s cubic-bezier(0, 1.2, 0.94, 0.95);
+        }
     </style>
 </head>
 
@@ -393,7 +479,7 @@
                             obligatorios.</span>
                     </div>
                     <div class="card-body">
-                        <form action="/NuevaReserva" method="POST" autocomplete="OFF">
+                        <form action="/NuevaReserva" method="POST" autocomplete="off">
                             <input type="hidden" name="Id_Reserva" id="Id_Reserva">
 
                             <% if (typeof user !="undefined" ){ %>
@@ -401,12 +487,19 @@
                                 <% } %>
 
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-lg-3">
                                             <label class="fw-bold">Tipo de reserva</label>
-                                            <select class="form-style mayusculas  mayusculas " name="TipoReserva"
-                                                id="TipoReserva">
-                                                <option value="Grupal" selected>Grupal</option>
-                                                <option value="Privada">Privada</option>
+                                            <select class="form-style" name="TipoReserva" id="TipoReserva"
+                                                onchange="callCupos()">
+                                                <option value="Grupal" selected>GRUPAL</option>
+                                                <option value="Privada">PRIVADA</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label class="fw-bold">Estado de la reserva</label>
+                                            <select class="form-style" name="Estado" id="Estado">
+                                                <option value="Activo" selected>ACTIVO</option>
+                                                <option value="Pendiente">PENDIENTE</option>
                                             </select>
                                         </div>
                                     </div>
@@ -423,17 +516,18 @@
                                                 <div class="form-group">
                                                     <input type="text" name="adultos"
                                                         class="form-styleCount mayusculas " placeholder="Adultos"
-                                                        id="adultos" onkeyup="total(); CallCupos();" autocomplete="off">
+                                                        id="adultos" onkeyup="total(); callCupos(); num_Pas();"
+                                                        autocomplete="off" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="text" name="niños" class="form-styleCount mayusculas "
-                                                        placeholder="Niños" id="niños" onkeyup="total(); CallCupos();"
-                                                        autocomplete="off">
+                                                        placeholder="Niños" id="niños"
+                                                        onkeyup="total(); callCupos(); num_Pas();" autocomplete="off">
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="text" name="infantes"
                                                         class="form-styleCount mayusculas " placeholder="Infantes"
-                                                        id="infantes" onkeyup="total(); CallCupos();"
+                                                        id="infantes" onkeyup="total(); callCupos(); num_Pas();"
                                                         autocomplete="off">
                                                 </div>
                                             </div>
@@ -441,8 +535,8 @@
                                         <div class="col-lg-3">
                                             <label class="fw-bold">Elige el tour <span
                                                     style="color: red">*</span></label>
-                                            <select class="form-style mayusculas " name="SelectTour" id="SelectTour"
-                                                required>
+                                            <select class="form-style" name="SelectTour" id="SelectTour"
+                                                onchange="select_Tour();" required>
                                                 <option selected disabled>Seleccionar</option>
                                                 <% if (typeof resultsTours !="undefined" ){
                                                     resultsTours.forEach((Tours)=>{ %>
@@ -459,49 +553,14 @@
                                             <div class="input-group mb-3">
                                                 <input type="text" class="form-style mayusculas " placeholder=""
                                                     id="NombrePunto" name="NombrePunto" required>
-                                            </div>
-                                        </div>
-                                        <div id="modal" class="modal" tabindex="-1" role="dialog"
-                                            data-backdrop="static">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h2>Puntos de encuetro</h2>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="search-container">
-                                                        <input type="text" class="form-style"
-                                                            placeholder="Punto de encuentro principal" id="Punto_1">
-                                                        <div class="search">
-                                                            <span id="search_result_Punto_1"></span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="search-container">
-                                                        <input type="text" class="form-style"
-                                                            placeholder="Punto de encuentro 2" id="Punto_2">
-                                                        <div class="search">
-                                                            <span id="search_result_Punto_2"></span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="search-container">
-                                                        <input type="text" class="form-style"
-                                                            placeholder="Punto de encuentro 3" id="Punto_3">
-                                                        <div class="search">
-                                                            <span id="search_result_Punto_3"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" id="modal-btn-agregar">Listo</button>
-                                                </div>
+                                                <input type="hidden" name="Id_Punto" id="Id_Punto">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <label class="fw-bold">Elige la fecha<span
                                                     style="color: red">*</span></label>
                                             <input type="date" class="form-style mayusculas " name="FechaReserva"
-                                                id="FechaReserva" onchange="CallCupos();" required />
+                                                id="FechaReserva" onchange="callCupos();" required />
                                         </div>
                                     </div>
                                     <div class="row">
@@ -509,19 +568,19 @@
                                             <label class="fw-bold"># Tel. Reserva<span
                                                     style="color: red">*</span></label>
                                             <input type="text" class="form-style mayusculas " name="TelefonoReserva"
-                                                id="TelefonoReserva" required />
+                                                id="TelefonoReserva" required autocomplete="off" />
                                         </div>
                                         <div class="col-lg-2">
                                             <label class="fw-bold">Idioma</label>
-                                            <select class="form-style mayusculas " name="IdiomaReserva">
-                                                <option value="Español">Español</option>
-                                                <option value="Inglés">Inglés</option>
+                                            <select class="form-style" name="IdiomaReserva">
+                                                <option value="ESPAÑOL">ESPAÑOL</option>
+                                                <option value="INGLÉS">INGLÉS</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-2">
                                             <label class="fw-bold">Categoría</label>
                                             <select class="selectpicker form-style" title="Seleccionar" name="Categoria"
-                                                id="ReportaReserva">
+                                                id="Categoria" onchange="call_Load_Comision();">
                                                 <% if(typeof resultsCategoria !="undefined" ){
                                                     resultsCategoria.forEach((Categoria)=>{ %>
                                                     <option value="<%= Categoria.Id_Categoria %>">
@@ -531,9 +590,10 @@
                                             </select>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="fw-bold">¿Quién Reporta?</label>
+                                            <label class="fw-bold">¿Quién Reporta?<span
+                                                    style="color: red">*</span></label>
                                             <input type="text" class="form-style mayusculas " name="NombreReporta"
-                                                placeholder="Nombre" />
+                                                placeholder="Nombre" id="NombreReporta" required autocomplete="off" />
                                         </div>
                                         <div class="col-lg-2">
                                             <label class="fw-bold">Hora recogida</label>
@@ -543,6 +603,14 @@
                                         <div class="col-lg-1">
                                             <label class="fw-bold">Ruta</label>
                                             <input type="text" class="form-style mayusculas " name="Ruta" id="Ruta" />
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row" id="div_PagoAgencia">
+                                        <div class="col-lg-2">
+                                            <label class="fw-bold">Pago Agencia</label>
+                                            <input type="text" class="form-style mayusculas " name="PagoAgencia"
+                                                id="PagoAgencia" value="0">
                                         </div>
                                     </div>
                                     <br>
@@ -599,12 +667,96 @@
                                         </div>
                                         <hr>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-end">
-                                        <button type="button" class="btn btn-primary btn-lg"
-                                            id="save-btn">Guardar</button>
-                                    </div>
+
+                                    <input type="button" name="Exportar" value="Guardar" class="btn-flotante"
+                                        id="save-btn">
+
                                     <input type="submit" value="" id="Submit">
                         </form>
+
+                    </div>
+                </div>
+                <div id="modal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2>Puntos de encuentro</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="search-container">
+                                    <input type="checkbox" id="checkbox_Punto_1" name="toggle"
+                                        class="llegan-a-checkbox mx-sm-3 mb-2 sw"> <label
+                                        for="checkbox_Punto_1"><span>LLEGAN A</span>
+                                    </label>
+                                    <input type="text" class="form-style" placeholder="Punto de encuentro principal"
+                                        id="Punto_1" autocomplete="off">
+                                    <div class="search">
+                                        <span id="search_result_Punto_1"></span>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="search-container">
+                                    <input type="checkbox" id="checkbox_Punto_2" name="toggle"
+                                        class="llegan-a-checkbox mx-sm-3 mb-2 sw"> <label
+                                        for="checkbox_Punto_2"><span>LLEGAN A</span>
+                                    </label>
+                                    <input type="text" class="form-style" placeholder="Punto de encuentro 2"
+                                        id="Punto_2" autocomplete="off">
+                                    <div class="search">
+                                        <span id="search_result_Punto_2"></span>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="search-container">
+                                    <input type="checkbox" id="checkbox_Punto_3" name="toggle"
+                                        class="llegan-a-checkbox mx-sm-3 mb-2 sw"><label
+                                        for="checkbox_Punto_3"><span>LLEGAN A</span>
+                                    </label>
+                                    <input type="text" class="form-style" placeholder="Punto de encuentro 3"
+                                        id="Punto_3" autocomplete="off">
+                                    <div class="search">
+                                        <span id="search_result_Punto_3"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="modal-btn-agregar">Listo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modalNP" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modalNP-header">
+                                <h2>Nuevo punto de encuentro:</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card-header">
+                                    <input type="hidden" name="Id_PuntoNP" id="Id_PuntoNP">
+                                    <span style="font-size:12px">Los campos con <span class="text-danger">*</span> son
+                                        obligatorios.</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label for="NombrePuntoNP" class="FormNewTour">Nombre<span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" name="NombrePuntoNP" id="NombrePuntoNP"
+                                                class="form-style mayusculas " placeholder="Nombre del Punto"
+                                                required="required">
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="modal-btn-NP" onclick="punto();">Crear</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -629,11 +781,15 @@
 
                 const inputPrincipal = document.getElementById("NombrePunto");
                 const modal = document.getElementById("modal");
-                const modalInputs = document.querySelectorAll("#modal input");
+                const modalNP = document.getElementById("modalNP");
+                const modalInputs = document.querySelectorAll("#modal input[type='text']");
                 const modalBtnAgregar = document.getElementById("modal-btn-agregar");
+                const modalBtnNP = document.getElementById("modal-btn-NP");
+                const checkboxes = document.querySelectorAll(".punto-checkbox");
                 var Select = document.getElementById("SelectTour");
+                var Select_Categoria = document.getElementById("Categoria");
                 var Punto_1 = document.getElementById("Punto_1");
-
+                $("#div_PagoAgencia").hide();
 
                 // Función para abrir el modal
                 function openModal() {
@@ -643,18 +799,32 @@
                     }
                 }
 
-                // Función para cerrar el modal y actualizar el input principal
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Closes the modal and updates the main input field with selected values.
+ * Iterates over each input element in the modal to check if the associated
+ * checkbox is checked and if the input has a value. If both conditions are met,
+ * adds the prefix "LLEGAN A" to the input value and stores it. Otherwise, stores
+ * the input value as-is if it is not empty. Joins all stored values into a single
+ * string and sets it as the value of the main input field. Finally, hides the modal.
+ */
+
+/******  b3da0d7e-7d14-48e0-a1a0-1eaa4b7f798f  *******/
                 function closeModal() {
-                    let datos = [];
+                    let selectedInputs = [];
+
                     modalInputs.forEach((input) => {
-                        datos.push(input.value.trim());
+                        const checkbox = document.getElementById(`checkbox_${input.id}`);
+                        const inputValue = input.value.trim();
+
+                        if (checkbox.checked && inputValue) {
+                            selectedInputs.push(`LLEGAN A ${inputValue}`);
+                        } else if (inputValue) {
+                            selectedInputs.push(inputValue);
+                        }
                     });
-                    let filteredDatos = datos.filter((dato) => dato !== ""); // Elimina valores vacíos
-                    if (filteredDatos.length > 1) {
-                        inputPrincipal.value = filteredDatos.join(", ");
-                    } else {
-                        inputPrincipal.value = filteredDatos[0] || ""; // Asigna el primer valor o un string vacío si no hay valores
-                    }
+
+                    inputPrincipal.value = selectedInputs.join(", ");
                     modal.style.display = "none";
                 }
 
@@ -671,47 +841,247 @@
                     }
                 });
 
-                $("#save-btn").click(() => {
+                // Función para abrir el modal para crear un nuevo punto de encuentro
+                function openModalNP() {
+                    modalNP.style.display = "block";
+                    if (modalInputs[0].value == "") {
+                        modalInputs[0].focus();
+                    }
+                }
+
+                // Función para cerrar el modal del nuevo punto
+                function closeModalNP() {
+                    let datos = [];
+                    modalInputs.forEach((input) => {
+                        datos.push(input.value.trim());
+                    });
+                    let filteredDatos = datos.filter((dato) => dato !== ""); // Elimina valores vacíos
+                    if (filteredDatos.length > 1) {
+                        inputPrincipal.value = filteredDatos.join(", ");
+                    } else {
+                        inputPrincipal.value = filteredDatos[0] || ""; // Asigna el primer valor o un string vacío si no hay valores
+                    }
+                    modalNP.style.display = "none";
+                }
+
+
+                // Evento para cerrar el modal al presionar el botón "Agregar" y actualizar el input principal
+                modalBtnNP.addEventListener("click", closeModalNP);
+
+                // Evento para cerrar el modal al presionar la tecla "Enter" y actualizar el input principal
+                // modal.addEventListener("keydown", (e) => {
+                //     if (e.key === "Enter") {
+                //         closeModal();
+                //     }
+                // });
+
+
+                $("#save-btn").click(async () => {
+                    const numpas = $("#adultos").val();
+                    const tour = $("#SelectTour").val();
+                    const punto = $("#Punto_1").val();
+                    const fecha = $("#FechaReserva").val();
+                    const telefonoReserva = $("#TelefonoReserva").val();
+                    const reporta = $("#NombreReporta").val();
+
+                    // Función para mostrar alertas
+                    const mostrarAlerta = (mensaje, titulo = "Cuidado", icono = "warning") => {
+                        return swal({
+                            title: titulo,
+                            text: mensaje,
+                            icon: icono,
+                            buttons: true,
+                            dangerMode: true,
+                        });
+                    };
+
+                    // Validaciones sincronas
+                    if (!numpas) {
+                        await mostrarAlerta("Por favor ingrese el número de pasajeros.");
+                        return;
+                    }
+                    if (!tour) {
+                        await mostrarAlerta("Por favor seleccione el tour.");
+                        return;
+                    }
+                    if (!punto || !validate_inputs()) {
+                        await mostrarAlerta("Por favor seleccione un punto de encuentro principal.");
+                        return;
+                    }
+                    if (!fecha) {
+                        await mostrarAlerta("Por favor seleccione una fecha para la reserva.");
+                        return;
+                    }
+                    if (!telefonoReserva) {
+                        await mostrarAlerta("Por favor ingrese el número de teléfono para la reserva.");
+                        return;
+                    }
+                    if (!reporta) {
+                        await mostrarAlerta("Por favor ingrese el nombre del reportante.");
+                        return;
+                    }
+                    if (!validarTelefonos()) {
+                        await mostrarAlerta("Por favor, ingrese al menos un teléfono.");
+                        return;
+                    }
+
+                    // Validación asincrónica de cupos
+                    const hayCupos = await callCupos();
+                    if (!hayCupos) {
+                        await mostrarAlerta("No hay cupos disponibles para la reserva.", 'Error', 'error');
+                        return;
+                    }
+
+                    // Confirmación final
                     swal({
                         title: "¿Todo Listo?",
                         icon: "warning",
                         buttons: true,
                         dangerMode: true,
-                    })
-                        .then((go) => {
-                            if (go) {
-                                $("#Submit").click()
-                            }
-                        });
-                })
+                    }).then((go) => {
+                        if (go) {
+                            $("#Submit").click();
+                        }
+                    });
+                });
 
-                $('#adultos').keyup(function () {
-                    var val = $(this).val();
-                    var innerhtml = '';
-                    for (var i = 0; i < val; i++) {
-                        innerhtml += "<div class='row lista-producto' id='cont_adultos'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas  mayusculas IdPas' id='IdPas' onkeyup='CheckPasajeros();'/></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioAdulto'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeAdulto'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Adulto'></div><br /></div></div>";
-                    }
-                    var dis = $('#div_adultos');
-                    dis.html(innerhtml);
+
+                $(document).ready(function () {
+                    $('#adultos').keyup(function () {
+                        var val = $(this).val();
+                        var innerhtml = '';
+
+                        for (var i = 0; i < val; i++) {
+                            innerhtml += `
+                <div class='row lista-producto' id='cont_adultos'>
+                    <div>
+                        <div class='row '>
+                            <div class='form-group col-lg-3'>
+                                <label class='form-label'>Nombre</label>
+                                <input name='NomPas[]' class='form-style mayusculas ' />
+                            </div>
+                            <div class='form-group col-lg-2'>
+                                <label class='form-label'>Dni/Pasaporte </label>
+                                <input name='IdPas[]' class='form-style mayusculas IdPas' id='IdPas' onkeyup='call_checkPasajeros(this);'/>
+                            </div>
+                            <div class='form-group col-lg-2'>
+                                <label class='form-label'>Teléfono </label>
+                                <input name='Telefono[]' class='form-style mayusculas ' />
+                            </div>
+                            <div class='form-group col-lg-2'>
+                                <label class='form-label'>Precio Tour </label>
+                                <input type='text' name='PrecioTour[]' class='form-style mayusculas PrecioAdulto'>
+                            </div>
+                            <div class='form-group col-lg-1 Comisiones'>
+                                <label class='form-label'>Comisión </label>
+                                <input name='Comision[]' class='form-style mayusculas Comision' />
+                            </div>
+                            <div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'>
+                                <div>
+                                    <button type='button' class='icon-btn add-btn'>
+                                        <div class='btn-txt' id='removeAdulto'>Eliminar</div>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type='hidden' name='TipoPasajero[]' value='Adulto'>
+                            <input type='hidden' name='Precio[]' class='PrecioAdulto'>
+                        </div>
+                        <br />
+                    </div>
+                </div>`;
+                        }
+
+                        var dis = $('#div_adultos');
+                        dis.html(innerhtml);
+                    });
+
+                    $('#niños').keyup(function () {
+                        var val = $(this).val();
+                        var innerhtml = '';
+
+                        for (var i = 0; i < val; i++) {
+                            innerhtml += `
+                <div class='row lista-producto1' id='cont_niños'>
+                    <div>
+                        <div class='row '>
+                            <div class='form-group col-lg-3'>
+                                <label class='form-label  '>Nombre</label>
+                                <input name='NomPas[]' class='form-style mayusculas ' />
+                            </div>
+                            <div class='form-group col-lg-2'>
+                                <label class='form-label'>Dni/Pasaporte </label>
+                                <input name='IdPas[]' class='form-style mayusculas ' onkeyup='call_checkPasajeros(this);'/>
+                            </div>
+                            <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='NIÑO'/>
+                            <div class='form-group col-lg-2'>
+                                <label class='form-label'>Precio Tour </label>
+                                <input type='text' name='PrecioTour[]' class='form-style mayusculas PrecioNiño'>
+                            </div>
+                            <div class='form-group col-lg-1 Comisiones'>
+                                <label class='form-label'>Comisión </label>
+                                <input name='Comision[]' class='form-style mayusculas Comision' />
+                            </div>
+                            <div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'>
+                                <div>
+                                    <button type='button' class='icon-btn add-btn'>
+                                        <div class='btn-txt' id='removeNiño'>Eliminar</div>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type='hidden' name='TipoPasajero[]' value='Niño'>
+                            <input type='hidden' name='Precio[]' class='PrecioNiño'>
+                        </div>
+                        <br />
+                    </div>
+                </div>`;
+                        }
+
+                        var dis = $('#div_niños');
+                        dis.html(innerhtml);
+                    });
+
+                    $('#infantes').keyup(function () {
+                        var val = $(this).val();
+                        var innerhtml = '';
+
+                        for (var i = 0; i < val; i++) {
+                            innerhtml += `
+                <div class='row lista-producto2' id='cont_infantes'>
+                    <div>
+                        <div class='row '>
+                            <div class='form-group col-lg-4'>
+                                <label class='form-label '>Nombre</label>
+                                <input name='NomPas[]' class='form-style mayusculas ' />
+                            </div>
+                            <div class='form-group col-lg-3'>
+                                <label class='form-label'>Dni/Pasaporte </label>
+                                <input name='IdPas[]' class='form-style mayusculas ' onkeyup='call_checkPasajeros(this);'/>
+                            </div>
+                            <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='INFANTE'/>
+                            <div class='form-group col-lg-3'>
+                                <label class='form-label'>Precio Tour </label>
+                                <input type='text' name='PrecioTour[]' class='form-style mayusculas PrecioInfante'>
+                            </div>
+                            <input type='hidden' name='Comision[]' class='form-style mayusculas ' value='0'/>
+                            <div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'>
+                                <div>
+                                    <button type='button' class='icon-btn add-btn'>
+                                        <div class='btn-txt' id='removeInfante'>Eliminar</div>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type='hidden' name='TipoPasajero[]' value='Infante'>
+                            <input type='hidden' name='Precio[]' class='PrecioInfante'>
+                        </div>
+                        <br />
+                    </div>
+                </div>`;
+                        }
+                        var dis = $('#div_infantes');
+                        dis.html(innerhtml);
+                    });
                 });
-                $('#niños').keyup(function () {
-                    var val = $(this).val();
-                    var innerhtml = '';
-                    for (var i = 0; i < val; i++) {
-                        innerhtml += "<div class='row lista-producto1' id='cont_niños'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioNiño'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNiño'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Niño'></div><br /></div></div>";
-                    }
-                    var dis = $('#div_niños');
-                    dis.html(innerhtml);
-                });
-                $('#infantes').keyup(function () {
-                    var val = $(this).val();
-                    var innerhtml = '';
-                    for (var i = 0; i < val; i++) {
-                        innerhtml += "<div class='row lista-producto2' id='cont_infantes'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div> <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioInfante'></div><input type='hidden' name='Comision[]' class='form-style mayusculas ' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeInfante'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Infante'></div><br /></div></div>";
-                    }
-                    var dis = $('#div_infantes');
-                    dis.html(innerhtml);
-                });
+
 
                 //---------------------------------------------------------------- JSON --------------------------------------------------------
 
@@ -765,10 +1135,11 @@
 
                                 html += '<a class="list-group-item list-group-item-action list-group-color" onclick="get_text(this, \'' + idInput + '\'); call_Load_HR()">' + responseData[count].NombrePunto.replace(regular_expression, '<span class="text-primary fw-bold">$1</span>') + '</a>';
                             }
+                            // html += '<a class="list-group-item list-group-item-action list-group-create-color" id="CrearPunto" onClick="openModalNP(); id_Punto();">Crear nuevo punto</a>';
                         }
                         else {
                             html += '<a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>';
-                            html += '<a href="../../Puntos/NuevoPunto" class="list-group-item list-group-item-action list-group-create-color">Crear nuevo punto</a>';
+                            // html += '<a class="list-group-item list-group-item-action list-group-create-color" id="CrearPunto" onClick="openModalNP(); id_Punto();">Crear nuevo punto</a>';
                         }
 
                         html += '</ul>';
@@ -788,19 +1159,52 @@
                         if (responseData.length > 0) {
                             $("#Ruta").val(responseData[0].Ruta)
                             $("#HoraSalida").val(responseData[0].HoraSalida);
-                            $(".PrecioAdulto").val(responseData[0].PrecioAdulto);
-                            $(".PrecioNiño").val(responseData[0].PrecioNiño);
-                            $(".PrecioInfante").val(responseData[0].PrecioInfante);
-                            $(".Comision").val(responseData[0].Comision);
+                            $("#Id_Punto").val(responseData[0].Id_Punto);
                         } else {
-                            $("Ruta").val("")
+                            $("#Ruta").val("")
                             $("#HoraSalida").val("");
                         }
 
                     });
                 }
 
-                Id_Reserva = (Id_Tour) => {
+                load_Precios = (Id_Tour) => {
+                    fetch('/Precios?Id_Tour=' + Id_Tour + '').then((response) => {
+
+                        return response.json();
+
+                    }).then((responseData) => {
+
+                        if (responseData.length > 0) {
+                            $(".PrecioAdulto").val(responseData[0].PrecioAdulto);
+                            $(".PrecioNiño").val(responseData[0].PrecioNiño);
+                            $(".PrecioInfante").val(responseData[0].PrecioInfante);
+                        } else {
+                            $(".PrecioAdulto").val("");
+                            $(".PrecioNiño").val("");
+                            $(".PrecioInfante").val("");
+                        }
+
+                    });
+                }
+
+                load_Comision = (Id_Tour, Categoria) => {
+                    fetch('/Comision?Id_Tour=' + Id_Tour + '&Categoria=' + Categoria + '').then((response) => {
+
+                        return response.json();
+
+                    }).then((responseData) => {
+
+                        if (responseData.length > 0) {
+                            $(".Comision").val(responseData[0].Comision);
+                        } else {
+                            $(".Comision").val("0");
+                        }
+
+                    });
+                }
+
+                id_Reserva = (Id_Tour) => {
                     fetch('/Id_Reserva?Id_Tour=' + Id_Tour + '').then((response) => {
                         return response.json();
                     }).then((Id_Reserva) => {
@@ -811,103 +1215,310 @@
                     })
                 }
 
-                cupos = (Id_Tour, Cupos) => {
-                    fetch('/Cupos?Id_Tour=' + Id_Tour + '&Cupos=' + Cupos + '').then((response) => {
+                nuevoPunto = (Id_PuntoNP, NombrePuntoNP) => {
+                    fetch('/NuevaReserva/NuevoPunto?Id_PuntoNP=' + Id_PuntoNP + '&NombrePuntoNP=' + NombrePuntoNP + '').then((response) => {
                         return response.json();
-                    }).then((resCupos) => {
-                        var TotalCupos = resCupos[0].Cupos
-                        var FechaReserva = $('#FechaReserva').val();
-                        var Id_Tour = $('#SelectTour').val();
-                        fetch('/TotalPasajeros?Id_Tour=' + Id_Tour + '&FechaReserva=' + FechaReserva + '').then((res) => {
-                            return res.json();
-                        }).then((TotalPasajeros) => {
-                            var Pasajeros = 0;
-                            var NumPas = $('#input_numpas').val();
-                            if (TotalPasajeros[0].Total != null) {
-                                Pasajeros = TotalPasajeros[0].Total;
-                            }
-                            var TotalPas = Pasajeros + parseInt(NumPas);
+                    }).then((res) => {
+                        if (res != null) {
+                            swal({
+                                title: '¡Ocurrió un error!',
+                                text: 'No fue posible crear el punto de encuentro. Si el error continúa, comuníquese con soporte técnico.',
+                                icon: 'error',
+                                showConfirmButton: false,
 
-                            if (TotalPas > TotalCupos) {
-                                $("#save-btn").attr("disabled", true);
-                                swal({
-                                    title: "Error",
-                                    text: "No tenemos suficientes cupos para la fa fecha " + FechaReserva + "... ¿Desea revisar los cupos disponibles? ",
-                                    icon: "error",
-                                    buttons: true,
-                                    dangerMode: true,
-                                })
-                                    .then((go) => {
-                                        if (go) {
-                                            window.location = "/";
-                                        }
-                                    });
-                            } else {
-                                $("#save-btn").removeAttr("disabled");
-                            }
-                        })
+                            })
+                        } else {
+                            swal({
+                                title: 'Exito',
+                                text: 'El nuevo punto de encuentro se ha creado correctamente. Recuerde que aun hace falta información necesaria la cual debe ingresar lo antes posible.',
+                                icon: 'warning',
+                                showConfirmButton: false,
+
+                            }).then(() => {
+
+                            })
+                        }
                     })
                 }
+                async function cupos(Id_Tour, FechaReserva) {
+                    try {
+                        // Consultar la tabla 'aforos' para ver si hay cupos definidos para la fecha de reserva
+                        const aforosResponse = await fetch(`/Reservas/Aforos?FechaReserva=${FechaReserva}&Id_Tour=${Id_Tour}`);
+                        const resAforos = await aforosResponse.json();
+
+                        let TotalCupos;
+                        if (resAforos.length > 0) {
+                            TotalCupos = resAforos[0].Cupos;
+                        } else {
+                            // Si no hay cupos definidos en 'aforos', consultar la tabla 'tours'
+                            const tourResponse = await fetch(`/Cupos?Id_Tour=${Id_Tour}`);
+                            const resCupos = await tourResponse.json();
+                            TotalCupos = resCupos[0].Cupos;
+                        }
+
+                        // Validar si los cupos son suficientes
+                        return await validarCupos(TotalCupos, Id_Tour, FechaReserva);
+                    } catch (error) {
+                        console.error("Error al validar los cupos:", error);
+                        return false;
+                    }
+                }
+
+                async function validarCupos(TotalCupos, Id_Tour, FechaReserva) {
+                    try {
+                        const NumPas = parseInt($('#input_numpas').val() || 0, 10);
+                        const totalPasajerosResponse = await fetch(`/TotalPasajeros?Id_Tour=${Id_Tour}&FechaReserva=${FechaReserva}`);
+                        const TotalPasajeros = await totalPasajerosResponse.json();
+
+                        const Pasajeros = TotalPasajeros[0]?.Total || 0;
+                        const TotalPas = Pasajeros + NumPas;
+
+                        if (TotalPas > TotalCupos) {
+                            swal({
+                                title: "Error",
+                                text: `No tenemos suficientes cupos para la fecha ${FechaReserva}... ¿Desea revisar los cupos disponibles? `,
+                                icon: "error",
+                                buttons: true,
+                                dangerMode: true,
+                            }).then((go) => {
+                                if (go) {
+                                    window.open("/", "_blank");
+                                }
+                            });
+                            return false; // No hay cupos
+                        }
+                        return true; // Hay cupos disponibles
+                    } catch (error) {
+                        console.error("Error al validar el total de pasajeros:", error);
+                        return false;
+                    }
+                }
+
+
 
 
                 //---------------------------------------------------------------------------------------------------------------
 
-                Select.onchange = function () {
+                function checkDuplicates() {
+                    // Obtén todos los inputs con el nombre 'IdPas[]'
+                    var ids = $('input[name="IdPas[]"]');
+                    var values = [];
+                    var duplicates = [];
+
+                    // Recorre cada input y guarda su valor en un array
+                    ids.each(function () {
+                        var value = $(this).val().trim();
+                        if (value) { // Solo considera los valores no vacíos
+                            if (values.includes(value)) {
+                                duplicates.push(value);
+                            } else {
+                                values.push(value);
+                            }
+                        }
+                    });
+
+                    // Si hay valores duplicados, puedes mostrar una alerta o hacer algo con ellos
+                    if (duplicates.length > 0) {
+                        $("#save-btn").attr("disabled", true);
+                        swal({
+                            title: "Cuidado",
+                            text: "Los siguientes DNI/Pasaporte estan repetidos: " + duplicates.join(', '),
+                            icon: "warning",
+                        })
+                    } else {
+                        $("#save-btn").removeAttr("disabled");
+                    }
+                }
+
+                function validarTelefonos() {
+                    var telefonos = $('input[name="Telefono[]"]').map(function () {
+                        return $(this).val();
+                    }).get();
+
+                    // Verifica si alguno de los campos de teléfono tiene un valor
+                    var algunoConTelefono = telefonos.some(function (telefono) {
+                        return telefono.trim() !== '';
+                    });
+
+                    if (!algunoConTelefono) {
+                        return false; // Evita que el formulario se envíe
+                    }
+
+                    return true;
+                }
+
+
+                select_Tour = () => {
+                    var Id_Tour = Select.value;
+                    var Categoria = Select_Categoria.value;
                     if (inputPrincipal.value == "") {
                         openModal();
                     } else {
-                        var Id_Tour = Select.value;
                         var Punto = Punto_1.value;
                         load_HR(Id_Tour, Punto);
                     }
+                    call_Load_Comision();
+                    load_Precios(Id_Tour);
+                    id_Reserva(Id_Tour);
                     callCupos()
+                };
+
+                call_Load_Comision = () => {
+                    var Id_Tour = Select.value;
+                    var Categoria = Select_Categoria.value;
+                    if (Categoria !== "") {
+                        if (Categoria == 1 || Categoria == 2 || Categoria == 3) {
+                            $(".Comisiones").show();
+                            load_Comision(Id_Tour, Categoria);
+                        } else {
+                            $(".Comisiones").hide();
+                            $(".Comision").val("0");
+                        }
+                        if (Categoria == 2) {
+                            $("#div_PagoAgencia").show();
+                        }else{
+                            $("#div_PagoAgencia").hide();
+                            $("#PagoAgencia").val("0");
+                        }
+                    }
+
+                };
+
+
+                function call_checkPasajeros(element) {
+                    var idpas = $(element).val();
+                    var FechaReserva = $('#FechaReserva').val();
+                    var Id_Reserva = $('#Id_Reserva').val();
+                    checkPasajeros(idpas, FechaReserva, Id_Reserva);
+                    checkDuplicates();
+                }
+
+                checkPasajeros = (idpas, FechaReserva, Id_Reserva) => {
+                    fetch('/Reservas/CheckPasajeros?idpas=' + idpas + '&FechaReserva=' + FechaReserva + '&Id_Reserva=' + Id_Reserva + '').then((res) => {
+                        return res.json();
+                    }).then((res) => {
+                        if (res.length > 0) {
+                            $("#save-btn").attr("disabled", true);
+                            swal({
+                                title: "Cuidado",
+                                text: "El pasajero ya tiene una reserva para la fecha " + FechaReserva + "... ¿Desea revisar la reserva? ",
+                                icon: "warning",
+                                buttons: true,
+                                dangerMode: true,
+                            }).then((go) => {
+                                if (go) {
+                                    window.open("EditarReserva/" + res[0].Id_Reserva, '_blank');
+                                }
+                            });
+                        } else {
+                            $("#save-btn").removeAttr("disabled");
+                        }
+                    });
+                }
+
+                num_Pas = () => {
+                    var Id_Tour = Select.value;
+
+                    if (Select.value != "") {
+                        load_Precios(Id_Tour);
+                    }
+                    if (Select_Categoria.value != "") {
+                        call_Load_Comision();
+                    }
                 };
 
                 call_Load_HR = () => {
                     var Punto_name = document.getElementById('Punto_1').value;
                     var Id_Tour = Select.value;
-                    var Punto = Punto_name;
+                    const Punto = encodeURIComponent(Punto_name);
                     load_HR(Id_Tour, Punto);
                 }
+
                 function get_text(event, inputId) {
                     var Punto_name = event.textContent;
-
                     document.getElementById(inputId).value = Punto_name;
                     document.getElementById('search_result_' + inputId).innerHTML = '';
+                    document.getElementById(inputId).setAttribute('data-selected', 'true'); // Marcar el input como seleccionado
                 }
 
-                CallCupos = () => {
-                    var Id_Tour = Select.value;
-                    var FechaReserva = $('#FechaReserva').val();
-                    var Cupos = "CupoBase";
+                function validate_autocomplete_input(input) {
+                    return input.getAttribute('data-selected') === 'true';
+                }
 
+                function validate_inputs() {
+                    var inputs = document.querySelectorAll('.search-container input[type="text"]');
+                    var valid = true;
 
+                    inputs.forEach(function (input) {
+                        if (input.value && !validate_autocomplete_input(input)) {
+                            valid = false;
+                            swal("Error", "Por favor, seleccione un punto de encuentro válido para " + input.placeholder + ".", "warning");
+                            $("#save-btn").attr("disabled", true);
+                        }
+                    });
 
-                    var fecha = new Date();
-                    var FechaDia = new Date(fecha.setDate(fecha.getDate() + 1));
-                    var diaActual = String(fecha.getDate()).padStart(2, '0');
-                    var mesActual = String(fecha.getMonth() + 1).padStart(2, '0');
+                    return valid;
+                }
 
-                    var diaTomorrow = String(FechaDia.getDate()).padStart(2, '0');
-                    var mesTomorrow = String(fecha.getMonth() + 1).padStart(2, '0');
-
-                    var año = fecha.getFullYear();
-
-                    var FechaActual = año + '-' + mesActual + '-' + diaActual
-                    var FechaTomorrow = año + '-' + mesTomorrow + '-' + diaTomorrow
-
-                    if ((FechaReserva == FechaActual) || (FechaReserva == FechaTomorrow)) {
-                        Cupos = "CupoDia";
+                // Validar los inputs antes de enviar el formulario
+                document.getElementById('modal-btn-agregar').addEventListener('click', function () {
+                    if (validate_inputs()) {
+                        $("#save-btn").removeAttr("disabled");
                     }
+                });
 
-                    if (Id_Tour == 1) {
-                        Id_Tour = 5;
+                // Remover el atributo 'data-selected' si el usuario cambia el valor manualmente
+                document.querySelectorAll('.search-container input[type="text"]').forEach(function (input) {
+                    input.addEventListener('input', function () {
+                        input.removeAttribute('data-selected');
+                    });
+                });
+
+                // Uso de la función `cupos`
+                async function callCupos() {
+
+                    var Id_Tour = $("#SelectTour").val();
+                    const FechaReserva = $("#FechaReserva").val();
+                    const TipoReserva = $("#TipoReserva").val();
+
+                    if (Id_Tour === "1") Id_Tour = 5;
+                    if (Id_Tour !== "Seleccionar" && FechaReserva !== "" && TipoReserva !== "Privada") {
+                        const resultado = await cupos(Id_Tour, FechaReserva);
+                        console.log("Cupos disponibles:", resultado);
+                        return resultado; // `true` si hay cupos, `false` si no hay
                     }
-
-                    if ((Id_Tour != 'Seleccionar') && (FechaReserva != '')) {
-                        cupos(Id_Tour, Cupos);
+                    if (TipoReserva === "Privada") {
+                        return true
                     }
+                    return false;
+                }
 
+                id_Punto = () => {
+                    fetch('/Puntos/Id_Punto').then((response) => {
+                        return response.json();
+                    }).then((Id) => {
+                        if (Id != null) {
+                            $("#Id_PuntoNP").val(Id);
+                            console.log('id : ' + Id);
+                        }
+                    })
+                }
+
+                //Funcion para enviar los datos del nuevo punto
+                punto = () => {
+                    var NombrePuntoNP = $("input[name='NombrePuntoNP']").val();
+                    var Id_PuntoNP = $("#Id_PuntoNP").val();
+                    if (NombrePuntoNP == "") {
+                        swal({
+                            title: '¡Error!',
+                            text: 'Debe ingresar el nombre del nuevo punto de encuetro',
+                            icon: 'warning',
+                            showConfirmButton: false,
+                            timer: 2000
+                        })
+                    } else {
+                        nuevoPunto(Id_PuntoNP, NombrePuntoNP);
+                    }
                 }
 
                 total = () => {
@@ -935,63 +1546,174 @@
                     total_pas.val(total);
                 }
 
-                $('#Agregar_Adulto').click(() => {
-                    var val = $('#adultos').val();
-                    if (val == '') {
-                        val = 0;
-                    }
-                    var num = parseInt(val) + 1;
-                    var innerhtml = '';
-                    innerhtml += "<div class='row lista-producto' id='cont_adultos'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label'>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioAdulto'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeAdulto'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Adulto'></div><br /></div></div>";
+                $(document).ready(function () {
+                    $('#Agregar_Adulto').click(() => {
+                        var val = $('#adultos').val();
+                        if (val == '') {
+                            val = 0;
+                        }
+                        var num = parseInt(val) + 1;
+                        var innerhtml = '';
 
-                    var dis = $('#div_adultos');
-                    dis.append(innerhtml);
-                    $('#adultos').val(num);
-                    total();
+                        innerhtml += `
+                            <div class='row lista-producto' id='cont_adultos'>
+                                <div>
+                                    <div class='row '>
+                                        <div class='form-group col-lg-3'>
+                                            <label class='form-label'>Nombre</label>
+                                            <input name='NomPas[]' class='form-style mayusculas ' />
+                                        </div>
+                                        <div class='form-group col-lg-2'>
+                                            <label class='form-label'>Dni/Pasaporte </label>
+                                            <input name='IdPas[]' class='form-style mayusculas ' onkeyup='call_checkPasajeros(this);'/>
+                                        </div>
+                                        <div class='form-group col-lg-2'>
+                                            <label class='form-label'>Teléfono </label>
+                                            <input name='Telefono[]' class='form-style mayusculas ' />
+                                        </div>
+                                        <div class='form-group col-lg-2'>
+                                            <label class='form-label'>Precio Tour </label>
+                                            <input type='text' name='PrecioTour[]' class='form-style mayusculas PrecioAdulto'>
+                                        </div>
+                                        <div class='form-group col-lg-1 Comisiones'>
+                                            <label class='form-label'>Comisión </label>
+                                            <input name='Comision[]' class='form-style mayusculas Comision' />
+                                        </div>
+                                        <div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'>
+                                            <div>
+                                                <button type='button' class='icon-btn add-btn'>
+                                                    <div class='btn-txt' id='removeAdulto'>Eliminar</div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type='hidden' name='TipoPasajero[]' value='Adulto'>
+                                        <input type='hidden' name='Precio[]' class='PrecioAdulto'>
+                                    </div>
+                                    <br />
+                                </div>
+                            </div>`;
 
-                    var Id_Tour = Select.value;
-                    var Punto = document.getElementById('NombrePunto').value;
-                    load_HR(Id_Tour, Punto);
+                        var dis = $('#div_adultos');
+                        dis.append(innerhtml);
+                        $('#adultos').val(num);
+                        total();
+
+                        var Id_Tour = Select.value;
+                        var Punto = document.getElementById('NombrePunto').value;
+                        load_HR(Id_Tour, Punto);
+                        load_Precios(Id_Tour);
+                        call_Load_Comision();
+                    });
+
+                    $('#Agregar_Niños').click(() => {
+                        var val = $('#niños').val();
+                        if (val == '') {
+                            val = 0;
+                        }
+                        var num = parseInt(val) + 1;
+                        var innerhtml = '';
+
+                        innerhtml += `
+                            <div class='row lista-producto1' id='cont_niños'>
+                                <div>
+                                    <div class='row '>
+                                        <div class='form-group col-lg-3'>
+                                            <label class='form-label  '>Nombre</label>
+                                            <input name='NomPas[]' class='form-style mayusculas ' />
+                                        </div>
+                                        <div class='form-group col-lg-2'>
+                                            <label class='form-label'>Dni/Pasaporte </label>
+                                            <input name='IdPas[]' class='form-style mayusculas ' onkeyup='call_checkPasajeros(this);'/>
+                                        </div>
+                                        <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='NIÑO'/>
+                                        <div class='form-group col-lg-2'>
+                                            <label class='form-label'>Precio Tour </label>
+                                            <input type='text' name='PrecioTour[]' class='form-style mayusculas PrecioNiño'>
+                                        </div>
+                                        <div class='form-group col-lg-1 Comisiones'>
+                                            <label class='form-label'>Comisión </label>
+                                            <input name='Comision[]' class='form-style mayusculas Comision' />
+                                        </div>
+                                        <div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'>
+                                            <div>
+                                                <button type='button' class='icon-btn add-btn'>
+                                                    <div class='btn-txt' id='removeNiño'>Eliminar</div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type='hidden' name='TipoPasajero[]' value='Niño'>
+                                        <input type='hidden' name='Precio[]' class='PrecioNiño'>
+                                    </div>
+                                    <br />
+                                </div>
+                            </div>`;
+
+                        var dis = $('#div_niños');
+                        dis.append(innerhtml);
+                        $('#niños').val(num);
+                        total();
+
+                        var Id_Tour = Select.value;
+                        var Punto = document.getElementById('NombrePunto').value;
+                        load_HR(Id_Tour, Punto);
+                        load_Precios(Id_Tour);
+                        call_Load_Comision();
+                    });
+
+                    $('#Agregar_Infantes').click(() => {
+                        var val = $('#infantes').val();
+                        if (val == '') {
+                            val = 0;
+                        }
+                        var num = parseInt(val) + 1;
+                        var innerhtml = '';
+
+                        innerhtml += `
+                        <div class='row lista-producto2' id='cont_infantes'>
+                            <div>
+                                <div class='row '>
+                                    <div class='form-group col-lg-4'>
+                                        <label class='form-label '>Nombre</label>
+                                        <input name='NomPas[]' class='form-style mayusculas ' />
+                                    </div>
+                                    <div class='form-group col-lg-3'>
+                                        <label class='form-label'>Dni/Pasaporte </label>
+                                        <input name='IdPas[]' class='form-style mayusculas ' onkeyup='call_checkPasajeros(this);'/>
+                                    </div>
+                                    <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='INFANTE'/>
+                                    <div class='form-group col-lg-3'>
+                                        <label class='form-label'>Precio Tour </label>
+                                        <input type='text' name='PrecioTour[]' class='form-style mayusculas PrecioInfante'>
+                                    </div>
+                                    <input type='hidden' name='Comision[]' class='form-style mayusculas ' value='0'/>
+                                    <div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'>
+                                        <div>
+                                            <button type='button' class='icon-btn add-btn'>
+                                                <div class='btn-txt' id='removeInfante'>Eliminar</div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type='hidden' name='TipoPasajero[]' value='Infante'>
+                                    <input type='hidden' name='Precio[]' class='PrecioInfante'>
+                                </div>
+                                <br />
+                            </div>
+                        </div>`;
+
+                        var dis = $('#div_infantes');
+                        dis.append(innerhtml);
+                        $('#infantes').val(num);
+                        total();
+
+                        var Id_Tour = Select.value;
+                        var Punto = document.getElementById('NombrePunto').value;
+                        load_HR(Id_Tour, Punto);
+                        load_Precios(Id_Tour);
+                        call_Load_Comision();
+                    });
+
                 });
 
-                $('#Agregar_Niños').click(() => {
-                    var val = $('#niños').val();
-                    if (val == '') {
-                        val = 0;
-                    }
-                    var num = parseInt(val) + 1;
-                    var innerhtml = '';
-                    innerhtml += "<div class='row lista-producto1' id='cont_niños'><div><div class='row '><div class='form-group col-lg-3'><label class='form-label  '>Nombre</label><input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Teléfono </label><input name='Telefono[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-2'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioNiño'></div><div class='form-group col-lg-1'><label class='form-label'>Comisión </label><input name='Comision[]' class='form-style mayusculas  mayusculas Comision' /></div><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeNiño'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Niño'></div><br /></div></div>";
-
-                    var dis = $('#div_niños');
-                    dis.append(innerhtml);
-                    $('#niños').val(num);
-                    total();
-
-                    var Id_Tour = Select.value;
-                    var Punto = document.getElementById('NombrePunto').value;
-                    load_HR(Id_Tour, Punto);
-                });
-
-                $('#Agregar_Infantes').click(() => {
-                    var val = $('#infantes').val();
-                    if (val == '') {
-                        val = 0;
-                    }
-                    var num = parseInt(val) + 1;
-                    var innerhtml = '';
-
-                    innerhtml += "<div class='row lista-producto2' id='cont_infantes'> <div> <div class='row '> <div class='form-group col-lg-4'> <label class='form-label '>Nombre</label> <input name='NomPas[]' class='form-style mayusculas ' /></div><div class='form-group col-lg-3'><label class='form-label'>Dni/Pasaporte </label><input name='IdPas[]' class='form-style mayusculas ' /></div> <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='N/A'/><div class='form-group col-lg-3'><label class='form-label'>Precio Tour </label><input type='text' name='Precio[]' class='form-style mayusculas  mayusculas PrecioInfante'></div><input type='hidden' name='Comision[]' class='form-style mayusculas ' value='0'/><div class='form-check col-lg-2 g-3 d-flex align-items-end justify-content-center'><div><button type='button' class='icon-btn add-btn'><div class='btn-txt' id='removeInfante'>Eliminar</div></button></div></div><input type='hidden' name='TipoPasajero[]' value='Infante'></div><br /></div></div>";
-
-                    var dis = $('#div_infantes');
-                    dis.append(innerhtml);
-                    $('#infantes').val(num);
-                    total();
-
-                    var Id_Tour = Select.value;
-                    var Punto = document.getElementById('NombrePunto').value;
-                    load_HR(Id_Tour, Punto);
-                });
 
                 $(document).on('click', '#removeAdulto', function () {
                     var val = $('#adultos').val();
@@ -1034,15 +1756,23 @@
                 var año = fecha.getFullYear();
                 var FechaMin = año + '-' + mes + '-' + dia
 
-                $("#FechaReserva").attr('min', FechaMin);
+                // $("#FechaReserva").attr('min', FechaMin);
+
 
                 $(document).ready(function () {
-                    $("form").keypress(function (e) {
+                    $(document).on("keydown", function (e) {
                         if (e.which == 13) {
-                            return false;
+                            // Activa el checkbox
+                            $("#dropdown").prop("checked", !$("#dropdown").prop("checked"));
+
+                            // Evita el comportamiento por defecto de la tecla Enter
+                            e.preventDefault();
                         }
                     });
                 });
+
+
+
             </script>
 </body>
 

@@ -377,7 +377,8 @@
                                 </div>
                                 <div class="col d-flex justify-content-end">
                                     <a type="button" class="delete" id="deleteReserva">
-                                        Cancelar
+                                        <iconify-icon icon="material-symbols:delete-outline" style="color: white;"
+                                            width="30" height="30"></iconify-icon>
                                     </a>
                                     <input type="hidden" name="" id="Id_Reserva" value="<%=Reserva.Id_Reserva %>">
                                 </div>
@@ -394,8 +395,7 @@
                                         <div class="row">
                                             <div class="col-3">
                                                 <label class="fw-bold">Tipo de reserva</label>
-                                                <select class="form-style" name="TipoReserva" id="TipoReserva"
-                                                    onchange="callCupos();">
+                                                <select class="form-style " name="TipoReserva" id="TipoReserva" onchange="callCupos()">
                                                     <option value="Grupal" selected>Grupal</option>
                                                     <option value="Privada">Privada</option>
                                                 </select>
@@ -455,8 +455,6 @@
                                                         </option>
                                                         <% }) } %>
                                                 </select>
-                                                <input type="hidden" id="OriginalTour"
-                                                    value="<%=Reserva.TourReserva %>">
                                             </div>
                                             <div class="col-lg-3" id="punto">
                                                 <label class="fw-bold">Puntos de encuentro<span
@@ -476,8 +474,6 @@
                                                 <input type="date" class="form-style mayusculas " name="FechaReserva"
                                                     value="<%=Reserva.FechaReserva %>" id="FechaReserva"
                                                     onchange="callCupos()" required />
-                                                <input type="hidden" name="" id="OriginalFecha"
-                                                    value="<%=Reserva.FechaReserva %>">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -522,14 +518,6 @@
                                                 <label class="fw-bold">Ruta</label>
                                                 <input type="text" class="form-style mayusculas " name="Ruta" id="Ruta"
                                                     value="<%=Reserva.Ruta %>" />
-                                            </div>
-                                        </div>
-                                        <br />
-                                        <div class="row" id="div_PagoAgencia">
-                                            <div class="col-lg-2">
-                                                <label class="fw-bold">Pago Agencia</label>
-                                                <input type="text" class="form-style mayusculas " name="PagoAgencia"
-                                                    id="PagoAgencia" value="<%=Reserva.PagoAgencia %>">
                                             </div>
                                         </div>
                                         <br>
@@ -582,8 +570,8 @@
                                             </div>
                                             <br>
                                             <div class="">
-                                                <button type="button" class="icon-btn add-btn plus" onclick=""
-                                                    id="Agregar_Infantes">
+                                                <button type="button" class="icon-btn add-btn plus"
+                                                    onclick="callCupos()" id="Agregar_Infantes">
                                                     <div class="add-icon"></div>
                                                     <div class="btn-txt">Agregar</div>
                                                 </button>
@@ -591,9 +579,6 @@
                                             <hr>
                                         </div>
                                         <div class=" d-flex align-items-center justify-content-end ">
-                                            <button type="button" class="btn btn-secondary btn-lg " id="duplica"
-                                                data-bs-toggle="modal" data-bs-target="#ModalDuplicar">Duplicar</button>
-                                            &nbsp;
                                             <button type="button" class="btn btn-primary btn-lg"
                                                 id="save-btn">Guardar</button>
                                         </div>
@@ -685,7 +670,6 @@
                                             son
                                             obligatorios.</span>
                                     </div>
-
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-12">
@@ -708,80 +692,6 @@
                         </div>
                     </div>
 
-
-                    <div class="modal fade" id="ModalDuplicar" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content ">
-                                <form action="" method="POST" autocomplete="OFF">
-                                    <div class="modal-header">
-                                        <div class="input-group">
-                                            <h3 class="mb-0">
-                                                <strong>Duplicar Reserva:</strong> &nbsp;&nbsp;&nbsp;
-                                            </h3>
-                                            </span>
-                                            <input type="hidden" name="Id_ReservaDuplicar" id="Id_ReservaDuplicar"
-                                                value="">
-                                        </div>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="container-fluid">
-                                            <div class="container">
-                                                <div style="margin-top: -20px">
-                                                    <br>
-                                                    <div class="row ">
-                                                        <div class="col-md-6">
-                                                            <label class="fw-bold">Estado de la reserva</label>
-                                                            <select class="form-style" name="Estadod" id="Estadod">
-                                                                <option value="Activo" selected>ACTIVO</option>
-                                                                <option value="Pendiente">PENDIENTE</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="fw-bold">Tour</label>
-                                                            <select class="form-style" name="SelectTourd"
-                                                                id="SelectTourd" onchange="select_TourDuplicar();">
-                                                                <option value="" disabled selected>Seleccionar</option>
-                                                                <% if (typeof resultsTours !="undefined" ){
-                                                                    resultsTours.forEach((Tours)=>{
-                                                                    %>
-                                                                    <option value="<%= Tours.Id_Tour %>">
-                                                                        <%= Tours.NombreTour %>
-                                                                    </option>
-                                                                    <% }) } %>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="fw-bold">Fecha reserva</label>
-                                                            <input type="date" class="form-style" value=""
-                                                                name="FechaReservad" id="FechaReservad" />
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <label class="fw-bold">Observaciones</label>
-                                                        <div class="form-floating">
-                                                            <input type="text" class="form-style mayusculas" value=""
-                                                                name="Observacionesd" id="Observacionesd"
-                                                                style="height: 100px">
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <br>
-                                                <div class=" d-flex align-items-center justify-content-end ">
-                                                    <input type="button" class="btn btn-primary" value="Duplicar"
-                                                        onclick="obtenerDatosduplicarReserva();">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                     <% } %>
             </div>
         </div>
@@ -801,9 +711,7 @@
             })
         </script>
         <% } %>
-
             <script>
-
                 $("#deleteReserva").click(() => {
                     const Id_Reserva = $("#Id_Reserva").val();
                     const id_user = $("#id_user").val();
@@ -818,7 +726,6 @@
                         }
                     });
                 });
-
                 // Función para cancelar una reserva
                 deleteReserva = (Id_Reserva, id_user) => {
                     fetch(`/Reservas/CancelarReserva?Id_Reserva=${Id_Reserva}&id_user=${id_user}`)
@@ -860,8 +767,6 @@
                 var Select_Categoria = document.getElementById("Categoria");
                 var Punto_1 = document.getElementById("Punto_1");
                 const checkboxes = document.querySelectorAll(".punto-checkbox");
-                $("#div_PagoAgencia").hide();
-
 
 
                 // Función para abrir el modal
@@ -893,10 +798,8 @@
 
                 // Evento para abrir el modal al hacer focus en el input principal
                 inputPrincipal.addEventListener("focus", openModal);
-
                 // Evento para cerrar el modal al presionar el botón "Agregar" y actualizar el input principal
                 modalBtnAgregar.addEventListener("click", closeModal);
-
                 // Evento para cerrar el modal al presionar la tecla "Enter" y actualizar el input principal
                 modal.addEventListener("keydown", (e) => {
                     if (e.key === "Enter") {
@@ -925,79 +828,37 @@
                     }
                     modalNP.style.display = "none";
                 }
-
                 // Evento para cerrar el modal al presionar el botón "Agregar" y actualizar el input principal
                 modalBtnNP.addEventListener("click", closeModalNP);
 
-                $("#save-btn").click(async () => {
-                    // Función para mostrar alertas
-                    const mostrarAlerta = (mensaje, titulo = "Cuidado", icono = "warning") => {
-                        return swal({
-                            title: titulo,
-                            text: mensaje,
-                            icon: icono,
-                            buttons: true,
-                            dangerMode: true,
-                        });
-                    };
-
-                    let textoAlerta = "";
-                    const estadoReserva = $("#Estado").val();
-                    const idReserva = $("#Id_Reserva").val();
-                    const newTour = $("#SelectTour").val();
-                    const newFecha = $("#FechaReserva").val();
-                    const newPasajeros = parseInt($("#input_numpas").val() || 0, 10);
-
-                    // Valores originales de la reserva
-                    const originalTour = $("#OriginalTour").val();
-                    const originalFecha = $("#OriginalFecha").val();
-                    const originalPasajeros = parseInt($("#NumeroPasajeros").val() || 0, 10);
-
-                    if (estadoReserva === "Cancelado") {
-                        textoAlerta = "La reserva está cancelada. Si continúa, será reactivada.";
-                    } else if (estadoReserva === "Completado") {
-                        textoAlerta = "La reserva está completada. Si continúa, será reactivada.";
-                    }
-
-                    // Validar cambios en tour o fecha
-                    const tourOFechaCambiados = newTour !== originalTour || newFecha !== originalFecha;
-
-                    // Lógica de validación para cupos
-                    if (tourOFechaCambiados || newPasajeros > originalPasajeros) {
-                        const hayCupos = await callCupos();
-                        if (!hayCupos) {
-                            await mostrarAlerta("No hay cupos disponibles para los cambios realizados.", "Error", "error");
-                            return;
-                        }
-                    }
-
-                    // Confirmación final
+                $("#save-btn").click(() => {
                     swal({
                         title: "¿Todo Listo?",
-                        text: textoAlerta,
                         icon: "warning",
                         buttons: true,
                         dangerMode: true,
-                    }).then((go) => {
-                        if (go) {
-                            // Reactivar la reserva si es necesario
-                            if (estadoReserva === "Cancelado" || estadoReserva === "Completado") {
-                                $("#Estado").val("Activo");
+                    })
+                        .then((go) => {
+                            if (go) {
+                                $("#Submit").click()
                             }
-                            // Enviar el formulario
-                            $("#Submit").click();
-                        }
-                    });
-                });
-
+                        });
+                })
 
                 $(document).ready(function () {
+
                     var Id_Reserva = $('#Id_Reserva').val();
-                    load_Pas(Id_Reserva)
-                    var Categoria = $('#Categoria').val();
-                    if (Categoria == 2) {
-                        $("#div_PagoAgencia").show();
-                    }
+                    load_Pas(Id_Reserva);
+                    setTimeout(() => {
+                        call_Load_HR();
+                        call_Load_Comision();
+                        call_Load_Precios();
+                        swal({
+                            text: "Se han cargado datos automáticamente desde la base de datos para la reserva. Por favor, revise la información y asegúrese de guardarla haciendo clic en el botón Guardar antes de continuar.",
+                            icon: "info",
+                        })
+                    }, 1000);
+
                 });
 
                 load_Pas = (Id_Reserva) => {
@@ -1021,7 +882,7 @@
                                     </div>
                                     <div class='form-group col-lg-2'>
                                         <label class='form-label'>Dni/Pasaporte </label>
-                                        <input name='IdPas[]' class='form-style mayusculas ' value='${responseData[count].IdPas}' onkeyup='call_checkPasajeros(this);' />
+                                        <input name='IdPas[]' class='form-style mayusculas ' value='${responseData[count].IdPas}'/>
                                     </div>
                                     <div class='form-group col-lg-2'>
                                         <label class='form-label'>Teléfono </label>
@@ -1064,7 +925,7 @@
                                     </div>
                                     <div class='form-group col-lg-2'>
                                         <label class='form-label'>Dni/Pasaporte </label>
-                                        <input name='IdPas[]' class='form-style mayusculas ' value='${responseData[count].IdPas}' onkeyup='call_checkPasajeros(this);' />
+                                        <input name='IdPas[]' class='form-style mayusculas ' value='${responseData[count].IdPas}'/>
                                     </div>
                                     <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='NIÑO'/>
                                     <div class='form-group col-lg-2'>
@@ -1104,9 +965,9 @@
                                     </div>
                                     <div class='form-group col-lg-3'>
                                         <label class='form-label'>Dni/Pasaporte </label>
-                                        <input name='IdPas[]' class='form-style mayusculas ' value='${responseData[count].IdPas}' onkeyup='call_checkPasajeros(this);' />
+                                        <input name='IdPas[]' class='form-style mayusculas ' value='${responseData[count].IdPas}'/>
                                     </div>
-                                <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='INFANTE'/>
+                                    <input type='hidden' name='Telefono[]' class='form-style mayusculas ' value='INFANTE'/>
                                     <div class='form-group col-lg-3'>
                                         <label class='form-label'>Precio Tour </label>
                                         <input type='text' name='PrecioTour[]' class='form-style mayusculas  mayusculas PrecioInfante' value='${responseData[count].PrecioTour}'>
@@ -1187,12 +1048,12 @@
 
                                 html += '<a class="list-group-item list-group-item-action list-group-color" onclick="get_text(this, \'' + idInput + '\'); call_Load_HR()">' + responseData[count].NombrePunto.replace(regular_expression, '<span class="text-primary fw-bold">$1</span>') + '</a>';
                             }
-                            // html += '<a class="list-group-item list-group-item-action list-group-create-color" id="CrearPunto" onClick="openModalNP(); id_Punto();">Crear nuevo punto</a>';
+                            html += '<a class="list-group-item list-group-item-action list-group-create-color" id="CrearPunto" onClick="openModalNP(); id_Punto();">Crear nuevo punto</a>';
 
                         }
                         else {
                             html += '<a class="list-group-item list-group-item-action list-group-disabled-bg disabled ">No hay datos</a>';
-                            // html += '<a class="list-group-item list-group-item-action list-group-create-color" id="CrearPunto" onClick="openModalNP(); id_Punto();">Crear nuevo punto</a>';
+                            html += '<a class="list-group-item list-group-item-action list-group-create-color" id="CrearPunto" onClick="openModalNP(); id_Punto();">Crear nuevo punto</a>';
                         }
 
                         html += '</ul>';
@@ -1284,61 +1145,55 @@
                     });
                 }
 
-                async function cupos(Id_Tour, FechaReserva) {
-                    try {
-                        // Consultar la tabla 'aforos' para ver si hay cupos definidos para la fecha de reserva
-                        const aforosResponse = await fetch(`/Reservas/Aforos?FechaReserva=${FechaReserva}&Id_Tour=${Id_Tour}`);
-                        const resAforos = await aforosResponse.json();
-
-                        let TotalCupos;
+                cupos = (Id_Tour, FechaReserva) => {
+                    // Consultar la tabla 'aforos' para ver si hay cupos definidos para la fecha de reserva
+                    fetch('/Reservas/Aforos?FechaReserva=' + FechaReserva + '&Id_Tour=' + Id_Tour + '').then((aforosResponse) => {
+                        return aforosResponse.json();
+                    }).then((resAforos) => {
+                        // Verificar si hay cupos definidos para la fecha en 'aforos'
                         if (resAforos.length > 0) {
-                            TotalCupos = resAforos[0].Cupos;
+                            var TotalCupos = resAforos[0].Cupos;
+                            validarCupos(TotalCupos);
                         } else {
                             // Si no hay cupos definidos en 'aforos', consultar la tabla 'tours'
-                            const tourResponse = await fetch(`/Cupos?Id_Tour=${Id_Tour}`);
-                            const resCupos = await tourResponse.json();
-                            TotalCupos = resCupos[0].Cupos;
-                        }
-
-                        // Validar si los cupos son suficientes
-                        return await validarCupos(TotalCupos, Id_Tour, FechaReserva);
-                    } catch (error) {
-                        console.error("Error al validar los cupos:", error);
-                        return false;
-                    }
-                }
-
-                async function validarCupos(TotalCupos, Id_Tour, FechaReserva) {
-                    try {
-                        const NumeroPasajeros = parseInt($('#NumeroPasajeros').val() || 0, 10);
-                        const input_numpas = parseInt($('#input_numpas').val() || 0, 10);
-                        const totalPasajerosResponse = await fetch(`/TotalPasajeros?Id_Tour=${Id_Tour}&FechaReserva=${FechaReserva}`);
-                        const TotalPasajeros = await totalPasajerosResponse.json();
-
-                        const Pasajeros = TotalPasajeros[0].Total || 0;
-                        const TotalPas = Pasajeros + (input_numpas - NumeroPasajeros);
-
-                        if (TotalPas > parseInt(TotalCupos)) {
-                            swal({
-                                title: "Error",
-                                text: `No tenemos suficientes cupos para la fecha ${FechaReserva}... ¿Desea revisar los cupos disponibles? `,
-                                icon: "error",
-                                buttons: true,
-                                dangerMode: true,
-                            }).then((go) => {
-                                if (go) {
-                                    window.open("/", "_blank");
-                                }
+                            fetch('/Cupos?Id_Tour=' + Id_Tour + '').then((tourResponse) => {
+                                return tourResponse.json();
+                            }).then((resCupos) => {
+                                var TotalCupos = resCupos[0].Cupos;
+                                validarCupos(TotalCupos);
                             });
-                            return false; // No hay cupos
                         }
-                        return true; // Hay cupos disponibles
-                    } catch (error) {
-                        console.error("Error al validar el total de pasajeros:", error);
-                        return false;
+                    });
+
+                    function validarCupos(TotalCupos) {
+                        var NumPas = $('#NewPasajeros').val();
+                        fetch('/TotalPasajeros?Id_Tour=' + Id_Tour + '&FechaReserva=' + FechaReserva + '').then((res) => {
+                            return res.json();
+                        }).then((TotalPasajeros) => {
+                            var Pasajeros = TotalPasajeros[0].Total || 0;
+                            var TotalPas = Pasajeros + parseInt(NumPas);
+
+                            if (TotalPas > TotalCupos) {
+                                // Deshabilitar el botón de guardar y mostrar un mensaje de error
+                                $("#save-btn").attr("disabled", true);
+                                swal({
+                                    title: "Error",
+                                    text: "No tenemos suficientes cupos para la fecha " + FechaReserva + "... ¿Desea revisar los cupos disponibles? ",
+                                    icon: "error",
+                                    buttons: true,
+                                    dangerMode: true,
+                                }).then((go) => {
+                                    if (go) {
+                                        window.open("/", "_blank");
+                                    }
+                                });
+                            } else {
+                                // Habilitar el botón de guardar si hay cupos suficientes
+                                $("#save-btn").removeAttr("disabled");
+                            }
+                        });
                     }
                 }
-
 
                 nuevoPunto = (Id_PuntoNP, NombrePuntoNP) => {
                     fetch('/NuevaReserva/NuevoPunto?Id_PuntoNP=' + Id_PuntoNP + '&NombrePuntoNP=' + NombrePuntoNP + '').then((response) => {
@@ -1366,186 +1221,6 @@
                     })
                 }
 
-                function obtenerDatosduplicarReserva() {
-                    // Obtener los valores del modal
-                    var Id_ReservaDuplicar = document.getElementById("Id_ReservaDuplicar").value;
-                    var Id_Tour = document.getElementById('SelectTourd').value;
-                    var Id_Tourd = document.getElementById('SelectTourd').value;
-                    var FechaReserva = document.getElementById('FechaReserva').value;
-                    var FechaReservad = document.getElementById('FechaReservad').value;
-                    var Observaciones = document.getElementById('Observacionesd').value;
-                    var Estado = document.getElementById('Estadod').value;
-                    // Obtener valores importantes del formulario principal
-                    var TipoReserva = document.getElementById('TipoReserva').value;
-                    var input_numpas = document.getElementById('input_numpas').value;
-                    var total_pas = document.getElementById('total_pas').value;
-                    var PuntoEncuentro = document.getElementById('NombrePunto').value;
-                    var Id_Punto = document.getElementById('Id_Punto').value;
-                    var TelefonoReserva = document.getElementById('TelefonoReserva').value;
-                    var IdiomaReserva = document.getElementById('IdiomaReserva').value;
-                    var Categoria = document.getElementById('Categoria').value;
-                    var NombreReporta = document.getElementById('NombreReporta').value;
-                    var id_user = document.getElementById('id_user').value;
-                    var NomPas = [];
-                    var TipoPasajero = [];
-                    var IdPas = [];
-                    var Telefono = [];
-
-                    var nombreInputs = document.getElementsByName('NomPas[]');
-                    var tipoPasajeroInputs = document.getElementsByName('tipo[]');
-                    var idPasInputs = document.getElementsByName('IdPas[]');
-                    var telefonoInputs = document.getElementsByName('Telefono[]');
-
-                    for (var i = 0; i < nombreInputs.length; i++) {
-                        NomPas.push(nombreInputs[i].value);
-                        TipoPasajero.push(tipoPasajeroInputs[i].value);
-                        IdPas.push(idPasInputs[i].value);
-                        Telefono.push(telefonoInputs[i].value);
-                    }
-
-                    // Serializa los arrays en cadenas JSON
-                    var nomPasJSON = JSON.stringify(NomPas);
-                    var tipoPasajeroJSON = JSON.stringify(TipoPasajero);
-                    var idPasJSON = JSON.stringify(IdPas);
-                    var telefonoJSON = JSON.stringify(Telefono);
-
-                    if (FechaReserva == FechaReservad) {
-                        swal({
-                            alert: true,
-                            title: "¡Error!",
-                            text: "La fecha de la nueva reserva debe ser diferente a la fecha de la reserva actual.",
-                            icon: "error",
-                            showConfirmButton: false,
-                            timer: 3500,
-                        });
-                    } else {
-                        cuposDuplicar = (Id_Tour, FechaReservad) => {
-                            fetch('/Reservas/Aforos?FechaReserva=' + FechaReservad + '&Id_Tour=' + Id_Tour)
-                                .then((aforosResponse) => {
-                                    return aforosResponse.json();
-                                })
-                                .then((resAforos) => {
-                                    if (resAforos.length > 0) {
-                                        var TotalCupos = resAforos[0].Cupos;
-                                        validarCuposDuplicar(TotalCupos);
-                                    } else {
-                                        fetch('/Cupos?Id_Tour=' + Id_Tour)
-                                            .then((tourResponse) => {
-                                                return tourResponse.json();
-                                            })
-                                            .then((resCupos) => {
-                                                var TotalCupos = resCupos[0].Cupos;
-                                                validarCuposDuplicar(TotalCupos);
-                                            });
-                                    }
-                                });
-
-                            function validarCuposDuplicar(TotalCupos) {
-                                var NumPas = $('#input_numpas').val();
-                                fetch('/TotalPasajeros?Id_Tour=' + Id_Tour + '&FechaReserva=' + FechaReservad)
-                                    .then((res) => {
-                                        return res.json();
-                                    })
-                                    .then((TotalPasajeros) => {
-                                        var Pasajeros = TotalPasajeros[0].Total || 0;
-                                        var TotalPas = Pasajeros + parseInt(NumPas);
-
-                                        if (TotalPas > TotalCupos) {
-                                            $("#save-btn").attr("disabled", true);
-                                            swal({
-                                                title: "Error",
-                                                text: "No tenemos suficientes cupos para la fecha " + FechaReservad + "... ¿Desea revisar los cupos disponibles? ",
-                                                icon: "error",
-                                                buttons: true,
-                                                dangerMode: true,
-                                            }).then((go) => {
-                                                if (go) {
-                                                    window.location = "/";
-                                                }
-                                            });
-                                        } else {
-                                            fetch(`/Edit/DuplucarReserva`, {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json'
-                                                },
-                                                body: JSON.stringify({
-                                                    Id_ReservaDuplicar,
-                                                    TipoReserva,
-                                                    input_numpas,
-                                                    total_pas,
-                                                    Id_Tour: Id_Tourd,
-                                                    PuntoEncuentro,
-                                                    Id_Punto,
-                                                    FechaReserva: FechaReservad,
-                                                    Observaciones,
-                                                    TelefonoReserva,
-                                                    IdiomaReserva,
-                                                    Categoria,
-                                                    NombreReporta,
-                                                    Estado,
-                                                    NomPas: nomPasJSON,
-                                                    TipoPasajero: tipoPasajeroJSON,
-                                                    IdPas: idPasJSON,
-                                                    Telefono: telefonoJSON,
-                                                    id_user
-                                                })
-                                            })
-                                                .then(response => response.json())
-                                                .then(result => {
-                                                    if (result?.error) {
-                                                        // Mostrar alerta específica de error con el mensaje devuelto
-                                                        swal({
-                                                            title: "Cupo insuficiente",
-                                                            text: result.error,
-                                                            icon: "warning",
-                                                            showConfirmButton: true,
-                                                        });
-                                                        return;
-                                                    }
-
-                                                    // Reserva duplicada correctamente
-                                                    swal({
-                                                        title: "Éxito",
-                                                        text: `La reserva ${Id_ReservaDuplicar} se ha creado correctamente. Será dirigido a la reserva para que complete los datos.`,
-                                                        icon: "success",
-                                                        timer: 2500,
-                                                    }).then(() => {
-                                                        window.location.replace(`/Reservas/ReservaDuplicada/${Id_ReservaDuplicar}`);
-                                                    });
-                                                })
-                                                .catch(error => {
-                                                    console.error(error);
-                                                    swal({
-                                                        title: "¡Ocurrió un error!",
-                                                        text: "No fue posible duplicar la reserva. Si el error continúa, comuníquese con soporte técnico.",
-                                                        icon: "error",
-                                                        showConfirmButton: false,
-                                                        timer: 3500,
-                                                    });
-                                                });
-
-                                            $("#save-btn").removeAttr("disabled");
-                                        }
-                                    });
-                            }
-                        };
-
-                        if (Id_Tour === "1") {
-                            Id_Tour = 5;
-                        }
-
-                        if (Id_Tour !== 'Seleccionar' && FechaReservad !== '') {
-                            try {
-                                cuposDuplicar(Id_Tour, FechaReservad);
-                            } catch (error) {
-                                console.error('Error al llamar a la función cupos:', error);
-                            }
-                        }
-                    }
-                }
-
-
                 id_Reserva = (Id_Tour) => {
                     fetch('/Id_Reserva?Id_Tour=' + Id_Tour + '').then((response) => {
                         return response.json();
@@ -1556,44 +1231,7 @@
                         }
                     })
                 }
-                select_TourDuplicar = () => {
-                    var Id_TourDuplicar = document.getElementById('SelectTourd').value;
-
-                    id_Reserva(Id_TourDuplicar);
-                };
-
                 //----------------------------------------------------------------------------------------
-                function checkDuplicates() {
-                    // Obtén todos los inputs con el nombre 'IdPas[]'
-                    var ids = $('input[name="IdPas[]"], input[name="New_IdPas[]"]');
-                    var values = [];
-                    var duplicates = [];
-
-                    // Recorre cada input y guarda su valor en un array
-                    ids.each(function () {
-                        var value = $(this).val().trim();
-                        if (value) { // Solo considera los valores no vacíos
-                            if (values.includes(value)) {
-                                duplicates.push(value);
-                            } else {
-                                values.push(value);
-                            }
-                        }
-                    });
-
-                    // Si hay valores duplicados, puedes mostrar una alerta o hacer algo con ellos
-                    if (duplicates.length > 0) {
-                        $("#save-btn").attr("disabled", true);
-                        swal({
-                            title: "Cuidado",
-                            text: "Los siguientes DNI/Pasaporte estan repetidos: " + duplicates.join(', '),
-                            icon: "warning",
-                        })
-                    } else {
-                        $("#save-btn").removeAttr("disabled");
-                    }
-                }
-
 
                 select_Tour = () => {
                     var Id_Tour = Select.value;
@@ -1619,12 +1257,6 @@
                         } else {
                             $(".Comisiones").hide();
                             $(".Comision").val("0");
-                        }
-                        if (Categoria == 2) {
-                            $("#div_PagoAgencia").show();
-                        } else {
-                            $("#div_PagoAgencia").hide();
-                            $("#PagoAgencia").val("0");
                         }
                     }
 
@@ -1691,6 +1323,7 @@
                     });
                 });
 
+
                 function call_checkPasajeros(element) {
                     var idpas = $(element).val();
                     var FechaReserva = $('#FechaReserva').val();
@@ -1722,23 +1355,17 @@
                     });
                 }
 
-                // Uso de la función `cupos`
-                async function callCupos() {
-                    var Id_Tour = $("#SelectTour").val();
-                    const FechaReserva = $("#FechaReserva").val();
-                    const TipoReserva = $("#TipoReserva").val();
-
-                    if (Id_Tour === "1") Id_Tour = 5;
-
-                    if (Id_Tour !== "Seleccionar" && FechaReserva !== "" && TipoReserva !== "Privada") {
-                        const resultado = await cupos(Id_Tour, FechaReserva);
-                        console.log("Cupos disponibles:", resultado);
-                        return resultado; // `true` si hay cupos, `false` si no hay
+                callCupos = () => {
+                    var Id_Tour = Select.value;
+                    var FechaReserva = $('#FechaReserva').val();
+                    var TipoReserva = $('#TipoReserva').val();
+                    if (Id_Tour === "1") {
+                        Id_Tour = 5;
                     }
-                    if (TipoReserva === "Privada") {
-                        return true
+
+                    if (Id_Tour !== 'Seleccionar' && FechaReserva !== '' && TipoReserva !== 'Privada') {
+                        cupos(Id_Tour, FechaReserva);
                     }
-                    return true;
                 }
                 id_Punto = () => {
                     fetch('/Puntos/Id_Punto').then((response) => {
@@ -2059,6 +1686,24 @@
                             }
                         });
                     });
+
+                    // $("#Layout_Aforos").attr("href", "../../Aforos");
+                    // $("#Layout_NuevaReserva").attr("href", "../../Reservas/NuevaReserva");
+                    // $("#Layout_VerReservas").attr("href", "../../Reservas/VerReservas");
+                    // $("#Layout_NuevoTransfer").attr("href", "../../Transfer/NuevoTransfer");
+                    // $("#Layout_VerTransfer").attr("href", "../../Transfer/VerTransfer");
+                    // $("#Layout_NuevoTour").attr("href", "../../Tours/NuevoTour");
+                    // $("#Layout_VerTours").attr("href", "../../Tours/VerTours");
+                    // $("#Layout_NuevoPunto").attr("href", "../../Puntos/NuevoPunto");
+                    // $("#Layout_VerPuntos").attr("href", "../../Puntos/VerPuntos");
+                    // $("#Layout_OrdenarPuntos").attr("href", "../../Puntos/OrdenarPuntos");
+                    // $("#Layout_Listado").attr("href", "../../Programacion/Listado");
+                    // $("#Layout_Confirmacion").attr("href", "../../Programacion/Confirmacion");
+                    // $("#Layout_Comisiones").attr("href", "../../Comisiones/Comisiones");
+                    // $("#Layout_Seguros").attr("href", "../../Seguros/Seguros");
+                    // $("#Layout_AdminUsers").attr("href", "../../Settings/AdminUsers");
+                    // $("#Layout_NewUser").attr("href", "../../Settings/NewUser");
+                    // $("#Layout_Perfil").attr("href", "../../Settings/Perfil/<% if(typeof user !='undefined' ){ %><%= user.id %> <% } %>");
 
 
                 });
